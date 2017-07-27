@@ -23,8 +23,7 @@
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QFileInfo
 from PyQt4.QtGui import QAction, QIcon, QColor
 from qgis.core import (QgsVectorLayer, QgsRasterLayer, QgsCoordinateReferenceSystem,
-                       QgsMapLayerRegistry, QgsCoordinateReferenceSystem)
-from qgis.gui import QgsMapCanvas
+                       QgsMapLayerRegistry, QgsCoordinateReferenceSystem, QgsVectorJoinInfo)
 
 # Initialize Qt resources from file resources.py
 import resources
@@ -67,8 +66,7 @@ class CalidadCAR:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&Calidad CAR Test')
-        # TODO: We are going to let the user set this up in a future iteration
+        self.menu = self.tr(u'&Calidad CAR')
         self.toolbar = self.iface.addToolBar(u'CalidadCAR')
         self.toolbar.setObjectName(u'CalidadCAR')
         crs = QgsCoordinateReferenceSystem(3116)
@@ -186,12 +184,43 @@ class CalidadCAR:
             parent=self.iface.mainWindow())
 
     def run2(self):
-        """Run method that performs all the real work"""
-        # show the dialog
+        a = '?type=csv&geomType=none&subsetIndex=no&watchFile=no&delimiter=,'
+        """Join operation test"""
+        shp = None
+        sheet = None
+
         self.untitled.show()
         # Run the dialog event loop
         result = self.untitled.exec_()
-        print result
+
+        if result:
+            #Load the layer
+            path, name = self.untitled.getFilePaths()
+            sheet = QgsVectorLayer(path + a, name, 'delimitedtext')
+
+            if not sheet.isValid():
+                print 'Archivo CVS invalido'
+                return
+
+            QgsMapLayerRegistry.instance().addMapLayer(sheet)
+
+            layers = QgsMapLayerRegistry.instance().mapLayers().values()
+            for layer in layers: #Get the shape layer
+                if layer.name() == 'secciones':
+                    self.iface.setActiveLayer(layer)
+                    shp = self.iface.activeLayer()
+
+            if shp and sheet:
+                shpField = 'RiverStatio'
+                csvField = 'SECCION'
+                joinObject = QgsVectorJoinInfo()
+                print sheet.id()
+                joinObject.joinLayerId = sheet.id()
+                joinObject.joinFieldName = csvField
+                joinObject.targetFieldName = shpField
+                shp.addJoin(joinObject)
+        else:
+            print 'hi'
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
