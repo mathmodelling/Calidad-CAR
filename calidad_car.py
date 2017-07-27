@@ -74,7 +74,7 @@ class CalidadCAR:
         self.layers = []
         self.work_layer = QgsVectorLayer('Point', 'temporal_points', 'memory')
         self.work_layer.setCrs(QgsCoordinateReferenceSystem(3116, True))
-        self.dlg = CalidadCARDialog()
+        # self.dlg = CalidadCARDialog()
         self.untitled = Untitled()
 
     # noinspection PyMethodMayBeStatic
@@ -143,7 +143,6 @@ class CalidadCAR:
         :rtype: QAction
         """
 
-        # Create the dialog (after translation) and keep reference
         icon = QIcon(icon_path)
         action = QAction(icon, text, parent)
         action.triggered.connect(callback)
@@ -176,6 +175,7 @@ class CalidadCAR:
             text=self.tr(u'Cargar fondo'),
             callback=self.run,
             parent=self.iface.mainWindow())
+            
         icon_path = ':/plugins/CalidadCAR/icon.png'
         self.add_action(
             icon_path,
@@ -226,7 +226,7 @@ class CalidadCAR:
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
             self.iface.removePluginMenu(
-                self.tr(u'&Calidad CAR Test'),
+                self.tr(u'&Calidad CAR'),
                 action)
             self.iface.removeToolBarIcon(action)
         # remove the toolbar
