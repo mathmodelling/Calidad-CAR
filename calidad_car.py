@@ -31,6 +31,7 @@ import resources
 from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
 from untitled import Untitled
 import os.path
+import pandas
 
 from random import randint
 
@@ -45,6 +46,10 @@ class CalidadCAR:
             application at run time.
         :type iface: QgsInterface
         """
+        self.settings = QSettings()
+
+        self.oldProjValue = self.settings.value( "/Projections/defaultBehaviour", "prompt", type=str )
+        self.settings.setValue( "/Projections/defaultBehaviour", "useProject" )
         # Save reference to the QGIS interface
         self.iface = iface
         # initialize plugin directory
@@ -74,7 +79,7 @@ class CalidadCAR:
         self.layers = []
         self.work_layer = QgsVectorLayer('Point', 'temporal_points', 'memory')
         self.work_layer.setCrs(QgsCoordinateReferenceSystem(3116, True))
-        # self.dlg = CalidadCARDialog()
+        self.dlg = CalidadCARDialog()
         self.untitled = Untitled()
 
     # noinspection PyMethodMayBeStatic
@@ -175,7 +180,7 @@ class CalidadCAR:
             text=self.tr(u'Cargar fondo'),
             callback=self.run,
             parent=self.iface.mainWindow())
-            
+
         icon_path = ':/plugins/CalidadCAR/icon.png'
         self.add_action(
             icon_path,
@@ -222,6 +227,14 @@ class CalidadCAR:
         else:
             print 'hi'
 
+        table = [row.attributes() for row in shp.getFeatures()]
+        field_names = [field.name() for field in shp.pendingFields() ]
+        print field_names
+        print table
+
+        pd_frame = pandas.DataFrame(table, columns = field_names)
+        print pd_frame
+
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
@@ -231,12 +244,14 @@ class CalidadCAR:
             self.iface.removeToolBarIcon(action)
         # remove the toolbar
         del self.toolbar
+        # ... then set the "CRS for new layers" back
+        self.settings.setValue( "/Projections/defaultBehaviour", self.oldProjValue )
+
 
     def addLayers(self):
-        settings = QSettings()
         # Take the "CRS for new layers" config, overwrite it while loading layers and...
-        oldProjValue = settings.value( "/Projections/defaultBehaviour", "prompt", type=str )
-        settings.setValue( "/Projections/defaultBehaviour", "useProject" )
+        #oldProjValue = settings.value( "/Projections/defaultBehaviour", "prompt", type=str )
+        #settings.setValue( "/Projections/defaultBehaviour", "useProject" )
         #Borrando las capas
         for layer in self.layers:
             QgsMapLayerRegistry.instance().removeMapLayer(layer)
@@ -262,12 +277,11 @@ class CalidadCAR:
         # self.layers.insert(0, QgsMapCanvasLayer(self.work_layer))
         # self.canvas.setLayerSet(self.layers)
         # ... then set the "CRS for new layers" back
-        settings.setValue( "/Projections/defaultBehaviour", oldProjValue )
+        #settings.setValue( "/Projections/defaultBehaviour", oldProjValue )
 
     def addVectorLayer(self, path, name):
         layerProvider = 'ogr'
 
-        # layer = QgsVectorLayer(path, layerInfo.fileName(), layerProvider)
         layer = QgsVectorLayer(path, name, 'ogr')
         if not layer.isValid():
             return
@@ -291,9 +305,9 @@ class CalidadCAR:
         #     self.canvas.setExtent(layer.extent())
         # my_crs = QgsCoordinateReferenceSystem(3116, QgsCoordinateReferenceSystem.EpsgCrsId)
         # layer.setCrs(my_crs)
-        crs = layer.crs()
-        crs.createFromId(3116)
-        layer.setCrs(crs)
+        # crs = layer.crs()
+        # crs.createFromId(3116)
+        layer.setCrs(QgsCoordinateReferenceSystem(3116, True))
         self.layers.append(layer)
         # self.layers.insert(0, layer)
         # self.canvas.setLayerSet(self.layers)
