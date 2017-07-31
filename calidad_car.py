@@ -23,7 +23,8 @@
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QFileInfo
 from PyQt4.QtGui import QAction, QIcon, QColor
 from qgis.core import (QgsVectorLayer, QgsRasterLayer, QgsCoordinateReferenceSystem,
-                       QgsMapLayerRegistry, QgsCoordinateReferenceSystem, QgsVectorJoinInfo)
+                       QgsMapLayerRegistry, QgsCoordinateReferenceSystem, QgsVectorJoinInfo,
+                       QGis, QgsPoint)
 
 # Initialize Qt resources from file resources.py
 import resources
@@ -34,6 +35,7 @@ import os.path
 import pandas
 
 from random import randint
+from math import sqrt
 
 class CalidadCAR:
     """QGIS Plugin Implementation."""
@@ -81,7 +83,6 @@ class CalidadCAR:
         self.work_layer = QgsVectorLayer('Point', 'temporal_points', 'memory')
         self.work_layer.setCrs(QgsCoordinateReferenceSystem(3116, True))
         self.dlg = CalidadCARDialog()
-        self.untitled = Untitled()
         self.csvDialog = CSVDialog()
 
     # noinspection PyMethodMayBeStatic
@@ -189,6 +190,33 @@ class CalidadCAR:
             text=self.tr(u'Join'),
             callback=self.run2,
             parent=self.iface.mainWindow())
+
+        icon_path = ':/plugins/CalidadCAR/icon.png'
+        self.add_action(
+            icon_path,
+            text=self.tr(u'Intersection'),
+            callback=self.intersection,
+            parent=self.iface.mainWindow())
+
+    def intersection(self):
+        secciones = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
+        eje = QgsMapLayerRegistry.instance().mapLayersByName("ejes")[0]
+        points = []
+        for f_eje in eje.getFeatures():
+            for f_seccion in secciones.getFeatures():
+                if f_eje.geometry().intersects(f_seccion.geometry()):
+                    inter = f_eje.geometry().intersection(f_seccion.geometry())
+                    if inter.wkbType() == QGis.WKBPoint:
+                        points.append(inter.asPoint())
+
+        qgsPoints = [QgsPoint(point) for point in points]
+        distances = [0]
+        for i in xrange(len(qgsPoints) - 1):
+            distances.append(sqrt(qgsPoints[i].sqrDist(qgsPoints[i + 1])))
+        print distances
+
+        pd_dataframe = pandas.DataFrame(distances, columns = ['Distancia'])
+        print pd_dataframe
 
     def run2(self):
         # """Join operation"""
