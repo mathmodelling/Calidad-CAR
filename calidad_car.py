@@ -29,7 +29,7 @@ from qgis.core import (QgsVectorLayer, QgsRasterLayer, QgsCoordinateReferenceSys
 import resources
 # Import the code for the dialog
 from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
-from untitled import Untitled
+from dialogo_csv import CSVDialog
 import os.path
 import pandas
 
@@ -77,10 +77,12 @@ class CalidadCAR:
         crs = QgsCoordinateReferenceSystem(3116)
         self.iface.mapCanvas().mapRenderer().setDestinationCrs(crs)
         self.layers = []
+        # self.sheet = None
         self.work_layer = QgsVectorLayer('Point', 'temporal_points', 'memory')
         self.work_layer.setCrs(QgsCoordinateReferenceSystem(3116, True))
         self.dlg = CalidadCARDialog()
         self.untitled = Untitled()
+        self.csvDialog = CSVDialog()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -189,51 +191,49 @@ class CalidadCAR:
             parent=self.iface.mainWindow())
 
     def run2(self):
-        a = '?type=csv&geomType=none&subsetIndex=no&watchFile=no&delimiter=,'
-        """Join operation test"""
+        # """Join operation"""
         shp = None
         sheet = None
-
-        self.untitled.show()
         # Run the dialog event loop
-        result = self.untitled.exec_()
+        result = self.csvDialog.exec_()
+        if result and self.csvDialog.getLayer():
+            print self.csvDialog.getSelectedColumns()
 
-        if result:
-            #Load the layer
-            path, name = self.untitled.getFilePaths()
-            sheet = QgsVectorLayer(path + a, name, 'delimitedtext')
-
-            if not sheet.isValid():
-                print 'Archivo CVS invalido'
-                return
-
+            sheet = self.csvDialog.getLayer()
             QgsMapLayerRegistry.instance().addMapLayer(sheet)
-
+            #Get the shape layer called secciones
             layers = QgsMapLayerRegistry.instance().mapLayers().values()
-            for layer in layers: #Get the shape layer
+            for layer in layers:
                 if layer.name() == 'secciones':
                     self.iface.setActiveLayer(layer)
                     shp = self.iface.activeLayer()
 
-            if shp and sheet:
-                shpField = 'RiverStatio'
-                csvField = 'SECCION'
-                joinObject = QgsVectorJoinInfo()
-                print sheet.id()
-                joinObject.joinLayerId = sheet.id()
-                joinObject.joinFieldName = csvField
-                joinObject.targetFieldName = shpField
-                shp.addJoin(joinObject)
-        else:
-            print 'hi'
+            if shp == None: return
 
-        table = [row.attributes() for row in shp.getFeatures()]
-        field_names = [field.name() for field in shp.pendingFields() ]
-        print field_names
-        print table
+            columns = self.csvDialog.getSelectedColumns()
+            field_names = [field.name() for field in shp.pendingFields() ]
+            #Avoid duplitcate columns
+            for new_col in columns:
+                if 'csv_' + new_col in field_names:
+                    columns.remove(new_col)
 
-        pd_frame = pandas.DataFrame(table, columns = field_names)
-        print pd_frame
+            shpField = 'RiverStatio'
+            csvField = self.csvDialog.getJoinField()
+            joinObject = QgsVectorJoinInfo()
+            joinObject.joinLayerId = sheet.id()
+            joinObject.joinFieldName = csvField
+            joinObject.targetFieldName = shpField
+            joinObject.setJoinFieldNamesSubset(columns)
+            joinObject.memoryCache = True
+            shp.addJoin(joinObject)
+            # shp.updateFields()
+
+            table = [row.attributes() for row in shp.getFeatures()]
+            field_names = [field.name() for field in shp.pendingFields() ]
+            print field_names
+
+            pd_frame = pandas.DataFrame(table, columns = field_names)
+            print pd_frame
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
