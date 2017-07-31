@@ -18,8 +18,11 @@ class CSVDialog(QtGui.QDialog, FORM_CLASS):
         super(CSVDialog, self).__init__(parent)
 
         self.setupUi(self)
+        self.configWidgets()
         self._layer = None
 
+    def configWidgets(self):
+        """Configuration of the dialog's graphic elements."""
         self.buttonLoadFile.clicked.connect(self.handler)
         self.buttonAddColumn.clicked.connect(self.addItem)
         self.buttonRemoveColumn.clicked.connect(self.removeItem)
@@ -28,9 +31,22 @@ class CSVDialog(QtGui.QDialog, FORM_CLASS):
         self.listTarget.setSelectionMode(QAbstractItemView.ExtendedSelection)
 
     def getLayer(self):
+        """
+        :returns: the qgis layer of the CSV file.
+        :rtype: QgsVectorLayer.
+        """
         return self._layer
 
-    def handler(self, title):
+    def getSelectedColumns(self):
+        """ Get all the columns of the listTarget.
+
+        :returns: Array of columns.
+        :rtype: String array.
+        """
+        return [str(self.listTarget.item(i).text()) for i in xrange(self.listTarget.count())]
+
+    def handler(self):
+        """Handle function of the buttonLoadFile."""
         layerPath = QFileDialog.getOpenFileName(self, u'Abrir CSV', '.', 'CSV (*.CSV)')
         layerInfo = QFileInfo(layerPath)
         self.editPath.setText(layerPath)
@@ -44,11 +60,18 @@ class CSVDialog(QtGui.QDialog, FORM_CLASS):
             self.editPath.setText('')
 
     def pupulateSourceList(self, columns = []):
+        """Populate the listSource with columns
+
+        :param columns: The columns that are going to be inserted
+            in the listSource
+        :type columns: String array.
+        """
         self.listSource.addItems(columns)
 
     def addItem(self):
         """Add the selected items in the source list, to the
-           target list."""
+           target list.
+        """
         for item in self.listSource.selectedItems():
             item.setHidden(True)
             self.listTarget.addItem(item.text())
@@ -62,6 +85,18 @@ class CSVDialog(QtGui.QDialog, FORM_CLASS):
 
 
     def loadLayer(self, path, name = 'csv'):
+        """Load a CSV layer, raise an error if the layer is not valid.
+
+        :param path: Path of the csv layer.
+        :type path: String
+
+        :param name: Name of the layer, default value csv
+        :type name: String
+
+        :returns: If there is not it returns the qgis layer, with
+            the information loaded.
+        :rtype: QgsVectorLayer
+        """
         layer = QgsVectorLayer(path + CSV_SUFFIX, name, 'delimitedtext')
 
         if not layer.isValid():
