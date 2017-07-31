@@ -26,6 +26,7 @@ class CSVDialog(QtGui.QDialog, FORM_CLASS):
         self.buttonLoadFile.clicked.connect(self.handler)
         self.buttonAddColumn.clicked.connect(self.addItem)
         self.buttonRemoveColumn.clicked.connect(self.removeItem)
+        self.buttonClear.clicked.connect(self.clear)
 
         self.listSource.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.listTarget.setSelectionMode(QAbstractItemView.ExtendedSelection)
@@ -37,13 +38,37 @@ class CSVDialog(QtGui.QDialog, FORM_CLASS):
         """
         return self._layer
 
+    def getJoinField(self):
+        return  str(self.comboJoinField.currentText())
+
     def getSelectedColumns(self):
         """ Get all the columns of the listTarget.
 
         :returns: Array of columns.
         :rtype: String array.
         """
-        return [str(self.listTarget.item(i).text()) for i in xrange(self.listTarget.count())]
+        if self.listTarget.count() > 0:
+            """ Return the items of the listTarget if the user
+                selected at least one element, otherwise return
+                the elements of the listSource.
+            """
+            items = self.getItems(self.listTarget)
+        else:
+            items = self.getItems(self.listSource)
+
+        if self.getJoinField() in items:
+            items.remove(self.getJoinField())
+
+        return items
+
+    def getItems(self, list):
+        return [str(list.item(i).text()) for i in xrange(list.count())]
+
+    def clear(self):
+        self.editPath.setText('')
+        self.listSource.clear()
+        self.listTarget.clear()
+        self.comboJoinField.clear()
 
     def handler(self):
         """Handle function of the buttonLoadFile."""
@@ -54,19 +79,21 @@ class CSVDialog(QtGui.QDialog, FORM_CLASS):
         try:
             self._layer = self.loadLayer(layerPath)
             columns = [field.name() for field in self._layer.pendingFields()]
-            self.pupulateSourceList(columns)
+            self.pupulateLists(columns)
         except:
             #TODO: Alert the user with an error dialog
             self.editPath.setText('')
 
-    def pupulateSourceList(self, columns = []):
-        """Populate the listSource with columns
+    def pupulateLists(self, columns = []):
+        """Populate the listSource and the comboJoinField
+            with the columns names.
 
         :param columns: The columns that are going to be inserted
             in the listSource
         :type columns: String array.
         """
         self.listSource.addItems(columns)
+        self.comboJoinField.addItems(columns)
 
     def addItem(self):
         """Add the selected items in the source list, to the
@@ -81,8 +108,10 @@ class CSVDialog(QtGui.QDialog, FORM_CLASS):
         for item in self.listTarget.selectedItems():
             source_index = self.listSource.findItems(item.text(), Qt.MatchExactly)
             source_index[0].setHidden(False)
-            self.listTarget.takeItem(self.listTarget.row(item))
+            self.deleteItem(self.listTarget, item)
 
+    def deleteItem(self, list, item):
+        list.takeItem(list.row(item))
 
     def loadLayer(self, path, name = 'csv'):
         """Load a CSV layer, raise an error if the layer is not valid.
