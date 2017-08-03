@@ -204,6 +204,21 @@ class CalidadCAR:
             callback=self.addSection,
             parent=self.iface.mainWindow())
 
+
+    def mergeFeatures(self):
+        secciones = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
+        temp = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
+
+        union = QgsVectorLayer('LineString', 'union', 'memory')
+        QgsMapLayerRegistry.instance().addMapLayer(union)
+
+        pr = tempLayer.dataProvider()
+        fields = seccionesLayer.pendingFields()
+
+        for f in fields:
+            pr.addAttributes([f])
+
+
     def addSection(self):
         # self.work_layer = QgsVectorLayer('LineString?crs=epsg:3116&field=id:integer&field=name:string(20)&index=yes', 'temp', 'memory')
         tempLayer = None
@@ -220,25 +235,13 @@ class CalidadCAR:
             tempLayer = QgsVectorLayer('LineString', 'temp', 'memory')
             QgsMapLayerRegistry.instance().addMapLayer(tempLayer)
 
-        pr = tempLayer.dataProvider()
-        fields = seccionesLayer.pendingFields()
+            pr = tempLayer.dataProvider()
+            fields = seccionesLayer.pendingFields()
 
-        for f in fields:
-            pr.addAttributes([f])
+            for f in fields:
+                pr.addAttributes([f])
 
-        # tempLayer.updateFields()
-        #
-        # feats1 = lyr[1].getFeatures()
-        # for feature in feats1:
-        #   pr.addFeatures([feature])
-        #
-        # feats3 = lyr[3].getFeatures()
-        # for feature in feats3:
-        #   pr.addFeatures([feature])
-
-        # vl.updateExtents()
-
-        tempLayer.startEditing()
+            tempLayer.startEditing()
 
     def distance(self, a, b):
         return sqrt(a.sqrDist(b))
@@ -280,52 +283,72 @@ class CalidadCAR:
 
         return segements
 
+    def addFeature(self, layerA, feature = None, idx = -1):
+        crs = layerA.crs().authid()
+        tempLayer = QgsVectorLayer('LineString?crs='+crs, 'output', 'memory')
+        pr = tempLayer.dataProvider()
+        fields = layerA.pendingFields()
+
+        for f in fields:
+            pr.addAttributes([f])
+
+        # tempLayer.startEditing()
+        features = list(layerA.getFeatures())
+        if idx != -1:
+            features.insert(idx + 1, feature)
+
+        tempLayer.updateFields()
+        #
+        # feats1 = lyr[1].getFeatures()
+        for feature in features:
+            # string = ''
+            # for attr in feature:
+            #     string += ' ' + str(attr)
+            # print string
+            pr.addFeatures([feature])
+        #
+        # feats3 = lyr[3].getFeatures()
+        # for feature in feats3:
+        #   pr.addFeatures([feature])
+        tempLayer.updateExtents()
+        # QgsMapLayerRegistry.instance().addMapLayer(tempLayer)
+        return tempLayer
+
 
     def intersection(self):
         secciones = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
         eje = QgsMapLayerRegistry.instance().mapLayersByName("ejes")[0]
-        points = []
-        for f_eje in eje.getFeatures():
-            for f_seccion in secciones.getFeatures():
-                if f_eje.geometry().intersects(f_seccion.geometry()):
-                    inter = f_eje.geometry().intersection(f_seccion.geometry())
-                    if inter.wkbType() == QGis.WKBPoint:
-                        points.append(inter.asPoint())
+        temp = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
 
-        qgsPoints = [QgsPoint(point) for point in points]
-        print qgsPoints
+        work_layer = self.addFeature(secciones)
+
+        for new_feature in temp.getFeatures():
+            segements = self.getSegments(work_layer)
+            point = geometry.intersectionLayerGeometry(eje, new_feature.geometry())
+            idx = self.place(segements, point)
+            print 'IDX: ', idx
+            work_layer = self.addFeature(work_layer, new_feature, idx)
+
+        #Paint the work_layer
+        QgsMapLayerRegistry.instance().addMapLayer(work_layer)
+
+        #DataFrame with the attribute table
+        table = [row.attributes() for row in work_layer.getFeatures()]
+        field_names = [field.name() for field in work_layer.pendingFields() ]
+        pd_frame = pandas.DataFrame(table, columns = field_names)
+        print pd_frame
+
+        #DataFrame of distances
+        points = geometry.intersectionPoints(eje, work_layer)
+
         distances = [0]
-        for i in xrange(len(qgsPoints) - 1):
-            distances.append(sqrt(qgsPoints[i].sqrDist(qgsPoints[i + 1])))
+        for i in xrange(len(points) - 1):
+            distances.append(self.distance(points[i], points[i + 1]))
         # print distances
 
         pd_dataframe = pandas.DataFrame(distances, columns = ['Distancia'])
-        # print pd_dataframe
+        print pd_dataframe
 
-        newPoints = []
-        temp = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
-        for f_eje in eje.getFeatures():
-            for f_seccion in temp.getFeatures():
-                if f_eje.geometry().intersects(f_seccion.geometry()):
-                    inter = f_eje.geometry().intersection(f_seccion.geometry())
-                    if inter.wkbType() == QGis.WKBPoint:
-                        newPoints.append(inter.asPoint())
-
-        segs = self.getSegments(secciones)
-        # for point in newPoints:
-            # print self.place(segs, point)
-        for point in newPoints:
-            print self.place(segs, point)
-
-        # layer =  QgsVectorLayer('Polygon?crs=epsg:3116', 'poly' , "memory")
-        # pr = layer.dataProvider()
-        # poly = QgsFeature()
-        # poly.setGeometry(geometry.buildPolygon(segs))
-        # pr.addFeatures([poly])
-        # layer.updateExtents()
-        # QgsMapLayerRegistry.instance().addMapLayers([layer])
-
-        # print polygone.contains(newPoints[0])
     def run2(self):
         # """Join operation"""
         shp = None
@@ -364,12 +387,12 @@ class CalidadCAR:
             shp.addJoin(joinObject)
             # shp.updateFields()
 
-            table = [row.attributes() for row in shp.getFeatures()]
-            field_names = [field.name() for field in shp.pendingFields() ]
-            print field_names
-
-            pd_frame = pandas.DataFrame(table, columns = field_names)
-            print pd_frame
+            # table = [row.attributes() for row in shp.getFeatures()]
+            # field_names = [field.name() for field in shp.pendingFields() ]
+            # print field_names
+            #
+            # pd_frame = pandas.DataFrame(table, columns = field_names)
+            # print pd_frame
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -415,56 +438,19 @@ class CalidadCAR:
 
         layer = QgsVectorLayer(path, name, 'ogr')
         if not layer.isValid():
-            print 'invalid'
             return
-
-        # myLayer = qgis.utils.iface.activeLayer()
-        layer.setCrs(QgsCoordinateReferenceSystem(3116, QgsCoordinateReferenceSystem.EpsgCrsId))
-
-        #Sets canvas CRS
-        my_crs = QgsCoordinateReferenceSystem(3116, QgsCoordinateReferenceSystem.EpsgCrsId)
-        self.iface.mapCanvas().mapRenderer().setDestinationCrs(my_crs)
-
-        # print 'ProjAcronym: ', layer.crs().projectionAcronym()
-        # print 'toWkt: ', layer.crs().toWkt()
-        # itera = layer.getFeatures()
-        # for feature in itera:
-        #     for attrs in feature.attributes():
-        #         obj = attrs.toPyObject()
-        #         print type(obj)
-        #         # for k, v in obj:
-        #         #     print k , ': ', v
 
         # Cambiar el color del layer
         symbol_layer = layer.rendererV2().symbols()[0].symbolLayer(0)
         symbol_layer.setColor(QColor(randint(0, 50),randint(0, 255),163))
 
-        # QgsMapLayerRegistry.instance().addMapLayer(layer)
-        # if self.canvas.layerCount() == 0:
-        #     self.canvas.setExtent(layer.extent())
-        # my_crs = QgsCoordinateReferenceSystem(3116, QgsCoordinateReferenceSystem.EpsgCrsId)
-        # layer.setCrs(my_crs)
-        # crs = layer.crs()
-        # crs.createFromId(3116)
-        # layer.setCrs(QgsCoordinateReferenceSystem(3116, True))
         self.layers.append(layer)
-        # self.layers.insert(0, layer)
-        # self.canvas.setLayerSet(self.layers)
-
 
     def addRasterLayer(self, path, name):
         rlayer = QgsRasterLayer(path, name)
 
         if not rlayer.isValid():
-            print "Layer failed to load!"
             return
-
-        # print 'ProjAcronym: ', rlayer.crs().projectionAcronym()
-        # print 'toWkt: ', rlayer.crs().toWkt()
-
-        # QgsMapLayerRegistry.instance().addMapLayer(rlayer)
-        # if self.canvas.layerCount() == 0:
-        #     self.canvas.setExtent(rlayer.extent())
 
         self.layers.append(rlayer)
 
