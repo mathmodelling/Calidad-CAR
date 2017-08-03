@@ -48,15 +48,14 @@ class Ui_Dialog(QtGui.QDialog, FORM_CLASS):
 
     def getFilePaths(self):
         filePaths = []
-
         if self.capaFondo.text():
-             filePaths.append((self.capaFondo.text(), u'fondo'))
+            filePaths.append((self.capaFondo.text() + a, u'fondo'))
         if self.capaHidrografia.text():
-             filePaths.append((self.capaHidrografia.text(), u'hidrografia'))
+            filePaths.append((self.capaHidrografia.text(), u'hidrografia'))
         if self.capaEjes.text():
-             filePaths.append((self.capaEjes.text(), u'ejes'))
+            filePaths.append((self.capaEjes.text(), u'ejes'))
         if self.capaSecciones.text():
-             filePaths.append((self.capaSecciones.text(), u'secciones'))
+            filePaths.append((self.capaSecciones.text(), u'secciones'))
 
         return filePaths
 
