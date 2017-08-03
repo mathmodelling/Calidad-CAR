@@ -24,7 +24,10 @@ from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QFi
 from PyQt4.QtGui import QAction, QIcon, QColor
 from qgis.core import (QgsVectorLayer, QgsRasterLayer, QgsCoordinateReferenceSystem,
                        QgsMapLayerRegistry, QgsCoordinateReferenceSystem, QgsVectorJoinInfo,
-                       QGis, QgsPoint)
+                       QGis, QgsPoint, QgsFeature, QgsGeometry)
+
+from qgis.gui import QgsMapToolEmitPoint
+
 
 # Initialize Qt resources from file resources.py
 import resources
@@ -36,6 +39,7 @@ import pandas
 
 from random import randint
 from math import sqrt
+import geometry
 
 class CalidadCAR:
     """QGIS Plugin Implementation."""
@@ -48,11 +52,6 @@ class CalidadCAR:
             application at run time.
         :type iface: QgsInterface
         """
-        self.settings = QSettings()
-
-        self.oldProjValue = self.settings.value( "/Projections/defaultBehaviour", "prompt", type=str )
-        self.settings.setValue( "/Projections/defaultBehaviour", "useProject" )
-        # Save reference to the QGIS interface
         self.iface = iface
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
@@ -76,12 +75,12 @@ class CalidadCAR:
         self.menu = self.tr(u'&Calidad CAR')
         self.toolbar = self.iface.addToolBar(u'CalidadCAR')
         self.toolbar.setObjectName(u'CalidadCAR')
-        crs = QgsCoordinateReferenceSystem(3116)
-        self.iface.mapCanvas().mapRenderer().setDestinationCrs(crs)
+        # crs = QgsCoordinateReferenceSystem(3116)
+        # self.iface.mapCanvas().mapRenderer().setDestinationCrs(crs)
         self.layers = []
         # self.sheet = None
-        self.work_layer = QgsVectorLayer('Point', 'temporal_points', 'memory')
-        self.work_layer.setCrs(QgsCoordinateReferenceSystem(3116, True))
+        # self.work_layer = QgsVectorLayer('LineString?crs=epsg:3116&field=id:integer&field=name:string(20)&index=yes', 'temporal_points', 'memory')
+        # self.work_layer.setCrs(QgsCoordinateReferenceSystem(3116, True))
         self.dlg = CalidadCARDialog()
         self.csvDialog = CSVDialog()
 
@@ -198,6 +197,90 @@ class CalidadCAR:
             callback=self.intersection,
             parent=self.iface.mainWindow())
 
+        icon_path = ':/plugins/CalidadCAR/icon.png'
+        self.add_action(
+            icon_path,
+            text=self.tr(u'Agregar sección'),
+            callback=self.addSection,
+            parent=self.iface.mainWindow())
+
+    def addSection(self):
+        # self.work_layer = QgsVectorLayer('LineString?crs=epsg:3116&field=id:integer&field=name:string(20)&index=yes', 'temp', 'memory')
+        tempLayer = None
+        seccionesLayer = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
+
+        layers = QgsMapLayerRegistry.instance().mapLayers().values()
+        for layer in layers:
+            print layer.name()
+            if layer.name() == 'temp':
+                self.iface.setActiveLayer(layer)
+                tempLayer = self.iface.activeLayer()
+
+        if tempLayer is None:
+            tempLayer = QgsVectorLayer('LineString', 'temp', 'memory')
+            QgsMapLayerRegistry.instance().addMapLayer(tempLayer)
+
+        pr = tempLayer.dataProvider()
+        fields = seccionesLayer.pendingFields()
+
+        for f in fields:
+            pr.addAttributes([f])
+
+        # tempLayer.updateFields()
+        #
+        # feats1 = lyr[1].getFeatures()
+        # for feature in feats1:
+        #   pr.addFeatures([feature])
+        #
+        # feats3 = lyr[3].getFeatures()
+        # for feature in feats3:
+        #   pr.addFeatures([feature])
+
+        # vl.updateExtents()
+
+        tempLayer.startEditing()
+
+    def distance(self, a, b):
+        return sqrt(a.sqrDist(b))
+
+    def check(self, segements, point):
+        """Check if point c is between points a and b."""
+        if len(segements) == 1 : return False
+        polygon = geometry.buildPolygon(segements)
+        # layer =  QgsVectorLayer('Polygon?crs=epsg:3116', 'poly' , "memory")
+        # pr = layer.dataProvider()
+        # poly = QgsFeature()
+        # poly.setGeometry(polygon)
+        # pr.addFeatures([poly])
+        # layer.updateExtents()
+        # QgsMapLayerRegistry.instance().addMapLayers([layer])
+        return polygon.contains(point)
+
+    def place(self, segements, p):
+        low, hi = 0, len(segements)
+        mid, cont = 0, 0
+
+        while(low <= hi):
+            mid =  low + ((hi - low) / 2)
+            if self.check(segements[low : mid + 1], p):
+                hi = mid
+            else:
+                low = mid
+            cont += 1
+            #Sacurity trigger
+            if cont == 20: break
+
+        return low
+
+    def getSegments(self, layer):
+        segements = []
+
+        for f_seccion in layer.getFeatures():
+            segements.append(f_seccion.geometry().asPolyline())
+
+        return segements
+
+
     def intersection(self):
         secciones = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
         eje = QgsMapLayerRegistry.instance().mapLayersByName("ejes")[0]
@@ -210,14 +293,39 @@ class CalidadCAR:
                         points.append(inter.asPoint())
 
         qgsPoints = [QgsPoint(point) for point in points]
+        print qgsPoints
         distances = [0]
         for i in xrange(len(qgsPoints) - 1):
             distances.append(sqrt(qgsPoints[i].sqrDist(qgsPoints[i + 1])))
-        print distances
+        # print distances
 
         pd_dataframe = pandas.DataFrame(distances, columns = ['Distancia'])
-        print pd_dataframe
+        # print pd_dataframe
 
+        newPoints = []
+        temp = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
+        for f_eje in eje.getFeatures():
+            for f_seccion in temp.getFeatures():
+                if f_eje.geometry().intersects(f_seccion.geometry()):
+                    inter = f_eje.geometry().intersection(f_seccion.geometry())
+                    if inter.wkbType() == QGis.WKBPoint:
+                        newPoints.append(inter.asPoint())
+
+        segs = self.getSegments(secciones)
+        # for point in newPoints:
+            # print self.place(segs, point)
+        for point in newPoints:
+            print self.place(segs, point)
+
+        # layer =  QgsVectorLayer('Polygon?crs=epsg:3116', 'poly' , "memory")
+        # pr = layer.dataProvider()
+        # poly = QgsFeature()
+        # poly.setGeometry(geometry.buildPolygon(segs))
+        # pr.addFeatures([poly])
+        # layer.updateExtents()
+        # QgsMapLayerRegistry.instance().addMapLayers([layer])
+
+        # print polygone.contains(newPoints[0])
     def run2(self):
         # """Join operation"""
         shp = None
@@ -272,21 +380,17 @@ class CalidadCAR:
             self.iface.removeToolBarIcon(action)
         # remove the toolbar
         del self.toolbar
-        # ... then set the "CRS for new layers" back
-        self.settings.setValue( "/Projections/defaultBehaviour", self.oldProjValue )
 
 
     def addLayers(self):
         # Take the "CRS for new layers" config, overwrite it while loading layers and...
-        #oldProjValue = settings.value( "/Projections/defaultBehaviour", "prompt", type=str )
-        #settings.setValue( "/Projections/defaultBehaviour", "useProject" )
         #Borrando las capas
         for layer in self.layers:
             QgsMapLayerRegistry.instance().removeMapLayer(layer)
         self.layers = []
         #Paint all the layers
         files = self.dlg.getFilePaths()
-        print files
+        # print files
 
         for layer in files:
             path, name = layer
@@ -301,18 +405,25 @@ class CalidadCAR:
             QgsMapLayerRegistry.instance().addMapLayer(layer)
 
 
-        QgsMapLayerRegistry.instance().addMapLayer(self.work_layer)
+        # QgsMapLayerRegistry.instance().addMapLayer(self.work_layer)
         # self.layers.insert(0, QgsMapCanvasLayer(self.work_layer))
         # self.canvas.setLayerSet(self.layers)
         # ... then set the "CRS for new layers" back
-        #settings.setValue( "/Projections/defaultBehaviour", oldProjValue )
 
     def addVectorLayer(self, path, name):
         layerProvider = 'ogr'
 
         layer = QgsVectorLayer(path, name, 'ogr')
         if not layer.isValid():
+            print 'invalid'
             return
+
+        # myLayer = qgis.utils.iface.activeLayer()
+        layer.setCrs(QgsCoordinateReferenceSystem(3116, QgsCoordinateReferenceSystem.EpsgCrsId))
+
+        #Sets canvas CRS
+        my_crs = QgsCoordinateReferenceSystem(3116, QgsCoordinateReferenceSystem.EpsgCrsId)
+        self.iface.mapCanvas().mapRenderer().setDestinationCrs(my_crs)
 
         # print 'ProjAcronym: ', layer.crs().projectionAcronym()
         # print 'toWkt: ', layer.crs().toWkt()
@@ -335,7 +446,7 @@ class CalidadCAR:
         # layer.setCrs(my_crs)
         # crs = layer.crs()
         # crs.createFromId(3116)
-        layer.setCrs(QgsCoordinateReferenceSystem(3116, True))
+        # layer.setCrs(QgsCoordinateReferenceSystem(3116, True))
         self.layers.append(layer)
         # self.layers.insert(0, layer)
         # self.canvas.setLayerSet(self.layers)
