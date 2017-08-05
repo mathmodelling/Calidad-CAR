@@ -1,19 +1,16 @@
 from qgis.core import *
+from shapely.geometry import MultiPoint
 
-def buildPolygon(segements):
-    origins, ends = [], []
+def buildConvexPolygon(segments):
 
-    for segement in segements:
-        origins.append(segement[0])
-        ends.append(segement[-1])
+    origins = [points[0] for points in segments[1 : -1]]
+    ends = [points[-1] for points in segments[1: -1]]
+    borders = segments[0] + segments[-1]
 
-    points = ends[ : ] + origins[-1: :-1]
-    poly = QgsGeometry.fromPolygon([points])
+    points = borders + origins + ends
 
-    return poly
+    return QgsGeometry.fromMultiPoint(points).convexHull()
 
-def is_inside(polygon, point):
-    return polygon.contains(point)
 
 def intersectionPoints(layerA, layerB):
     points = []
@@ -34,7 +31,7 @@ def intersectionLayerGeometry(layer, geometry):
         if temp is not None:
             intersections.append(temp)
 
-    print intersections
+    # print intersections
     return intersections[0]
 
 def intersection(A, B):

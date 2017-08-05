@@ -246,10 +246,10 @@ class CalidadCAR:
     def distance(self, a, b):
         return sqrt(a.sqrDist(b))
 
-    def check(self, segements, point):
+    def check(self, segments, point):
         """Check if point c is between points a and b."""
-        if len(segements) == 1 : return False
-        polygon = geometry.buildPolygon(segements)
+        if len(segments) == 1 : return False
+        polygon = geometry.buildConvexPolygon(segments)
         # layer =  QgsVectorLayer('Polygon?crs=epsg:3116', 'poly' , "memory")
         # pr = layer.dataProvider()
         # poly = QgsFeature()
@@ -275,13 +275,19 @@ class CalidadCAR:
 
         return low
 
+    # def place(self, segements, p):
+    #     for i in xrange(len(segements) - 1):
+    #         if self.check([segements[i], segements[i + 1]], p):
+    #             return i
+    #     return None
+
     def getSegments(self, layer):
-        segements = []
+        segments = []
 
         for f_seccion in layer.getFeatures():
-            segements.append(f_seccion.geometry().asPolyline())
+            segments.append(f_seccion.geometry().asPolyline())
 
-        return segements
+        return segments
 
     def addFeature(self, layerA, feature = None, idx = -1):
         crs = layerA.crs().authid()
@@ -326,7 +332,7 @@ class CalidadCAR:
             segements = self.getSegments(work_layer)
             point = geometry.intersectionLayerGeometry(eje, new_feature.geometry())
             idx = self.place(segements, point)
-            print 'IDX: ', idx
+            # print 'IDX: ', idx
             work_layer = self.addFeature(work_layer, new_feature, idx)
 
         #Paint the work_layer
