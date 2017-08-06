@@ -21,7 +21,7 @@
  ***************************************************************************/
 """
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QFileInfo
-from PyQt4.QtGui import QAction, QIcon, QColor
+from PyQt4.QtGui import QAction, QIcon, QColor, QMessageBox
 from qgis.core import (QgsVectorLayer, QgsRasterLayer, QgsCoordinateReferenceSystem,
                        QgsMapLayerRegistry, QgsCoordinateReferenceSystem, QgsVectorJoinInfo,
                        QGis, QgsPoint, QgsFeature, QgsGeometry)
@@ -182,7 +182,7 @@ class CalidadCAR:
         self.addCsvAction = self.add_action(
             icon_path,
             text=self.tr(u'Join'),
-            callback=self.run2,
+            callback=self.addCsv,
             parent=self.iface.mainWindow())
 
         icon_path = ':/plugins/CalidadCAR/icon.png'
@@ -208,7 +208,8 @@ class CalidadCAR:
         try:
             seccionesLayer = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
         except IndexError:
-            # TODO: Throw the respective alert dialog
+            self.errorDialog(u'No se encontró la capa de secciones.',
+                    u'Asegurate de agregarla con la opción de cargar fondos.')
             return
 
         try:
@@ -288,7 +289,8 @@ class CalidadCAR:
             secciones = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
             eje = QgsMapLayerRegistry.instance().mapLayersByName("ejes")[0]
         except IndexError:
-            print 'Something happen'
+            self.errorDialog(u'No se encontraron algunas de las capas necesarias para realizar esta operación.',
+                    u'Asegurate de agregar la capa de secciones, y la capa del eje con la opción Configurar Fondo.')
             return
 
         work_layer = self.addFeature(secciones)
@@ -326,9 +328,15 @@ class CalidadCAR:
         pd_dataframe = pandas.DataFrame(distances, columns = ['Distancia'])
         print pd_dataframe
 
-    def run2(self):
+    def addCsv(self):
         # """Join operation"""
-        shp = None
+        try:
+            shp = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
+        except IndexError:
+            self.errorDialog(u'No se encontró la capa de secciones.',
+            u'Asegurate de agregarla con la opción de Cargar fondos.')
+            return
+
         sheet = None
         # Run the dialog event loop
         result = self.csvDialog.exec_()
@@ -338,13 +346,6 @@ class CalidadCAR:
             sheet = self.csvDialog.getLayer()
             QgsMapLayerRegistry.instance().addMapLayer(sheet)
             #Get the shape layer called secciones
-            layers = QgsMapLayerRegistry.instance().mapLayers().values()
-            for layer in layers:
-                if layer.name() == 'secciones':
-                    self.iface.setActiveLayer(layer)
-                    shp = self.iface.activeLayer()
-
-            if shp == None: return
 
             columns = self.csvDialog.getSelectedColumns()
             field_names = [field.name() for field in shp.pendingFields() ]
@@ -421,3 +422,11 @@ class CalidadCAR:
         if result:
             self.addLayers()
             self.addCsvAction.setEnabled(True)
+
+    def errorDialog(selg, text, detail):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setText(text)
+        msg.setInformativeText(detail)
+        msg.setWindowTitle("Error")
+        msg.exec_()
