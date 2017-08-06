@@ -38,7 +38,6 @@ import os.path
 import pandas
 
 from random import randint
-from math import sqrt
 import geometry
 
 class CalidadCAR:
@@ -75,12 +74,8 @@ class CalidadCAR:
         self.menu = self.tr(u'&Calidad CAR')
         self.toolbar = self.iface.addToolBar(u'CalidadCAR')
         self.toolbar.setObjectName(u'CalidadCAR')
-        # crs = QgsCoordinateReferenceSystem(3116)
-        # self.iface.mapCanvas().mapRenderer().setDestinationCrs(crs)
+
         self.layers = []
-        # self.sheet = None
-        # self.work_layer = QgsVectorLayer('LineString?crs=epsg:3116&field=id:integer&field=name:string(20)&index=yes', 'temporal_points', 'memory')
-        # self.work_layer.setCrs(QgsCoordinateReferenceSystem(3116, True))
         self.dlg = CalidadCARDialog()
         self.csvDialog = CSVDialog()
 
@@ -176,34 +171,37 @@ class CalidadCAR:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/CalidadCAR/icon.png'
-        self.add_action(
+        icon_path = ':/plugins/CalidadCAR/layers-icon.png'
+        self.addLayersAction = self.add_action(
             icon_path,
             text=self.tr(u'Cargar fondo'),
             callback=self.run,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icon.png'
-        self.add_action(
+        icon_path = ':/plugins/CalidadCAR/csv-join-icon-add.png'
+        self.addCsvAction = self.add_action(
             icon_path,
             text=self.tr(u'Join'),
             callback=self.run2,
             parent=self.iface.mainWindow())
 
         icon_path = ':/plugins/CalidadCAR/icon.png'
-        self.add_action(
-            icon_path,
-            text=self.tr(u'Intersection'),
-            callback=self.intersection,
-            parent=self.iface.mainWindow())
-
-        icon_path = ':/plugins/CalidadCAR/icon.png'
-        self.add_action(
+        self.addSectionAction = self.add_action(
             icon_path,
             text=self.tr(u'Agregar sección'),
             callback=self.addSection,
             parent=self.iface.mainWindow())
 
+        icon_path = ':/plugins/CalidadCAR/icon.png'
+        self.intersctionAction = self.add_action(
+            icon_path,
+            text=self.tr(u'Calcular'),
+            callback=self.intersection,
+            parent=self.iface.mainWindow())
+
+        # self.intersctionAction.setEnabled(False)
+        # self.addSectionAction.setEnabled(False)
+        # self.addCsvAction.setEnabled(False)
 
     def mergeFeatures(self):
         secciones = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
@@ -220,20 +218,17 @@ class CalidadCAR:
 
 
     def addSection(self):
-        # self.work_layer = QgsVectorLayer('LineString?crs=epsg:3116&field=id:integer&field=name:string(20)&index=yes', 'temp', 'memory')
         tempLayer = None
-        seccionesLayer = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
+        try:
+            seccionesLayer = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
+        except IndexError:
+            # TODO: Throw the respective alert dialog
+            return
 
-        layers = QgsMapLayerRegistry.instance().mapLayers().values()
-        for layer in layers:
-            print layer.name()
-            if layer.name() == 'temp':
-                self.iface.setActiveLayer(layer)
-                tempLayer = self.iface.activeLayer()
-
-        if tempLayer is None:
+        try:
+            tempLayer = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
+        except IndexError:
             tempLayer = QgsVectorLayer('LineString', 'temp', 'memory')
-            QgsMapLayerRegistry.instance().addMapLayer(tempLayer)
 
             pr = tempLayer.dataProvider()
             fields = seccionesLayer.pendingFields()
@@ -241,10 +236,10 @@ class CalidadCAR:
             for f in fields:
                 pr.addAttributes([f])
 
-            tempLayer.startEditing()
+            QgsMapLayerRegistry.instance().addMapLayer(tempLayer)
 
-    def distance(self, a, b):
-        return sqrt(a.sqrDist(b))
+        self.iface.setActiveLayer(tempLayer)
+        tempLayer.startEditing()
 
     def check(self, segments, point):
         """Check if point c is between points a and b."""
@@ -259,13 +254,13 @@ class CalidadCAR:
         # QgsMapLayerRegistry.instance().addMapLayers([layer])
         return polygon.contains(point)
 
-    def place(self, segements, p):
-        low, hi = 0, len(segements)
+    def place(self, segments, p):
+        low, hi = 0, len(segments)
         mid, cont = 0, 0
 
         while(low <= hi):
             mid =  low + ((hi - low) / 2)
-            if self.check(segements[low : mid + 1], p):
+            if self.check(segments[low : mid + 1], p):
                 hi = mid
             else:
                 low = mid
@@ -275,19 +270,11 @@ class CalidadCAR:
 
         return low
 
-    # def place(self, segements, p):
-    #     for i in xrange(len(segements) - 1):
-    #         if self.check([segements[i], segements[i + 1]], p):
+    # def place(self, segments, p):
+    #     for i in xrange(len(segments) - 1):
+    #         if self.check([segments[i], segments[i + 1]], p):
     #             return i
     #     return None
-
-    def getSegments(self, layer):
-        segments = []
-
-        for f_seccion in layer.getFeatures():
-            segments.append(f_seccion.geometry().asPolyline())
-
-        return segments
 
     def addFeature(self, layerA, feature = None, idx = -1):
         crs = layerA.crs().authid()
@@ -298,42 +285,40 @@ class CalidadCAR:
         for f in fields:
             pr.addAttributes([f])
 
-        # tempLayer.startEditing()
         features = list(layerA.getFeatures())
         if idx != -1:
             features.insert(idx + 1, feature)
 
         tempLayer.updateFields()
-        #
-        # feats1 = lyr[1].getFeatures()
+
         for feature in features:
-            # string = ''
-            # for attr in feature:
-            #     string += ' ' + str(attr)
-            # print string
             pr.addFeatures([feature])
-        #
-        # feats3 = lyr[3].getFeatures()
-        # for feature in feats3:
-        #   pr.addFeatures([feature])
+
         tempLayer.updateExtents()
-        # QgsMapLayerRegistry.instance().addMapLayer(tempLayer)
         return tempLayer
 
-
     def intersection(self):
-        secciones = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
-        eje = QgsMapLayerRegistry.instance().mapLayersByName("ejes")[0]
-        temp = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
+        try:
+            secciones = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
+            eje = QgsMapLayerRegistry.instance().mapLayersByName("ejes")[0]
+        except IndexError:
+            print 'Something happen'
+            return
 
         work_layer = self.addFeature(secciones)
 
-        for new_feature in temp.getFeatures():
-            segements = self.getSegments(work_layer)
-            point = geometry.intersectionLayerGeometry(eje, new_feature.geometry())
-            idx = self.place(segements, point)
-            # print 'IDX: ', idx
-            work_layer = self.addFeature(work_layer, new_feature, idx)
+        try:
+            temp = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
+
+            for new_feature in temp.getFeatures():
+                segements = geometry.getSegments(work_layer)
+                point = geometry.intersectionLayerGeometry(eje, new_feature.geometry())
+                idx = self.place(segements, point)
+                # print 'IDX: ', idx
+                work_layer = self.addFeature(work_layer, new_feature, idx)
+
+        except IndexError:
+            pass
 
         #Paint the work_layer
         QgsMapLayerRegistry.instance().addMapLayer(work_layer)
@@ -349,7 +334,7 @@ class CalidadCAR:
 
         distances = [0]
         for i in xrange(len(points) - 1):
-            distances.append(self.distance(points[i], points[i + 1]))
+            distances.append(geometry.distance(points[i], points[i + 1]))
         # print distances
 
         pd_dataframe = pandas.DataFrame(distances, columns = ['Distancia'])
@@ -391,14 +376,10 @@ class CalidadCAR:
             joinObject.setJoinFieldNamesSubset(columns)
             joinObject.memoryCache = True
             shp.addJoin(joinObject)
-            # shp.updateFields()
 
-            # table = [row.attributes() for row in shp.getFeatures()]
-            # field_names = [field.name() for field in shp.pendingFields() ]
-            # print field_names
-            #
-            # pd_frame = pandas.DataFrame(table, columns = field_names)
-            # print pd_frame
+            self.addSectionAction.setEnabled(True)
+            self.intersctionAction.setEnabled(True)
+
 
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
@@ -412,14 +393,12 @@ class CalidadCAR:
 
 
     def addLayers(self):
-        # Take the "CRS for new layers" config, overwrite it while loading layers and...
         #Borrando las capas
         for layer in self.layers:
             QgsMapLayerRegistry.instance().removeMapLayer(layer)
+
         self.layers = []
-        #Paint all the layers
         files = self.dlg.getFilePaths()
-        # print files
 
         for layer in files:
             path, name = layer
@@ -433,15 +412,7 @@ class CalidadCAR:
         for layer in self.layers:
             QgsMapLayerRegistry.instance().addMapLayer(layer)
 
-
-        # QgsMapLayerRegistry.instance().addMapLayer(self.work_layer)
-        # self.layers.insert(0, QgsMapCanvasLayer(self.work_layer))
-        # self.canvas.setLayerSet(self.layers)
-        # ... then set the "CRS for new layers" back
-
     def addVectorLayer(self, path, name):
-        layerProvider = 'ogr'
-
         layer = QgsVectorLayer(path, name, 'ogr')
         if not layer.isValid():
             return
@@ -454,21 +425,13 @@ class CalidadCAR:
 
     def addRasterLayer(self, path, name):
         rlayer = QgsRasterLayer(path, name)
-
-        if not rlayer.isValid():
-            return
-
+        if not rlayer.isValid(): return
         self.layers.append(rlayer)
-
 
     def run(self):
         """Run method that performs all the real work"""
-        # show the dialog
         self.dlg.show()
-        # Run the dialog event loop
         result = self.dlg.exec_()
-        # See if OK was pressed
         if result:
-            # Do something useful here - delete the line containing pass and
-            # substitute with your code.
             self.addLayers()
+            self.addCsvAction.setEnabled(True)
