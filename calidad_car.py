@@ -215,7 +215,9 @@ class CalidadCAR:
         try:
             tempLayer = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
         except IndexError:
-            tempLayer = QgsVectorLayer('LineString', 'temp', 'memory')
+            crs = seccionesLayer.crs().authid()
+
+            tempLayer = QgsVectorLayer('LineString?crs='+crs, 'temp', 'memory')
 
             pr = tempLayer.dataProvider()
             fields = seccionesLayer.pendingFields()
