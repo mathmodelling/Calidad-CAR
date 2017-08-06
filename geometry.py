@@ -1,5 +1,16 @@
 from qgis.core import *
-from shapely.geometry import MultiPoint
+from math import sqrt
+
+def getSegments(layer):
+    segments = []
+
+    for f_seccion in layer.getFeatures():
+        segments.append(f_seccion.geometry().asPolyline())
+
+    return segments
+
+def distance(a, b):
+    return sqrt(a.sqrDist(b))
 
 def buildConvexPolygon(segments):
 
@@ -10,7 +21,6 @@ def buildConvexPolygon(segments):
     points = borders + origins + ends
 
     return QgsGeometry.fromMultiPoint(points).convexHull()
-
 
 def intersectionPoints(layerA, layerB):
     points = []
