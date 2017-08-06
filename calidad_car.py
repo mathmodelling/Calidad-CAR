@@ -203,20 +203,6 @@ class CalidadCAR:
         # self.addSectionAction.setEnabled(False)
         # self.addCsvAction.setEnabled(False)
 
-    def mergeFeatures(self):
-        secciones = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
-        temp = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
-
-        union = QgsVectorLayer('LineString', 'union', 'memory')
-        QgsMapLayerRegistry.instance().addMapLayer(union)
-
-        pr = tempLayer.dataProvider()
-        fields = seccionesLayer.pendingFields()
-
-        for f in fields:
-            pr.addAttributes([f])
-
-
     def addSection(self):
         tempLayer = None
         try:
