@@ -13,13 +13,15 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 CSV_SUFFIX = '?type=csv&geomType=none&subsetIndex=no&watchFile=no&delimiter=,'
 
 class CSVDialog(QtGui.QDialog, FORM_CLASS):
-    def __init__(self, parent=None):
+    def __init__(self, fields, parent=None):
         """Constructor."""
         super(CSVDialog, self).__init__(parent)
-
         self.setupUi(self)
-        self.configWidgets()
+
+        self.fields = fields
         self._layer = None
+        
+        self.configWidgets()
 
     def configWidgets(self):
         """Configuration of the dialog's graphic elements."""
@@ -31,6 +33,8 @@ class CSVDialog(QtGui.QDialog, FORM_CLASS):
         self.listSource.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.listTarget.setSelectionMode(QAbstractItemView.ExtendedSelection)
 
+        self.comboJoinFieldTarget.addItems(self.fields)
+
     def getLayer(self):
         """
         :returns: the qgis layer of the CSV file.
@@ -40,6 +44,9 @@ class CSVDialog(QtGui.QDialog, FORM_CLASS):
 
     def getJoinField(self):
         return  str(self.comboJoinField.currentText())
+
+    def getJoinFieldTarget(self):
+        return str(self.comboJoinFieldTarget.currentText())
 
     def getSelectedColumns(self):
         """ Get all the columns of the listTarget.

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>482</width>
-    <height>309</height>
+    <height>409</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
    <property name="geometry">
     <rect>
      <x>380</x>
-     <y>150</y>
+     <y>250</y>
      <width>81</width>
      <height>28</height>
     </rect>
@@ -46,7 +46,7 @@
    <property name="geometry">
     <rect>
      <x>380</x>
-     <y>180</y>
+     <y>280</y>
      <width>81</width>
      <height>28</height>
     </rect>
@@ -59,7 +59,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>120</y>
+     <y>220</y>
      <width>461</width>
      <height>181</height>
     </rect>
@@ -141,12 +141,12 @@
     <rect>
      <x>20</x>
      <y>80</y>
-     <width>111</width>
+     <width>291</width>
      <height>31</height>
     </rect>
    </property>
    <property name="text">
-    <string>Campo de unión:</string>
+    <string>Campo de unión (Capa de Secciones):</string>
    </property>
    <property name="wordWrap">
     <bool>true</bool>
@@ -155,9 +155,9 @@
   <widget class="QComboBox" name="comboJoinField">
    <property name="geometry">
     <rect>
-     <x>140</x>
-     <y>80</y>
-     <width>231</width>
+     <x>20</x>
+     <y>170</y>
+     <width>351</width>
      <height>30</height>
     </rect>
    </property>
@@ -175,6 +175,32 @@
     <string>Limpiar</string>
    </property>
   </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>140</y>
+     <width>201</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Campo de unión (CSV):</string>
+   </property>
+   <property name="wordWrap">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="comboJoinFieldTarget">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>110</y>
+     <width>351</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
   <zorder>groupBox</zorder>
   <zorder>buttonBox</zorder>
   <zorder>buttonAddColumn</zorder>
@@ -185,6 +211,8 @@
   <zorder>label_2</zorder>
   <zorder>comboJoinField</zorder>
   <zorder>buttonClear</zorder>
+  <zorder>label_3</zorder>
+  <zorder>comboJoinFieldTarget</zorder>
  </widget>
  <resources/>
  <connections>

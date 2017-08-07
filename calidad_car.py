@@ -77,7 +77,7 @@ class CalidadCAR:
 
         self.layers = []
         self.dlg = CalidadCARDialog()
-        self.csvDialog = CSVDialog()
+        # self.csvDialog = CSVDialog()
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -341,23 +341,26 @@ class CalidadCAR:
 
         sheet = None
         # Run the dialog event loop
-        result = self.csvDialog.exec_()
-        if result and self.csvDialog.getLayer():
-            print self.csvDialog.getSelectedColumns()
+        field_names = [field.name() for field in shp.pendingFields() ]
+        csvDialog = CSVDialog(field_names)
+        result = csvDialog.exec_()
+        if result and csvDialog.getLayer():
+            # print csvDialog.getSelectedColumns()
 
-            sheet = self.csvDialog.getLayer()
+            sheet = csvDialog.getLayer()
             QgsMapLayerRegistry.instance().addMapLayer(sheet)
             #Get the shape layer called secciones
 
-            columns = self.csvDialog.getSelectedColumns()
+            columns = csvDialog.getSelectedColumns()
             field_names = [field.name() for field in shp.pendingFields() ]
             #Avoid duplitcate columns
             for new_col in columns:
                 if 'csv_' + new_col in field_names:
                     columns.remove(new_col)
 
-            shpField = 'RiverStatio'
-            csvField = self.csvDialog.getJoinField()
+            # shpField = 'RiverStatio'
+            shpField = csvDialog.getJoinFieldTarget()
+            csvField = csvDialog.getJoinField()
             joinObject = QgsVectorJoinInfo()
             joinObject.joinLayerId = sheet.id()
             joinObject.joinFieldName = csvField
