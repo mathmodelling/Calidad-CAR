@@ -171,28 +171,28 @@ class CalidadCAR:
     def initGui(self):
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        icon_path = ':/plugins/CalidadCAR/layers-icon.png'
+        icon_path = ':/plugins/CalidadCAR/icons/layers-icon.png'
         self.addLayersAction = self.add_action(
             icon_path,
             text=self.tr(u'Cargar fondo'),
             callback=self.run,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/csv-join-icon-add.png'
+        icon_path = ':/plugins/CalidadCAR/icons/csv-join-icon-add.png'
         self.addCsvAction = self.add_action(
             icon_path,
             text=self.tr(u'Join'),
             callback=self.addCsv,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icon.png'
+        icon_path = ':/plugins/CalidadCAR/icons/add-section-icon.png'
         self.addSectionAction = self.add_action(
             icon_path,
             text=self.tr(u'Agregar sección'),
             callback=self.addSection,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icon.png'
+        icon_path = ':/plugins/CalidadCAR/icons/icon.png'
         self.intersctionAction = self.add_action(
             icon_path,
             text=self.tr(u'Calcular'),
