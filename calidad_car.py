@@ -303,6 +303,7 @@ class CalidadCAR:
             for new_feature in temp.getFeatures():
                 segements = geometry.getSegments(work_layer)
                 point = geometry.intersectionLayerGeometry(eje, new_feature.geometry())
+                if point is None: continue
                 idx = self.place(segements, point)
                 # print 'IDX: ', idx
                 work_layer = self.addFeature(work_layer, new_feature, idx)
@@ -411,7 +412,10 @@ class CalidadCAR:
 
         # Cambiar el color del layer
         symbol_layer = layer.rendererV2().symbols()[0].symbolLayer(0)
-        symbol_layer.setColor(QColor(randint(0, 50),randint(0, 255),163))
+        if name == 'ejes' or name == 'secciones':
+            symbol_layer.setColor(QColor(0, 0, 0))
+        else:
+            symbol_layer.setColor(QColor(randint(0, 50),randint(0, 255),163))
 
         self.layers.append(layer)
 
