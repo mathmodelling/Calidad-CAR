@@ -203,8 +203,6 @@
   </widget>
   <zorder>groupBox</zorder>
   <zorder>buttonBox</zorder>
-  <zorder>buttonAddColumn</zorder>
-  <zorder>buttonRemoveColumn</zorder>
   <zorder>label</zorder>
   <zorder>editPath</zorder>
   <zorder>buttonLoadFile</zorder>
@@ -213,6 +211,8 @@
   <zorder>buttonClear</zorder>
   <zorder>label_3</zorder>
   <zorder>comboJoinFieldTarget</zorder>
+  <zorder>buttonAddColumn</zorder>
+  <zorder>buttonRemoveColumn</zorder>
  </widget>
  <resources/>
  <connections>

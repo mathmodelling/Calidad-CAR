@@ -6,13 +6,13 @@ from PyQt4.QtGui import QFileDialog, QAbstractItemView
 from PyQt4.QtCore import QFileInfo, Qt
 
 from qgis.core import QgsVectorLayer
-
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'dialogo_csv_base.ui'))
+from dialogo_csv_base import Ui_DialogoCSV
+# FORM_CLASS, _ = uic.loadUiType(os.path.join(
+    # os.path.dirname(__file__), 'dialogo_csv_base.ui'))
 
 CSV_SUFFIX = '?type=csv&geomType=none&subsetIndex=no&watchFile=no&delimiter=,'
 
-class CSVDialog(QtGui.QDialog, FORM_CLASS):
+class CSVDialog(QtGui.QDialog, Ui_DialogoCSV):
     def __init__(self, fields, parent=None):
         """Constructor."""
         super(CSVDialog, self).__init__(parent)
@@ -20,7 +20,7 @@ class CSVDialog(QtGui.QDialog, FORM_CLASS):
 
         self.fields = fields
         self._layer = None
-        
+
         self.configWidgets()
 
     def configWidgets(self):
@@ -133,9 +133,15 @@ class CSVDialog(QtGui.QDialog, FORM_CLASS):
             the information loaded.
         :rtype: QgsVectorLayer
         """
-        layer = QgsVectorLayer(path + CSV_SUFFIX, name, 'delimitedtext')
+
+        #Formating the uri
+        path = 'file:///' + path.replace('\\', '/') + CSV_SUFFIX
+        print path
+        layer = QgsVectorLayer(path, name, 'delimitedtext')
 
         if not layer.isValid():
             raise Error('Invalid Layer')
+        else:
+            print 'hiyaaa'
 
         return layer
