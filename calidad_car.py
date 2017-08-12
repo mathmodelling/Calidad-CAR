@@ -221,9 +221,7 @@ class CalidadCAR:
 
             pr = tempLayer.dataProvider()
             fields = seccionesLayer.pendingFields()
-
-            for f in fields:
-                pr.addAttributes([f])
+            pr.addAttributes(fields)
 
             QgsMapLayerRegistry.instance().addMapLayer(tempLayer)
 
@@ -354,24 +352,26 @@ class CalidadCAR:
 
             columns = csvDialog.getSelectedColumns()
             field_names = [field.name() for field in shp.pendingFields() ]
-            #Avoid duplitcate columns
-            for new_col in columns:
-                if 'csv_' + new_col in field_names:
-                    columns.remove(new_col)
 
-            # shpField = 'RiverStatio'
+            columns = [col for col in columns if 'csv' + col not in field_names]
+
+            if columns == []:
+                #There is nothing to join
+                return
+
             shpField = csvDialog.getJoinFieldTarget()
             csvField = csvDialog.getJoinField()
             joinObject = QgsVectorJoinInfo()
             joinObject.joinLayerId = sheet.id()
             joinObject.joinFieldName = csvField
             joinObject.targetFieldName = shpField
+
             joinObject.setJoinFieldNamesSubset(columns)
             joinObject.memoryCache = True
             shp.addJoin(joinObject)
 
-            self.addSectionAction.setEnabled(True)
-            self.intersctionAction.setEnabled(True)
+            # self.addSectionAction.setEnabled(True)
+            # self.intersctionAction.setEnabled(True)
 
 
     def unload(self):

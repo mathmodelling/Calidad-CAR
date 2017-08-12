@@ -136,12 +136,9 @@ class CSVDialog(QtGui.QDialog, Ui_DialogoCSV):
 
         #Formating the uri
         path = 'file:///' + path.replace('\\', '/') + CSV_SUFFIX
-        print path
         layer = QgsVectorLayer(path, name, 'delimitedtext')
 
         if not layer.isValid():
             raise Error('Invalid Layer')
-        else:
-            print 'hiyaaa'
 
         return layer
