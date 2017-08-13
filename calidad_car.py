@@ -199,9 +199,31 @@ class CalidadCAR:
             callback=self.intersection,
             parent=self.iface.mainWindow())
 
+        icon_path = ':/plugins/CalidadCAR/icons/icon.png'
+        self.intersctionAction = self.add_action(
+            icon_path,
+            text=self.tr(u'Limpiar'),
+            callback=self.clean,
+            parent=self.iface.mainWindow())
+
         # self.intersctionAction.setEnabled(False)
         # self.addSectionAction.setEnabled(False)
         # self.addCsvAction.setEnabled(False)
+
+    def clean(self):
+        for layer in self.layers:
+            QgsMapLayerRegistry.instance().removeMapLayer(layer)
+
+        csv_layers = QgsMapLayerRegistry.instance().mapLayersByName("csv")
+        for layer in csv_layers:
+            QgsMapLayerRegistry.instance().removeMapLayer(layer)
+
+        tempLayer = QgsMapLayerRegistry.instance().mapLayersByName("temp")
+        for layer in tempLayer:
+            layer.commitChanges()
+            QgsMapLayerRegistry.instance().removeMapLayer(layer)
+
+        self.layers = []
 
     def addSection(self):
         tempLayer = None
