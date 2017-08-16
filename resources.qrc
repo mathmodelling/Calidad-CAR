@@ -4,5 +4,7 @@
         <file>icons/layers-icon.png</file>
         <file>icons/csv-join-icon-add.png</file>
         <file>icons/add-section-icon.png</file>
+        <file>icons/refresh-icon.png</file>
+        <file>icons/start-icon.png</file>
     </qresource>
 </RCC>
