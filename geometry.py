@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from qgis.core import *
 from math import sqrt
 
@@ -18,29 +19,28 @@ def getSegments(layer):
     return segments
 
 def distance(a, b):
-    """Compute the distance between ponint a and point b
-    :param a: Point a
+    """Cálcula la distancia entre un punto a, y un punto b.
+    :param a: Punto a
     :type a: QgsPoint
 
-    :param b: Point b
+    :param b: Punto b
     :type b: QgsPoint
 
-    :returns: The distance between point a and b
+    :returns: Distancia entre a y b.
     :rtype: Double
     """
     return sqrt(a.sqrDist(b))
 
 def buildConvexPolygon(segments):
-    """Builds a convex polygon from a set of segements
-       taking all the points of the bounding segements,
-       an just the begin and end points of the inside
-       segments
+    """Construye un polígono convexo a partir de un conjungo de segementos,
+       tomando todos los puntos de los segmentos que estan al extremo inicial, y final,
+       y solo el punto de inicio y el punto final de los segementos intermedios.
 
     :param segements:
-    :type segements: List of Polylines
+    :type segements: Lista de Polylines
 
-    :returns: A convex polygon containing all the points
-              described above.
+    :returns: Un polígono convexo que envuelve todos los puntos que se acabarón de
+              describir.
     :rtype: QgsGeometry
     """
     origins = [points[0] for points in segments[1 : -1]]
@@ -52,7 +52,7 @@ def buildConvexPolygon(segments):
     return QgsGeometry.fromMultiPoint(points).convexHull()
 
 def intersectionPoints(layerA, layerB):
-    """Get the intersection points between two layers
+    """Obtiene los puntos de intersección entre dos capas.
 
     :param layerA
     :type layerA: QgsVectorLayer
@@ -60,8 +60,8 @@ def intersectionPoints(layerA, layerB):
     :param layerB
     :type layerB: QgsVectorLayer
 
-    :returns: A list of the intersection points
-    :rtype: QgsPoint List
+    :returns: La lista de los puntos de intersección
+    :rtype: Lista de QgsPoints
     """
     points = []
     for featA in layerA.getFeatures():
@@ -74,17 +74,15 @@ def intersectionPoints(layerA, layerB):
     return qgsPoints
 
 def intersectionLayerGeometry(layer, geometry):
-    """Get the first intersection point between a layer and a
-       geometry.
+    """Obtiene la primera inresección entre una capa y una geometría.
 
-    :param layer
+    :param layer: Capa
     :type layer: QgsVectorLayer
 
-    :param geometry
+    :param geometry: Geometría
     :type geometry: QgsGeometry
 
-    :returns: A point if there is an intersection between the layer
-              and the geometry, return None otherwise.
+    :returns: El punto de insersección, en caso de que exita, returna None de otra forma.
     :rtype: QgsPointXY
     """
     intersections = []
@@ -99,16 +97,15 @@ def intersectionLayerGeometry(layer, geometry):
     return None
 
 def intersection(A, B):
-    """Get the intersection point between two geometries
+    """Optiene el punto de insersección entre dos geometrías
 
-    :param A: Geometry A
+    :param A: Geometría A
     :type A: QgsGeometry
 
-    :param B: Geometry B
+    :param B: Geometría B
     :type B: QgsGeometry
 
-    :returns: If there is an intersection between the geometries
-              returns a point
+    :returns: El punto de insersección, en caso de que exita, returna None de otra forma.
     :rtype: QgsPointXY
     """
     if A.intersects(B):

@@ -1,24 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-/***************************************************************************
- CalidadCAR
-                                 A QGIS plugin
- Test
-                              -------------------
-        begin                : 2017-07-24
-        git sha              : $Format:%H$
-        copyright            : (C) 2017 by cbdavide
-        email                : cbdavide
- ***************************************************************************/
 
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 """
 from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QFileInfo
 from PyQt4.QtGui import QAction, QIcon, QColor, QMessageBox
@@ -29,9 +11,7 @@ from qgis.core import (QgsVectorLayer, QgsRasterLayer, QgsCoordinateReferenceSys
 from qgis.gui import QgsMapToolEmitPoint
 
 
-# Initialize Qt resources from file resources.py
 import resources
-# Import the code for the dialog
 from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
 from dialogo_csv import CSVDialog
 import os.path
@@ -41,14 +21,14 @@ from random import randint
 import geometry
 
 class CalidadCAR:
-    """QGIS Plugin Implementation."""
+    """Implementación del plugin."""
 
     def __init__(self, iface):
         """Constructor.
 
-        :param iface: An interface instance that will be passed to this class
-            which provides the hook by which you can manipulate the QGIS
-            application at run time.
+        :param iface: Una instancia de la interfaz que será pasada a esta clase,
+            la cual proveé una ligadura con la cual se podrá manipular la aplicación
+            de QGIS en tiempo de ejecución.
         :type iface: QgsInterface
         """
         self.iface = iface
@@ -106,42 +86,42 @@ class CalidadCAR:
         status_tip=None,
         whats_this=None,
         parent=None):
-        """Add a toolbar icon to the toolbar.
+        """Agrega una acción la la barra de herramientas, y al menú del plugin.
 
-        :param icon_path: Path to the icon for this action. Can be a resource
-            path (e.g. ':/plugins/foo/bar.png') or a normal file system path.
+        :param icon_path: Ruta del icono. Puede ser la ruta de un recurso recurso
+            (ejemplo: ':/plugins/foo/bar.png') o una ruta normal del sistema de archivos
         :type icon_path: str
 
-        :param text: Text that should be shown in menu items for this action.
+        :param text: Texto que será mostrado en el menu de opciones de plugin para esta accion.
         :type text: str
 
-        :param callback: Function to be called when the action is triggered.
+        :param callback: Función que será llamada cuando se hace click sobre la acción.
         :type callback: function
 
-        :param enabled_flag: A flag indicating if the action should be enabled
-            by default. Defaults to True.
+        :param enabled_flag: Una bandera que indica si la acción debería ser activada
+            por defecto. Por defecto este valor esta en True.
         :type enabled_flag: bool
 
-        :param add_to_menu: Flag indicating whether the action should also
-            be added to the menu. Defaults to True.
+        :param add_to_menu: Una bandera indicando si la acción debería ser agregada
+            al menú de opciones del plugin. Por defecto esta en True
         :type add_to_menu: bool
 
-        :param add_to_toolbar: Flag indicating whether the action should also
-            be added to the toolbar. Defaults to True.
+        :param add_to_toolbar: Una bandera indicando si la acción debería ser agregada
+            a la barra de herramientas del plugin. Por defecto esta en True
         :type add_to_toolbar: bool
 
-        :param status_tip: Optional text to show in a popup when mouse pointer
-            hovers over the action.
+        :param status_tip: Texto opcional que aparecerá cuando el puntero del mouse
+            se pocisione sobre la acción.
         :type status_tip: str
 
-        :param parent: Parent widget for the new action. Defaults None.
+        :param parent: Widget padre de la nueva acción. Por defecto será None
         :type parent: QWidget
 
-        :param whats_this: Optional text to show in the status bar when the
-            mouse pointer hovers over the action.
+        :param whats_this: Texto opcional para mostrar en la barra de estatus,
+            cuando el puntero del mouse se pocisione sobre la acción.
 
-        :returns: The action that was created. Note that the action is also
-            added to self.actions list.
+        :returns: La acción que fue creada. Notar que la acción también es
+            agregada a self.actions list.
         :rtype: QAction
         """
 
@@ -169,19 +149,20 @@ class CalidadCAR:
         return action
 
     def initGui(self):
-        """Create the menu entries and toolbar icons inside the QGIS GUI."""
+        """Crea las entradas del menu, y las acciones de la barra de herramientas
+            dentro de la interfaz de QGIS"""
 
         icon_path = ':/plugins/CalidadCAR/icons/layers-icon.png'
         self.addLayersAction = self.add_action(
             icon_path,
-            text=self.tr(u'Cargar fondo'),
-            callback=self.run,
+            text=self.tr(u'Cargar fondos'),
+            callback=self.cargarCapas,
             parent=self.iface.mainWindow())
 
         icon_path = ':/plugins/CalidadCAR/icons/csv-join-icon-add.png'
         self.addCsvAction = self.add_action(
             icon_path,
-            text=self.tr(u'Join'),
+            text=self.tr(u'Unir CSV'),
             callback=self.addCsv,
             parent=self.iface.mainWindow())
 
@@ -211,6 +192,8 @@ class CalidadCAR:
         # self.addCsvAction.setEnabled(False)
 
     def clean(self):
+        """Recarga el plugin, limpiando todas las capas cargadas, excepto, las
+           capas de salida de información."""
         for layer in self.layers:
             QgsMapLayerRegistry.instance().removeMapLayer(layer)
 
@@ -226,6 +209,12 @@ class CalidadCAR:
         self.layers = []
 
     def addSection(self):
+        """Utiliza una capa llamada temp, para insertar las nuevas secciones,
+           esta operación solo podrá ser realizada si existe la capa de secciones.
+
+           En caso de que no exista la capa temp, se creara una nueva, con el crs
+           de la capa de secciones.
+        """
         tempLayer = None
         try:
             seccionesLayer = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
@@ -251,7 +240,17 @@ class CalidadCAR:
         tempLayer.startEditing()
 
     def check(self, segments, point):
-        """Check if point c is between points a and b."""
+        """Verifica si un punto se encuentra entre dos segmentos
+
+        :param segments: Lista de segmentos entre los que se puede encontrar el punto.
+        :type segments: Lista de QgsSegments
+
+        :param point: punto sobre el cual se va a hacer la verificación
+        :type point: QgsPoint
+
+        :returns: Un booleano que indica si la condición se cumple o no.
+        :rtype: Boolean
+        """
         if len(segments) == 1 : return False
         polygon = geometry.buildConvexPolygon(segments)
         # layer =  QgsVectorLayer('Polygon?crs=epsg:3116', 'poly' , "memory")
@@ -264,6 +263,15 @@ class CalidadCAR:
         return polygon.contains(point)
 
     def place(self, segments, p):
+        """Ubica un punto entre los dos segmentos consecutivos a los que pertenece.
+
+        :param segments: Lista de segmentos
+        :type segments: Lista de QgsSegments
+
+        :param p: punto que se va a ubicar en la lista de segmentos
+        :type point: QgsPoint
+
+        """
         low, hi = 0, len(segments)
         mid, cont = 0, 0
 
@@ -286,6 +294,20 @@ class CalidadCAR:
     #     return None
 
     def addFeature(self, layerA, feature = None, idx = -1):
+        """Inserta una característica (feature) en una capa en un orden establecido
+
+        :param layerA: Capa en la que se va a insertar la característica (feature)
+        :type layerA: QgsVectorLayer
+
+        :param feature: Característica (feature) que se va a insertar en la capa.
+        :type feature: QgsFeature
+
+        :param idx: Indice de la nueva característica (feature) que se va a insertar.
+        :type idx: Integer
+
+        :returns: Una nueva capa con la característica insertada en el pocisión idx.
+        :rtype: QgsVectorLayer
+        """
         crs = layerA.crs().authid()
         tempLayer = QgsVectorLayer('LineString?crs='+crs, 'output', 'memory')
         pr = tempLayer.dataProvider()
@@ -307,6 +329,12 @@ class CalidadCAR:
         return tempLayer
 
     def intersection(self):
+        """Este método se encarga de recopilar toda la información, para posteriormente
+           aplicarle la lógica del plugin.
+
+           Para que el usuario pueda realizar esta operación, necesariamente, tienen
+           que estar cargadas la capa de ejes, y la capa de secciones transversales.
+        """
         try:
             secciones = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
             eje = QgsMapLayerRegistry.instance().mapLayersByName("ejes")[0]
@@ -318,6 +346,8 @@ class CalidadCAR:
         work_layer = self.addFeature(secciones)
 
         try:
+            """En caso de que existan secciones temporales, se combinaran con la
+               capa de secciones, para crear la capa work_layer"""
             temp = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
 
             for new_feature in temp.getFeatures():
@@ -331,16 +361,16 @@ class CalidadCAR:
         except IndexError:
             pass
 
-        #Paint the work_layer
+        #Mostrar la capa de trabajo work_layer
         QgsMapLayerRegistry.instance().addMapLayer(work_layer)
 
-        #DataFrame with the attribute table
+        #Crar un DataFrame de pandas con la tabla de atributos de la capa de trabajo
         table = [row.attributes() for row in work_layer.getFeatures()]
         field_names = [field.name() for field in work_layer.pendingFields() ]
         pd_frame = pandas.DataFrame(table, columns = field_names)
         print pd_frame
 
-        #DataFrame of distances
+        #Crear un DataFrame de pandas con las distancias de la sucesión de secciones
         points = geometry.intersectionPoints(eje, work_layer)
 
         distances = [0]
@@ -352,7 +382,10 @@ class CalidadCAR:
         print pd_dataframe
 
     def addCsv(self):
-        # """Join operation"""
+        """Crea una capa a partir de un archivo CSV, y une la información que
+           contiene esta, con la tabla de atributos de la capa de secciones,
+           la cual tendrá que existir, para que se pueda realizar esta operación.
+        """
         try:
             shp = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
         except IndexError:
@@ -361,7 +394,6 @@ class CalidadCAR:
             return
 
         sheet = None
-        # Run the dialog event loop
         field_names = [field.name() for field in shp.pendingFields() ]
         csvDialog = CSVDialog(field_names)
         result = csvDialog.exec_()
@@ -370,15 +402,16 @@ class CalidadCAR:
 
             sheet = csvDialog.getLayer()
             QgsMapLayerRegistry.instance().addMapLayer(sheet)
-            #Get the shape layer called secciones
 
+            #Columnas del archivo CSV
             columns = csvDialog.getSelectedColumns()
+            #Filtra las columnas existentes, para evitar información duplicada
             field_names = [field.name() for field in shp.pendingFields() ]
 
             columns = [col for col in columns if 'csv' + col not in field_names]
 
             if columns == []:
-                #There is nothing to join
+                #No hay columnas nuevas para unir
                 return
 
             shpField = csvDialog.getJoinFieldTarget()
@@ -397,7 +430,8 @@ class CalidadCAR:
 
 
     def unload(self):
-        """Removes the plugin menu item and icon from QGIS GUI."""
+        """Remueve el menú del plugin, y las acciones de la barra de herramientas
+           de la interfaz de QGIS."""
         for action in self.actions:
             self.iface.removePluginMenu(
                 self.tr(u'&Calidad CAR'),
@@ -408,13 +442,18 @@ class CalidadCAR:
 
 
     def addLayers(self):
-        #Borrando las capas
+        """Carga las capas que el usuario ingreso en el dialog de cargar fondos,
+           los fondos se volverán a cargar cada vez que se llame este método, en
+           caso de que el usuario quiera recargar un fondo."""
+
+        #Eliminar los fondos cargados
         for layer in self.layers:
             QgsMapLayerRegistry.instance().removeMapLayer(layer)
 
         self.layers = []
         files = self.dlg.getFilePaths()
 
+        #Cargar los fondos que se encuentrán en el dialogo de cargar fondos.
         for layer in files:
             path, name = layer
             layerInfo = QFileInfo(path)
@@ -428,6 +467,15 @@ class CalidadCAR:
             QgsMapLayerRegistry.instance().addMapLayer(layer)
 
     def addVectorLayer(self, path, name):
+        """Agrega una capa vectorizada a self.layers
+
+        :param path: Ruta de la capa que se va a cargar.
+        :type path: str
+
+        :param name: Nombre de la capa que se va a cargar, este nombre será el
+            identificador de la capa.
+        :type name: str
+        """
         layer = QgsVectorLayer(path, name, 'ogr')
         if not layer.isValid():
             return
@@ -442,19 +490,37 @@ class CalidadCAR:
         self.layers.append(layer)
 
     def addRasterLayer(self, path, name):
+        """Agrega una capa rasterizada a self.layers
+
+        :param path: Ruta de la capa que se va a cargar.
+        :type path: str
+
+        :param name: Nombre de la capa que se va a cargar, este nombre será el
+            identificador de la capa.
+        :type name: str
+        """
         rlayer = QgsRasterLayer(path, name)
         if not rlayer.isValid(): return
         self.layers.append(rlayer)
 
-    def run(self):
+    def cargarCapas(self):
         """Run method that performs all the real work"""
         self.dlg.show()
         result = self.dlg.exec_()
         if result:
             self.addLayers()
-            self.addCsvAction.setEnabled(True)
+            # self.addCsvAction.setEnabled(True)
 
     def errorDialog(selg, text, detail):
+        """Dialogo de error que se lanzará cuando el usuario intente hacer una
+           operación que no esta permitida.
+
+        :param text: Identificador principal del error.
+        :type text: str
+
+        :param name: Información detallada del error.
+        :type name: str
+        """
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Critical)
         msg.setText(text)
