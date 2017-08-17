@@ -2,19 +2,29 @@
 import os
 
 from PyQt4 import QtGui, uic
-from PyQt4.QtGui import QFileDialog, QAbstractItemView
+from PyQt4.QtGui import QFileDialog, QAbstractItemView, QMessageBox
 from PyQt4.QtCore import QFileInfo, Qt
 
 from qgis.core import QgsVectorLayer
-from dialogo_csv_base import Ui_DialogoCSV
+from dialogs.dialogo_csv_base import Ui_DialogoCSV
+
 # FORM_CLASS, _ = uic.loadUiType(os.path.join(
     # os.path.dirname(__file__), 'dialogo_csv_base.ui'))
 
 CSV_SUFFIX = '?type=csv&geomType=none&subsetIndex=no&watchFile=no&delimiter=,'
 
 class CSVDialog(QtGui.QDialog, Ui_DialogoCSV):
+    """ Este diálogo es el encargado de carvar un archivo CSV, y
+        de recolectar la información necesaria para unirlo con la
+        capa de secciones.
+    """
     def __init__(self, fields, parent=None):
-        """Constructor."""
+        """Constructor de la clase.
+
+        :param fields: Lista de strings que usara para llenar el combo box
+                       self.comboJoinFieldTarget.
+        :type a: Lista str
+        """
         super(CSVDialog, self).__init__(parent)
         self.setupUi(self)
 
@@ -24,7 +34,7 @@ class CSVDialog(QtGui.QDialog, Ui_DialogoCSV):
         self.configWidgets()
 
     def configWidgets(self):
-        """Configuration of the dialog's graphic elements."""
+        """Configura los componentes gráficos del diálogo."""
         self.buttonLoadFile.clicked.connect(self.handler)
         self.buttonAddColumn.clicked.connect(self.addItem)
         self.buttonRemoveColumn.clicked.connect(self.removeItem)
@@ -36,28 +46,41 @@ class CSVDialog(QtGui.QDialog, Ui_DialogoCSV):
         self.comboJoinFieldTarget.addItems(self.fields)
 
     def getLayer(self):
-        """
-        :returns: the qgis layer of the CSV file.
+        """Devuelve la el archivo CSV cargado como capa de QGIS.
+
+        :returns: La capa de qgis del archivo CSV que el usuario cargo.
         :rtype: QgsVectorLayer.
         """
         return self._layer
 
     def getJoinField(self):
+        """ Retorna el campo del archivo CSV sobre el cual se va a hacer la unión.
+
+        :returns: Campo sobre el cual se a hacer la unión
+        :rtype: str
+        """
         return  str(self.comboJoinField.currentText())
 
     def getJoinFieldTarget(self):
+        """ Retorna el campo de la capa secciones sobre el cual se va a hacer la unión
+            con el archivo CSV.
+
+        :returns: Campo sobre el cual se a hacer la unión
+        :rtype: str
+        """
         return str(self.comboJoinFieldTarget.currentText())
 
     def getSelectedColumns(self):
-        """ Get all the columns of the listTarget.
+        """ Retorna todos los campos de self.listTarget, los cuales contienen
+            las columnas seleccionadas para unir a la capa de secciones.
 
-        :returns: Array of columns.
-        :rtype: String array.
+        :returns: Lista de las columnas seleccionadas.
+        :rtype: Lista str.
         """
+
         if self.listTarget.count() > 0:
-            """ Return the items of the listTarget if the user
-                selected at least one element, otherwise return
-                the elements of the listSource.
+            """ En caso de que self.listTarget no contenga elementos, se seleccionarán
+                los elementos de self.listSource.
             """
             items = self.getItems(self.listTarget)
         else:
@@ -69,16 +92,28 @@ class CSVDialog(QtGui.QDialog, Ui_DialogoCSV):
         return items
 
     def getItems(self, list):
+        """Función auxiliar que extrae el texto de los items gráficos de la lista
+           que se le pase.
+
+        :param list: Lista de items a los cuales se les va a extraer el texto.
+        :type list: QListWidget
+
+        :returns: Lista del título de cada item.
+        :rtype: Lista str
+        """
         return [str(list.item(i).text()) for i in xrange(list.count())]
 
     def clear(self):
+        """Limpia los componentes gráficos del diálogo.
+        """
         self.editPath.setText('')
         self.listSource.clear()
         self.listTarget.clear()
         self.comboJoinField.clear()
 
     def handler(self):
-        """Handle function of the buttonLoadFile."""
+        """Maneja el evento de click del botón self.buttonLoadFile"""
+
         layerPath = QFileDialog.getOpenFileName(self, u'Abrir CSV', '.', 'CSV (*.CSV)')
         layerInfo = QFileInfo(layerPath)
         self.editPath.setText(layerPath)
@@ -88,49 +123,57 @@ class CSVDialog(QtGui.QDialog, Ui_DialogoCSV):
             columns = [field.name() for field in self._layer.pendingFields()]
             self.pupulateLists(columns)
         except:
-            #TODO: Alert the user with an error dialog
+            self.errorDialog(u'Error al cargar el archivo CSV',
+                u'Asegurate de que el archivo no esta corrupto.')
             self.editPath.setText('')
 
     def pupulateLists(self, columns = []):
-        """Populate the listSource and the comboJoinField
-            with the columns names.
+        """Llena las listas self.listSource, y self.comboJoinField con los nombres
+           columnas del archivo CSV.
 
-        :param columns: The columns that are going to be inserted
-            in the listSource
-        :type columns: String array.
+        :param columns: Son las columnas que se van a instertar en las listas.
+        :type columns: Lista str
         """
         self.listSource.addItems(columns)
         self.comboJoinField.addItems(columns)
 
     def addItem(self):
-        """Add the selected items in the source list, to the
-           target list.
+        """Agrega los items seleccionados de self.listSource a self.listTarget.
         """
         for item in self.listSource.selectedItems():
             item.setHidden(True)
             self.listTarget.addItem(item.text())
 
     def removeItem(self):
-        """Remove the selected items form the target list."""
+        """Remueve los items seleccionados de self.listTarget."""
         for item in self.listTarget.selectedItems():
             source_index = self.listSource.findItems(item.text(), Qt.MatchExactly)
             source_index[0].setHidden(False)
             self.deleteItem(self.listTarget, item)
 
     def deleteItem(self, list, item):
+        """Función auxiliar que remueve el un item de una lista.
+
+        :param list: Lista de la cual se va a eliminar el item.
+        :type list: QListWidget
+
+        :param item: Item que se va a eliminar.
+        :type item: QListWidgetItem
+        """
         list.takeItem(list.row(item))
 
     def loadLayer(self, path, name = 'csv'):
-        """Load a CSV layer, raise an error if the layer is not valid.
+        """Esta función crea una capa de QGIS, a partir de un archivo CSV, lanza una
+           excepción en caso de que el archivo no sea válido.
 
-        :param path: Path of the csv layer.
-        :type path: String
+        :param path: Ruta del archivo CSV.
+        :type path: str
 
-        :param name: Name of the layer, default value csv
-        :type name: String
+        :param name: Nombre que se le asignará a la capa, por defecto es csv.
+        :type name: str
 
-        :returns: If there is not it returns the qgis layer, with
-            the information loaded.
+        :returns: En caso de que no acurra ningun error, retorna la capa del archivo
+                  CSV.
         :rtype: QgsVectorLayer
         """
 
@@ -142,3 +185,20 @@ class CSVDialog(QtGui.QDialog, Ui_DialogoCSV):
             raise Error('Invalid Layer')
 
         return layer
+
+    def errorDialog(selg, text, detail):
+        """Dialogo de error que se lanzará cuando el usuario intente hacer una
+           operación que no esta permitida.
+
+        :param text: Identificador principal del error.
+        :type text: str
+
+        :param name: Información detallada del error.
+        :type name: str
+        """
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Critical)
+        msg.setText(text)
+        msg.setInformativeText(detail)
+        msg.setWindowTitle("Error")
+        msg.exec_()
