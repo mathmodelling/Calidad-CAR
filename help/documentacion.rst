@@ -19,3 +19,19 @@ clase CalidadCAR
 
 .. automodule:: geometry
    :members:
+
+*********************
+Componentes gráficos
+*********************
+
+Módulo calidad_car_dialog
+##########################
+
+.. automodule:: calidad_car_dialog
+   :members:
+
+Módulo dialogo_csv
+###################
+
+.. automodule:: dialogo_csv
+   :members:

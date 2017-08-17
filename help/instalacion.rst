@@ -20,6 +20,15 @@ Dependencias
 La única dependencia que tiene que estar instalada, para poder
 instalar el plugin de CalidadCAR es Qgis 2.18
 
+Instalar QGIS
+_______________
+
+Puedes descargar la distribución de QGIS para windows del siguiente enlace_. Al descargar este archivo, selecciona la opción *Instalación express*, y continua con el proceso de instalación.
+
+.. _enlace: http://download.osgeo.org/osgeo4w/osgeo4w-setup-x86_64.exe
+
+.. note:: Es necesario instalar QGIS en el directorio **C:/**
+
 ******************
 En Linux / MacOS
 ******************
