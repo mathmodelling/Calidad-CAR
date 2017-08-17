@@ -14,7 +14,7 @@ from dialogs.dialogo_csv_base import Ui_DialogoCSV
 CSV_SUFFIX = '?type=csv&geomType=none&subsetIndex=no&watchFile=no&delimiter=,'
 
 class CSVDialog(QtGui.QDialog, Ui_DialogoCSV):
-    """ Este diálogo es el encargado de carvar un archivo CSV, y
+    """ Este diálogo es el encargado de cargar un archivo CSV, y
         de recolectar la información necesaria para unirlo con la
         capa de secciones.
     """
@@ -62,8 +62,7 @@ class CSVDialog(QtGui.QDialog, Ui_DialogoCSV):
         return  str(self.comboJoinField.currentText())
 
     def getJoinFieldTarget(self):
-        """ Retorna el campo de la capa secciones sobre el cual se va a hacer la unión
-            con el archivo CSV.
+        """ Retorna el campo de la capa secciones sobre el cual se va a hacer la unión con el archivo CSV.
 
         :returns: Campo sobre el cual se a hacer la unión
         :rtype: str
@@ -128,8 +127,7 @@ class CSVDialog(QtGui.QDialog, Ui_DialogoCSV):
             self.editPath.setText('')
 
     def pupulateLists(self, columns = []):
-        """Llena las listas self.listSource, y self.comboJoinField con los nombres
-           columnas del archivo CSV.
+        """Llena las listas self.listSource, y self.comboJoinField con los nombres columnas del archivo CSV.
 
         :param columns: Son las columnas que se van a instertar en las listas.
         :type columns: Lista str
@@ -152,7 +150,7 @@ class CSVDialog(QtGui.QDialog, Ui_DialogoCSV):
             self.deleteItem(self.listTarget, item)
 
     def deleteItem(self, list, item):
-        """Función auxiliar que remueve el un item de una lista.
+        """Función auxiliar que remueve un item de una lista.
 
         :param list: Lista de la cual se va a eliminar el item.
         :type list: QListWidget
@@ -163,8 +161,7 @@ class CSVDialog(QtGui.QDialog, Ui_DialogoCSV):
         list.takeItem(list.row(item))
 
     def loadLayer(self, path, name = 'csv'):
-        """Esta función crea una capa de QGIS, a partir de un archivo CSV, lanza una
-           excepción en caso de que el archivo no sea válido.
+        """Esta función crea una capa de QGIS, a partir de un archivo CSV, lanza una excepción en caso de que el archivo no sea válido.
 
         :param path: Ruta del archivo CSV.
         :type path: str
