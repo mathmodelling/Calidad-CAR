@@ -2,13 +2,13 @@
 """
 
 """
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QFileInfo
-from PyQt4.QtGui import QAction, QIcon, QColor, QMessageBox
 from qgis.core import (QgsVectorLayer, QgsRasterLayer, QgsCoordinateReferenceSystem,
-                       QgsMapLayerRegistry, QgsCoordinateReferenceSystem, QgsVectorJoinInfo,
-                       QGis, QgsPoint, QgsFeature, QgsGeometry)
+QgsMapLayerRegistry, QgsCoordinateReferenceSystem, QgsVectorJoinInfo,
+QGis, QgsPoint, QgsFeature, QgsGeometry)
 
 from qgis.gui import QgsMapToolEmitPoint
+from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QFileInfo
+from PyQt4.QtGui import QAction, QIcon, QColor, QMessageBox
 
 
 import resources
