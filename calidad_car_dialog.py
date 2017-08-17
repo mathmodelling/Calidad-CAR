@@ -1,45 +1,22 @@
 # -*- coding: utf-8 -*-
-"""
-/***************************************************************************
- aDialog
-                                 A QGIS plugin
- a
-                             -------------------
-        begin                : 2017-07-24
-        git sha              : $Format:%H$
-        copyright            : (C) 2017 by a
-        email                : a
- ***************************************************************************/
-
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
-"""
-
 import os
 
 from PyQt4 import QtGui, uic
 from PyQt4.QtGui import QFileDialog
 from PyQt4.QtCore import QFileInfo
 
-FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    os.path.dirname(__file__), 'calidad_car_dialog_base.ui'))
+# FORM_CLASS, _ = uic.loadUiType(os.path.join(
+    # os.path.dirname(__file__), 'calidad_car_dialog_base.ui'))
+
+from dialogs.calidad_car_dialog_base import Ui_Dialog
 
 
-class Ui_Dialog(QtGui.QDialog, FORM_CLASS):
+class Ui_Dialog(QtGui.QDialog, Ui_Dialog):
+    """Este diálogo es el encargado de permitirle al usuario cargar las capas necesarias."""
+
     def __init__(self, parent=None):
         """Constructor."""
         super(Ui_Dialog, self).__init__(parent)
-        # Set up the user interface from Designer.
-        # After setupUI you can access any designer object by doing
-        # self.<objectname>, and you can use autoconnect slots - see
-        # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
-        # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
         self.botonFindFondo.clicked.connect(lambda: self.handler('fondo'))
         self.botonFindHdr.clicked.connect(lambda: self.handler('hidr'))
@@ -47,6 +24,16 @@ class Ui_Dialog(QtGui.QDialog, FORM_CLASS):
         self.botonFindSecciones.clicked.connect(lambda: self.handler('secc'))
 
     def getFilePaths(self):
+        """Retorna la lista de rutas de las capas que el usuario desea cargar.
+
+        :param list: Lista de items a los cuales se les va a extraer el texto.
+        :type list: QListWidget
+
+        :returns: La lista de las rutas de los archivos que el usuario selecciono.
+        :rtype: Lista str.
+
+        """
+
         filePaths = []
         if self.capaFondo.text():
             filePaths.append((self.capaFondo.text(), u'fondo'))
@@ -60,6 +47,8 @@ class Ui_Dialog(QtGui.QDialog, FORM_CLASS):
         return filePaths
 
     def handler(self, title):
+        """Maneja el evento de click sobre cualquiera de los botones de cargar archivo, con el fin de abrir un diálogo que le permita al usuario seleccionar el archivo de su sistema de archivos."""
+
         layerPath = QFileDialog.getOpenFileName(self, u'Abrir shapefile', '.', 'Shapefiles (*.shp *.tif)')
         layerInfo = QFileInfo(layerPath)
 
