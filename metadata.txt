@@ -1,18 +1,18 @@
-# This file contains metadata for your plugin. Since 
-# version 2.0 of QGIS this is the proper way to supply 
-# information about a plugin. The old method of 
-# embedding metadata in __init__.py will 
+# This file contains metadata for your plugin. Since
+# version 2.0 of QGIS this is the proper way to supply
+# information about a plugin. The old method of
+# embedding metadata in __init__.py will
 # is no longer supported since version 2.0.
 
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=Calidad CAR Test
+name=Calidad Car
 qgisMinimumVersion=2.0
-description=Test
+description=Calidad Car Plugin
 version=0.1
-author=cbdavide
-email=cbdavide
+author=Efrain Domínguez, David Castelblanco
+email=edoc@mathmodelling.org, cbdavides@gmail.com
 
 about=About
 
@@ -32,8 +32,7 @@ homepage=asd
 category=Plugins
 icon=icon.png
 # experimental flag
-experimental=True
+experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False
-
