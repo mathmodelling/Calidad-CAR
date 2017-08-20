@@ -28,7 +28,7 @@ repository=https://github.com/cbdavide/CalidadCAR-Plugin
 # Tags are comma separated with spaces allowed
 tags=water quality, mathematical modelling
 
-homepage=asd
+homepage=https://github.com/cbdavide/CalidadCAR-Plugin
 category=Plugins
 icon=icon.png
 # experimental flag
