@@ -201,6 +201,7 @@ doc:
 	@echo "Building documentation using sphinx."
 	@echo "------------------------------------"
 	make -f MakeDocs html
+	mv html docs
 
 pylint:
 	@echo
