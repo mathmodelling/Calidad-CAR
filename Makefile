@@ -44,9 +44,9 @@ PLUGINNAME = CalidadCAR
 
 PY_FILES = \
 	__init__.py \
-	calidad_car.py calidad_car_dialog.py
+	calidad_car.py calidad_car_dialog.py geometry.py
 
-UI_FILES = calidad_car_dialog_base.ui
+UI_FILES = ui/calidad_car_dialog_base.ui ui/dialogo_csv_base.ui
 
 EXTRAS = metadata.txt icon.png
 
