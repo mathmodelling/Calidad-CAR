@@ -1,0 +1,169 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>calidad_car_dialog &#8212; documentación de CalidadCAR - 1.0.0</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Código fuente para calidad_car_dialog</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">PyQt4</span> <span class="k">import</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">uic</span>
+<span class="kn">from</span> <span class="nn">PyQt4.QtGui</span> <span class="k">import</span> <span class="n">QFileDialog</span>
+<span class="kn">from</span> <span class="nn">PyQt4.QtCore</span> <span class="k">import</span> <span class="n">QFileInfo</span>
+
+<span class="c1"># FORM_CLASS, _ = uic.loadUiType(os.path.join(</span>
+    <span class="c1"># os.path.dirname(__file__), &#39;calidad_car_dialog_base.ui&#39;))</span>
+
+<span class="kn">from</span> <span class="nn">dialogs.calidad_car_dialog_base</span> <span class="k">import</span> <span class="n">Ui_Dialog</span>
+
+
+<div class="viewcode-block" id="Ui_Dialog"><a class="viewcode-back" href="../help/documentacion.html#calidad_car_dialog.Ui_Dialog">[documentos]</a><span class="k">class</span> <span class="nc">Ui_Dialog</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QDialog</span><span class="p">,</span> <span class="n">Ui_Dialog</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Este diálogo es el encargado de permitirle al usuario cargar las capas necesarias.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Ui_Dialog</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">botonFindFondo</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span><span class="s1">&#39;fondo&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">botonFindHdr</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span><span class="s1">&#39;hidr&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">botonFindEjes</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span><span class="s1">&#39;ejes&#39;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">botonFindSecciones</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">handler</span><span class="p">(</span><span class="s1">&#39;secc&#39;</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Ui_Dialog.getFilePaths"><a class="viewcode-back" href="../help/documentacion.html#calidad_car_dialog.Ui_Dialog.getFilePaths">[documentos]</a>    <span class="k">def</span> <span class="nf">getFilePaths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retorna la lista de rutas de las capas que el usuario desea cargar.</span>
+
+<span class="sd">        :param list: Lista de items a los cuales se les va a extraer el texto.</span>
+<span class="sd">        :type list: QListWidget</span>
+
+<span class="sd">        :returns: La lista de las rutas de los archivos que el usuario selecciono.</span>
+<span class="sd">        :rtype: Lista str.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">filePaths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">capaFondo</span><span class="o">.</span><span class="n">text</span><span class="p">():</span>
+            <span class="n">filePaths</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">capaFondo</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;fondo&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">capaHidrografia</span><span class="o">.</span><span class="n">text</span><span class="p">():</span>
+            <span class="n">filePaths</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">capaHidrografia</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;hidrografia&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">capaEjes</span><span class="o">.</span><span class="n">text</span><span class="p">():</span>
+            <span class="n">filePaths</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">capaEjes</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;ejes&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">capaSecciones</span><span class="o">.</span><span class="n">text</span><span class="p">():</span>
+            <span class="n">filePaths</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">capaSecciones</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span> <span class="sa">u</span><span class="s1">&#39;secciones&#39;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">filePaths</span></div>
+
+<div class="viewcode-block" id="Ui_Dialog.handler"><a class="viewcode-back" href="../help/documentacion.html#calidad_car_dialog.Ui_Dialog.handler">[documentos]</a>    <span class="k">def</span> <span class="nf">handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Maneja el evento de click sobre cualquiera de los botones de cargar archivo, con el fin de abrir un diálogo que le permita al usuario seleccionar el archivo de su sistema de archivos.&quot;&quot;&quot;</span>
+
+        <span class="n">layerPath</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getOpenFileName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;Abrir shapefile&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;Shapefiles (*.shp *.tif)&#39;</span><span class="p">)</span>
+        <span class="n">layerInfo</span> <span class="o">=</span> <span class="n">QFileInfo</span><span class="p">(</span><span class="n">layerPath</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">title</span> <span class="o">==</span> <span class="s1">&#39;fondo&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">capaFondo</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">layerPath</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">title</span> <span class="o">==</span> <span class="s1">&#39;hidr&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">capaHidrografia</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">layerPath</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">title</span> <span class="o">==</span> <span class="s1">&#39;ejes&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">capaEjes</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">layerPath</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">title</span> <span class="o">==</span> <span class="s1">&#39;secc&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">capaSecciones</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">layerPath</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">CalidadCAR</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+<p class="caption"><span class="caption-text">Contenido:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../help/manual_usuario.html">Manual de usuario</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/documentacion.html">Documentación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/instalacion.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/generar_documentacion.html">Generar Documentación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/componentes_graficos.html">Componentes gráficos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/recursos.html">Agregar recursos al plugin</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Búsqueda rápida</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Ir a" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, David Castelblanco.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

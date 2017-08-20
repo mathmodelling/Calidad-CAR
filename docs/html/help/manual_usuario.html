@@ -1,0 +1,182 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Manual de usuario &#8212; documentación de CalidadCAR - 1.0.0</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+    <link rel="next" title="Documentación" href="documentacion.html" />
+    <link rel="prev" title="Bienvenido a la documentación de CalidadCAR" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="manual-de-usuario">
+<h1>Manual de usuario<a class="headerlink" href="#manual-de-usuario" title="Enlazar permanentemente con este título">¶</a></h1>
+<p>Una vez instalado el plugin CalidadCAR, de desplegará la seiguiente barra de herramientas:</p>
+<img alt="../_images/barra_herramientas.png" src="../_images/barra_herramientas.png" />
+<p>La cual contiene los siguientes procedimientos que pordá realizar el usuario:</p>
+<ol class="arabic simple">
+<li><a class="reference internal" href="#cargar-fondos">Cargar fondos</a>.</li>
+<li><a class="reference internal" href="#unir-csv">Unir CSV</a>.</li>
+<li><a class="reference internal" href="#agregar-secciones">Agregar secciónes</a>.</li>
+<li><a class="reference internal" href="#calcular">Cálcular</a>.</li>
+<li><a class="reference internal" href="#limpiar">Limpiar</a>.</li>
+</ol>
+<div class="section" id="cargar-fondos">
+<h2>Cargar fondos<a class="headerlink" href="#cargar-fondos" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Con esta acción el usuario puede cargar las capas necesarias, para poder realizar _____________, para poder realizar esta operación el usario tendrá que hacer click en el icono resaltado que se ve en la siguiente imagen.</p>
+<img alt="../_images/cargar_fondos.png" src="../_images/cargar_fondos.png" />
+<p>La cual desplegará el siguiente dialogo en el que el usuario podrá buscar los diferentes archivos en su sistema de archivos, para cargar las capas.</p>
+<img alt="../_images/cargar_fondos_dialogo.png" src="../_images/cargar_fondos_dialogo.png" />
+<p>Una vez seleccionadas todas las capas que el usuario desea cargar, se desplegarán los dialogos correspondientes para solicitar el sistema de coordenadas de cada capa que se va a cargar.</p>
+<img alt="../_images/cargar_fondo_crs.png" src="../_images/cargar_fondo_crs.png" />
+<p>Una vez seleccionado el sistema de coordenadas de las capas que se van a cargar, estas se podrán visualizar en el canvas de QGIS, como se ve en la siguiente imagen, para visualizar directamente la capa de secciones, el usuario podrá hacer click en el icono resaltado en la siguiente imagen:</p>
+<img alt="../_images/enfocar_capa_secciones.png" src="../_images/enfocar_capa_secciones.png" />
+<p>En la siguiente imagen se puede ver el canvas de QGIS una vez el usuario ha realizado un acercamiento a la capa de secciones:</p>
+<img alt="../_images/capa_zoom.png" src="../_images/capa_zoom.png" />
+</div>
+<div class="section" id="unir-csv">
+<h2>Unir CSV<a class="headerlink" href="#unir-csv" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Este procedimiento consiste en cargar un archivo CSV, el cual se unira con la tabla de atributos de la capa de secciones, la cual tendrá que estar cargada, para que el usuario pueda realizar esta operación.</p>
+<p>En la siguiente imagen se puede ver el dialogo que le pedirá al usuario la información necesaria para cargar el archivo CSV, y para poder unirlo con la capa de secciones.</p>
+<img alt="../_images/dialogo_unir_csv.png" src="../_images/dialogo_unir_csv.png" />
+<p>Si el usuario desea realizar la union de otro archivo CSV con la para de secciones, tendrá que repetir el procedimiento que se acabo de describir.</p>
+</div>
+<div class="section" id="agregar-secciones">
+<h2>Agregar secciónes<a class="headerlink" href="#agregar-secciones" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Haciendo click sobre el botón subrayado en la siguiente imagen el usuario podrá agregar secciones transversales.</p>
+<img alt="../_images/agregar_seccion.png" src="../_images/agregar_seccion.png" />
+<p>Al hacer click sobre el botón de agregar sección se creara una capa de QGIS temporal en la que el usuario podrá dubujar las secciones que deseé, esto le habilitará al usuario el botón de <em>Añadir cadena circular</em>, el cual se ve resaltado en la siguiente imagen.</p>
+<img alt="../_images/agregar_seccion_opcion.png" src="../_images/agregar_seccion_opcion.png" />
+<p>Después de hacer click sobre el click sobre el botón de <em>Añadir cadena circular</em> el usuario podrá ubicar los puntos de la cadena, o la sección para dibujarla, como se ve en la siguiente imagen.</p>
+<img alt="../_images/dibujar_seccion.png" src="../_images/dibujar_seccion.png" />
+<p>En la imagen de arriba se puede ver la sección que se acabó de agregar (La sección con puntos rojos), Apretando el click derecho del mouse se finalizará la operación de agregarle puntos a la sección, y se le desplegrá al usuario un diálogo en el cual el podrá ingresar la información relacionada con la sección, como se puede ver en la siguiente imagen.</p>
+<img alt="../_images/informacion_seccion.png" src="../_images/informacion_seccion.png" />
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">Para poder agregar una sección es necesario que el usuario haya cargado previamente la capa de ejes, y la capa de secciones.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">Es importante que la sección que se va a agregar se intersecte con la el <em>eje</em> de la capa de ejes.</p>
+</div>
+</div>
+<div class="section" id="calcular">
+<h2>Cálcular<a class="headerlink" href="#calcular" title="Enlazar permanentemente con este título">¶</a></h2>
+</div>
+<div class="section" id="limpiar">
+<h2>Limpiar<a class="headerlink" href="#limpiar" title="Enlazar permanentemente con este título">¶</a></h2>
+<p>Al hacer click en el botón resaltado en la siguiente imagen el usuario limpiara el espacio de trabajo, cerrando las capas cargadas, en caso que deseé realizar el mismo proceso con capas diferentes.</p>
+<img alt="../_images/recargar_plugin.png" src="../_images/recargar_plugin.png" />
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">Las capas que contengan información de salida, fruto del proceso ___________ no se cerrarán.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">CalidadCAR</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+<p class="caption"><span class="caption-text">Contenido:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Manual de usuario</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cargar-fondos">Cargar fondos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#unir-csv">Unir CSV</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#agregar-secciones">Agregar secciónes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calcular">Cálcular</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#limpiar">Limpiar</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="documentacion.html">Documentación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="instalacion.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generar_documentacion.html">Generar Documentación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="componentes_graficos.html">Componentes gráficos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recursos.html">Agregar recursos al plugin</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="capítulo anterior">Bienvenido a la documentación de CalidadCAR</a></li>
+      <li>Next: <a href="documentacion.html" title="próximo capítulo">Documentación</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Búsqueda rápida</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Ir a" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, David Castelblanco.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="../_sources/help/manual_usuario.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
