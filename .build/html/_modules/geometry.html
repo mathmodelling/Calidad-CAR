@@ -1,0 +1,222 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>geometry &#8212; documentación de CalidadCAR - 1.0.0</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Código fuente para geometry</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">from</span> <span class="nn">qgis.core</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sqrt</span>
+
+<div class="viewcode-block" id="getSegments"><a class="viewcode-back" href="../help/documentacion.html#geometry.getSegments">[documentos]</a><span class="k">def</span> <span class="nf">getSegments</span><span class="p">(</span><span class="n">layer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the segments of a layer</span>
+
+<span class="sd">    :param layer</span>
+<span class="sd">    :type layer: QgsVectorLayer</span>
+
+<span class="sd">    :returns: The list of segements</span>
+<span class="sd">    :rtype: Polyline List</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">segments</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">f_seccion</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">getFeatures</span><span class="p">():</span>
+        <span class="n">segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f_seccion</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span><span class="o">.</span><span class="n">asPolyline</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">segments</span></div>
+
+<div class="viewcode-block" id="distance"><a class="viewcode-back" href="../help/documentacion.html#geometry.distance">[documentos]</a><span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Cálcula la distancia entre un punto a, y un punto b.</span>
+<span class="sd">    :param a: Punto a</span>
+<span class="sd">    :type a: QgsPoint</span>
+
+<span class="sd">    :param b: Punto b</span>
+<span class="sd">    :type b: QgsPoint</span>
+
+<span class="sd">    :returns: Distancia entre a y b.</span>
+<span class="sd">    :rtype: Double</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">sqrDist</span><span class="p">(</span><span class="n">b</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="buildConvexPolygon"><a class="viewcode-back" href="../help/documentacion.html#geometry.buildConvexPolygon">[documentos]</a><span class="k">def</span> <span class="nf">buildConvexPolygon</span><span class="p">(</span><span class="n">segments</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Construye un polígono convexo a partir de un conjungo de segementos,</span>
+<span class="sd">       tomando todos los puntos de los segmentos que estan al extremo inicial, y final,</span>
+<span class="sd">       y solo el punto de inicio y el punto final de los segementos intermedios.</span>
+
+<span class="sd">    :param segements:</span>
+<span class="sd">    :type segements: Lista de Polylines</span>
+
+<span class="sd">    :returns: Un polígono convexo que envuelve todos los puntos que se acabarón de</span>
+<span class="sd">              describir.</span>
+<span class="sd">    :rtype: QgsGeometry</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">origins</span> <span class="o">=</span> <span class="p">[</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">points</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">ends</span> <span class="o">=</span> <span class="p">[</span><span class="n">points</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">points</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">borders</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">segments</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">points</span> <span class="o">=</span> <span class="n">borders</span> <span class="o">+</span> <span class="n">origins</span> <span class="o">+</span> <span class="n">ends</span>
+
+    <span class="k">return</span> <span class="n">QgsGeometry</span><span class="o">.</span><span class="n">fromMultiPoint</span><span class="p">(</span><span class="n">points</span><span class="p">)</span><span class="o">.</span><span class="n">convexHull</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="intersectionPoints"><a class="viewcode-back" href="../help/documentacion.html#geometry.intersectionPoints">[documentos]</a><span class="k">def</span> <span class="nf">intersectionPoints</span><span class="p">(</span><span class="n">layerA</span><span class="p">,</span> <span class="n">layerB</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Obtiene los puntos de intersección entre dos capas.</span>
+
+<span class="sd">    :param layerA</span>
+<span class="sd">    :type layerA: QgsVectorLayer</span>
+
+<span class="sd">    :param layerB</span>
+<span class="sd">    :type layerB: QgsVectorLayer</span>
+
+<span class="sd">    :returns: La lista de los puntos de intersección</span>
+<span class="sd">    :rtype: Lista de QgsPoints</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">featA</span> <span class="ow">in</span> <span class="n">layerA</span><span class="o">.</span><span class="n">getFeatures</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">featB</span> <span class="ow">in</span> <span class="n">layerB</span><span class="o">.</span><span class="n">getFeatures</span><span class="p">():</span>
+            <span class="n">inter</span> <span class="o">=</span> <span class="n">intersection</span><span class="p">(</span><span class="n">featA</span><span class="o">.</span><span class="n">geometry</span><span class="p">(),</span> <span class="n">featB</span><span class="o">.</span><span class="n">geometry</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">inter</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inter</span><span class="p">)</span>
+
+    <span class="n">qgsPoints</span> <span class="o">=</span> <span class="p">[</span><span class="n">QgsPoint</span><span class="p">(</span><span class="n">point</span><span class="p">)</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">qgsPoints</span></div>
+
+<div class="viewcode-block" id="intersectionLayerGeometry"><a class="viewcode-back" href="../help/documentacion.html#geometry.intersectionLayerGeometry">[documentos]</a><span class="k">def</span> <span class="nf">intersectionLayerGeometry</span><span class="p">(</span><span class="n">layer</span><span class="p">,</span> <span class="n">geometry</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Obtiene la primera inresección entre una capa y una geometría.</span>
+
+<span class="sd">    :param layer: Capa</span>
+<span class="sd">    :type layer: QgsVectorLayer</span>
+
+<span class="sd">    :param geometry: Geometría</span>
+<span class="sd">    :type geometry: QgsGeometry</span>
+
+<span class="sd">    :returns: El punto de insersección, en caso de que exita, returna None de otra forma.</span>
+<span class="sd">    :rtype: QgsPointXY</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">intersections</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">layer</span><span class="o">.</span><span class="n">getFeatures</span><span class="p">():</span>
+
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">intersection</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">geometry</span><span class="p">(),</span> <span class="n">geometry</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">temp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">intersections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">intersections</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">intersections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="intersection"><a class="viewcode-back" href="../help/documentacion.html#geometry.intersection">[documentos]</a><span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Optiene el punto de insersección entre dos geometrías</span>
+
+<span class="sd">    :param A: Geometría A</span>
+<span class="sd">    :type A: QgsGeometry</span>
+
+<span class="sd">    :param B: Geometría B</span>
+<span class="sd">    :type B: QgsGeometry</span>
+
+<span class="sd">    :returns: El punto de insersección, en caso de que exita, returna None de otra forma.</span>
+<span class="sd">    :rtype: QgsPointXY</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">A</span><span class="o">.</span><span class="n">intersects</span><span class="p">(</span><span class="n">B</span><span class="p">):</span>
+        <span class="n">inter</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">inter</span><span class="o">.</span><span class="n">wkbType</span><span class="p">()</span> <span class="o">==</span> <span class="n">QGis</span><span class="o">.</span><span class="n">WKBPoint</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">inter</span><span class="o">.</span><span class="n">asPoint</span><span class="p">()</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">CalidadCAR</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+<p class="caption"><span class="caption-text">Contenido:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../help/manual_usuario.html">Manual de usuario</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/documentacion.html">Documentación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/instalacion.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/generar_documentacion.html">Generar Documentación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/componentes_graficos.html">Componentes gráficos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/recursos.html">Agregar recursos al plugin</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Búsqueda rápida</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Ir a" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, David Castelblanco.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
