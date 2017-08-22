@@ -4,16 +4,17 @@
 """
 from qgis.core import (QgsVectorLayer, QgsRasterLayer, QgsCoordinateReferenceSystem,
 QgsMapLayerRegistry, QgsCoordinateReferenceSystem, QgsVectorJoinInfo,
-QGis, QgsPoint, QgsFeature, QgsGeometry)
+QGis, QgsPoint, QgsFeature, QgsGeometry, QgsField)
 
 from qgis.gui import QgsMapToolEmitPoint
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QFileInfo
+from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QFileInfo,QVariant
 from PyQt4.QtGui import QAction, QIcon, QColor, QMessageBox
 
 
 import resources
 from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
 from dialogo_csv import CSVDialog
+from dialogo_concentracion import DialogoConcentracion
 import os.path
 import pandas
 
@@ -364,6 +365,10 @@ class CalidadCAR:
         #Mostrar la capa de trabajo work_layer
         QgsMapLayerRegistry.instance().addMapLayer(work_layer)
 
+        work_layer.dataProvider().addAttributes([QgsField(u'Concentración', QVariant.Int)])
+        work_layer.startEditing()
+        self.iface.showAttributeTable(work_layer)
+        
         #Crar un DataFrame de pandas con la tabla de atributos de la capa de trabajo
         table = [row.attributes() for row in work_layer.getFeatures()]
         field_names = [field.name() for field in work_layer.pendingFields() ]
@@ -380,6 +385,7 @@ class CalidadCAR:
 
         pd_dataframe = pandas.DataFrame(distances, columns = ['Distancia'])
         print pd_dataframe
+
 
     def addCsv(self):
         """Crea una capa a partir de un archivo CSV, y une la información que
