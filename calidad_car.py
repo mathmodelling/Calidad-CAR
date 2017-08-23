@@ -19,7 +19,9 @@ import os.path
 import pandas
 
 from random import randint
+
 import geometry
+from src import layer_manager as manager
 
 class CalidadCAR:
     """Implementación del plugin."""
@@ -368,7 +370,7 @@ class CalidadCAR:
         work_layer.dataProvider().addAttributes([QgsField(u'Concentración', QVariant.Int)])
         work_layer.startEditing()
         self.iface.showAttributeTable(work_layer)
-        
+
         #Crar un DataFrame de pandas con la tabla de atributos de la capa de trabajo
         table = [row.attributes() for row in work_layer.getFeatures()]
         field_names = [field.name() for field in work_layer.pendingFields() ]
@@ -452,11 +454,9 @@ class CalidadCAR:
            los fondos se volverán a cargar cada vez que se llame este método, en
            caso de que el usuario quiera recargar un fondo."""
 
-        #Eliminar los fondos cargados
-        for layer in self.layers:
-            QgsMapLayerRegistry.instance().removeMapLayer(layer)
-
+        manager.remove_layers(self.layers)
         self.layers = []
+
         files = self.dlg.getFilePaths()
 
         #Cargar los fondos que se encuentrán en el dialogo de cargar fondos.
@@ -465,49 +465,20 @@ class CalidadCAR:
             layerInfo = QFileInfo(path)
 
             if layerInfo.suffix() == 'tif':
-                self.addRasterLayer(path, name)
+                layer = manager.load_raster_layer(path, name)
+                if layer is not None:
+                    self.layers.append(layer)
+
             elif layerInfo.suffix() == 'shp':
-                self.addVectorLayer(path, name)
+                if name == 'secciones' or name == 'ejes':
+                    layer = manager.load_vector_layer(path, name)
+                else:
+                    layer = manager.load_vector_layer(path, name, (57, 165, 232))
 
-        for layer in self.layers:
-            QgsMapLayerRegistry.instance().addMapLayer(layer)
+                if layer is not None:
+                    self.layers.append(layer)
 
-    def addVectorLayer(self, path, name):
-        """Agrega una capa vectorizada a self.layers
-
-        :param path: Ruta de la capa que se va a cargar.
-        :type path: str
-
-        :param name: Nombre de la capa que se va a cargar, este nombre será el
-            identificador de la capa.
-        :type name: str
-        """
-        layer = QgsVectorLayer(path, name, 'ogr')
-        if not layer.isValid():
-            return
-
-        # Cambiar el color del layer
-        symbol_layer = layer.rendererV2().symbols()[0].symbolLayer(0)
-        if name == 'ejes' or name == 'secciones':
-            symbol_layer.setColor(QColor(0, 0, 0))
-        else:
-            symbol_layer.setColor(QColor(randint(0, 50),randint(0, 255),163))
-
-        self.layers.append(layer)
-
-    def addRasterLayer(self, path, name):
-        """Agrega una capa rasterizada a self.layers
-
-        :param path: Ruta de la capa que se va a cargar.
-        :type path: str
-
-        :param name: Nombre de la capa que se va a cargar, este nombre será el
-            identificador de la capa.
-        :type name: str
-        """
-        rlayer = QgsRasterLayer(path, name)
-        if not rlayer.isValid(): return
-        self.layers.append(rlayer)
+        manager.add_layers(self.layers)
 
     def cargarCapas(self):
         """Run method that performs all the real work"""
