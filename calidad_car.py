@@ -197,17 +197,15 @@ class CalidadCAR:
     def clean(self):
         """Recarga el plugin, limpiando todas las capas cargadas, excepto, las
            capas de salida de información."""
-        for layer in self.layers:
-            QgsMapLayerRegistry.instance().removeMapLayer(layer)
+        manager.remove_layers(self.layers)
 
-        csv_layers = QgsMapLayerRegistry.instance().mapLayersByName("csv")
-        for layer in csv_layers:
-            QgsMapLayerRegistry.instance().removeMapLayer(layer)
+        csv_layers = manager.get_all_layers("csv")
+        manager.remove_layers(csv_layers)
 
-        tempLayer = QgsMapLayerRegistry.instance().mapLayersByName("temp")
-        for layer in tempLayer:
-            layer.commitChanges()
-            QgsMapLayerRegistry.instance().removeMapLayer(layer)
+        tempLayer = manager.get_layer("temp")
+        if tempLayer is not None:
+            tempLayer.commitChanges()
+            manager.remove_layers([tempLayer])
 
         self.layers = []
 
@@ -219,16 +217,15 @@ class CalidadCAR:
            de la capa de secciones.
         """
         tempLayer = None
-        try:
-            seccionesLayer = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
-        except IndexError:
+
+        seccionesLayer = manager.get_layer('secciones')
+        if seccionesLayer is None:
             self.errorDialog(u'No se encontró la capa de secciones.',
-                    u'Asegurate de agregarla con la opción de cargar fondos.')
+            u'Asegurate de agregarla en el diálogo de cargar fondos.')
             return
 
-        try:
-            tempLayer = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
-        except IndexError:
+        tempLayer = manager.get_layer('temp')
+        if tempLayer is None:
             crs = seccionesLayer.crs().authid()
 
             tempLayer = QgsVectorLayer('LineString?crs='+crs, 'temp', 'memory')
@@ -338,12 +335,12 @@ class CalidadCAR:
            Para que el usuario pueda realizar esta operación, necesariamente, tienen
            que estar cargadas la capa de ejes, y la capa de secciones transversales.
         """
-        try:
-            secciones = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
-            eje = QgsMapLayerRegistry.instance().mapLayersByName("ejes")[0]
-        except IndexError:
+        secciones = manager.get_layer('secciones')
+        eje = manager.get_layer('ejes')
+
+        if secciones == None or eje == None:
             self.errorDialog(u'No se encontraron algunas de las capas necesarias para realizar esta operación.',
-                    u'Asegurate de agregar la capa de secciones, y la capa del eje con la opción Configurar Fondo.')
+                    u'Asegurate de agregar la capa de secciones, y la capa del eje en el diálogo de Cargar Fondos.')
             return
 
         work_layer = self.addFeature(secciones)
@@ -388,17 +385,16 @@ class CalidadCAR:
         pd_dataframe = pandas.DataFrame(distances, columns = ['Distancia'])
         print pd_dataframe
 
-
     def addCsv(self):
         """Crea una capa a partir de un archivo CSV, y une la información que
            contiene esta, con la tabla de atributos de la capa de secciones,
            la cual tendrá que existir, para que se pueda realizar esta operación.
         """
-        try:
-            shp = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
-        except IndexError:
+        shp = manager.get_layer('secciones')
+
+        if shp is None:
             self.errorDialog(u'No se encontró la capa de secciones.',
-            u'Asegurate de agregarla con la opción de Cargar fondos.')
+            u'Asegurate de agregarla en el diálogo de Cargar fondos.')
             return
 
         sheet = None
@@ -436,7 +432,6 @@ class CalidadCAR:
             # self.addSectionAction.setEnabled(True)
             # self.intersctionAction.setEnabled(True)
 
-
     def unload(self):
         """Remueve el menú del plugin, y las acciones de la barra de herramientas
            de la interfaz de QGIS."""
@@ -447,7 +442,6 @@ class CalidadCAR:
             self.iface.removeToolBarIcon(action)
         # remove the toolbar
         del self.toolbar
-
 
     def addLayers(self):
         """Carga las capas que el usuario ingreso en el dialog de cargar fondos,
