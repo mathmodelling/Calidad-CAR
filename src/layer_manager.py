@@ -19,6 +19,20 @@ def get_layer(layer_name):
     except IndexError:
         return None
 
+def get_all_layers(layer_name):
+    """ Retorna todas la capas con el nombre layer_name que estan en el registro de capas de qgis.
+
+    :param layer_name: Nombre de la capa a buscar.
+    :type layer_name: str
+
+    :returns: La primera capa cuyo nombre coincida con layer_name, en caso de que no exista se retorna None.
+    :rtype: Lista de QgsMapLayer
+    """
+    try:
+        return QgsMapLayerRegistry.instance().mapLayersByName(layer_name)
+    except IndexError:
+        return []
+
 def remove_layers(layers):
     """ Elimina capas del registro de capas de qgis.
 
