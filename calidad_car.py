@@ -162,14 +162,14 @@ class CalidadCAR:
             callback=self.cargarCapas,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icons/csv-join-icon-add.png'
+        icon_path = ':/plugins/CalidadCAR/icons/csv-join.png'
         self.addCsvAction = self.add_action(
             icon_path,
             text=self.tr(u'Unir CSV'),
             callback=self.addCsv,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icons/add-section-icon.png'
+        icon_path = ':/plugins/CalidadCAR/icons/add-section.png'
         self.addSectionAction = self.add_action(
             icon_path,
             text=self.tr(u'Agregar sección'),
