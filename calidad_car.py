@@ -176,7 +176,16 @@ class CalidadCAR:
             callback=self.addSection,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icons/start-icon.png'
+        # TODO: Agregar icono de esta acción
+        icon_path = ':/plugins/CalidadCAR/icons/icon.png'
+        self.intersctionAction = self.add_action(
+            icon_path,
+            text=self.tr(u'Agregar puntos de concentración'),
+            callback=self.concentrationPoints,
+            parent=self.iface.mainWindow())
+
+        # icon_path = ':/plugins/CalidadCAR/icons/start-icon.png'
+        icon_path = ':/plugins/CalidadCAR/icons/execute.png'
         self.intersctionAction = self.add_action(
             icon_path,
             text=self.tr(u'Calcular'),
@@ -328,7 +337,7 @@ class CalidadCAR:
         tempLayer.updateExtents()
         return tempLayer
 
-    def intersection(self):
+    def concentrationPoints(self):
         """Este método se encarga de recopilar toda la información, para posteriormente
            aplicarle la lógica del plugin.
 
@@ -361,6 +370,10 @@ class CalidadCAR:
         except IndexError:
             pass
 
+        temp_layer = manager.get_layer('output')
+        if temp_layer is not None:
+            manager.remove_layers([temp_layer])
+
         #Mostrar la capa de trabajo work_layer
         QgsMapLayerRegistry.instance().addMapLayer(work_layer)
 
@@ -368,6 +381,20 @@ class CalidadCAR:
         work_layer.startEditing()
         self.iface.showAttributeTable(work_layer)
 
+
+    def intersection(self):
+        """Se encarga de aplicar el modelo matemático a la información para determinar la calidad del agua.
+        """
+
+        # TODO: Agregar casos de excepción para esta acción
+        # TODO: Verificar que todos los puntos de concentración sean no nulos
+        # TODO: Separar información necesaria en vectores de numpy
+
+        work_layer = manager.get_layer('output')
+        eje = manager.get_layer('ejes')
+
+        if work_layer is None or eje is None:
+            return
         #Crar un DataFrame de pandas con la tabla de atributos de la capa de trabajo
         table = [row.attributes() for row in work_layer.getFeatures()]
         field_names = [field.name() for field in work_layer.pendingFields() ]
