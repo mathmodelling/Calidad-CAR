@@ -6,5 +6,6 @@
         <file>icons/add-section.png</file>
         <file>icons/refresh-icon.png</file>
         <file>icons/start-icon.png</file>
+        <file>icons/execute.png</file>
     </qresource>
 </RCC>
