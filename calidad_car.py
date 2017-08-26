@@ -338,11 +338,9 @@ class CalidadCAR:
         return tempLayer
 
     def concentrationPoints(self):
-        """Este método se encarga de recopilar toda la información, para posteriormente
-           aplicarle la lógica del plugin.
+        """Este método se encarga de recopilar toda la información, para permitirle al usuario ingresar los puntos de concentración
 
-           Para que el usuario pueda realizar esta operación, necesariamente, tienen
-           que estar cargadas la capa de ejes, y la capa de secciones transversales.
+           Para que el usuario pueda realizar esta operación, necesariamente, tienen que estar cargadas la capa de ejes, y la capa de secciones transversales.
         """
         secciones = manager.get_layer('secciones')
         eje = manager.get_layer('ejes')
@@ -354,10 +352,10 @@ class CalidadCAR:
 
         work_layer = self.addFeature(secciones)
 
-        try:
+        temp = manager.get_layer('temp')
+        if temp is not None:
             """En caso de que existan secciones temporales, se combinaran con la
                capa de secciones, para crear la capa work_layer"""
-            temp = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
 
             for new_feature in temp.getFeatures():
                 segements = geometry.getSegments(work_layer)
@@ -367,26 +365,21 @@ class CalidadCAR:
                 # print 'IDX: ', idx
                 work_layer = self.addFeature(work_layer, new_feature, idx)
 
-        except IndexError:
-            pass
-
-        temp_layer = manager.get_layer('output')
-        if temp_layer is not None:
-            manager.remove_layers([temp_layer])
+        output = manager.get_layer('output')
+        if output is not None:
+            manager.remove_layers([output])
 
         #Mostrar la capa de trabajo work_layer
-        QgsMapLayerRegistry.instance().addMapLayer(work_layer)
+        manager.add_layers([work_layer])
 
         work_layer.dataProvider().addAttributes([QgsField(u'Concentración', QVariant.Int)])
         work_layer.startEditing()
         self.iface.showAttributeTable(work_layer)
 
-
     def intersection(self):
         """Se encarga de aplicar el modelo matemático a la información para determinar la calidad del agua.
         """
 
-        # TODO: Agregar casos de excepción para esta acción
         # TODO: Verificar que todos los puntos de concentración sean no nulos
         # TODO: Separar información necesaria en vectores de numpy
 
@@ -394,7 +387,9 @@ class CalidadCAR:
         eje = manager.get_layer('ejes')
 
         if work_layer is None or eje is None:
+            self.errorDialog(u'No se encontraron algunas de las capas necesarias para realizar esta operación.', u'Asegurate de agregar los puntos de concentración, y la capa del eje en el diálogo de Cargar Fondos.')
             return
+
         #Crar un DataFrame de pandas con la tabla de atributos de la capa de trabajo
         table = [row.attributes() for row in work_layer.getFeatures()]
         field_names = [field.name() for field in work_layer.pendingFields() ]
