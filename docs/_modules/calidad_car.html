@@ -42,26 +42,29 @@
             
   <h1>Código fuente para calidad_car</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;Este módulo es el que articula toda la funcionalidad del plugin,</span>
+<span class="sd">y esta compuesto por la clase CalidadCAR.&quot;&quot;&quot;</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">qgis.core</span> <span class="k">import</span> <span class="p">(</span><span class="n">QgsVectorLayer</span><span class="p">,</span> <span class="n">QgsRasterLayer</span><span class="p">,</span> <span class="n">QgsCoordinateReferenceSystem</span><span class="p">,</span>
 <span class="n">QgsMapLayerRegistry</span><span class="p">,</span> <span class="n">QgsCoordinateReferenceSystem</span><span class="p">,</span> <span class="n">QgsVectorJoinInfo</span><span class="p">,</span>
-<span class="n">QGis</span><span class="p">,</span> <span class="n">QgsPoint</span><span class="p">,</span> <span class="n">QgsFeature</span><span class="p">,</span> <span class="n">QgsGeometry</span><span class="p">)</span>
+<span class="n">QGis</span><span class="p">,</span> <span class="n">QgsPoint</span><span class="p">,</span> <span class="n">QgsFeature</span><span class="p">,</span> <span class="n">QgsGeometry</span><span class="p">,</span> <span class="n">QgsField</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">qgis.gui</span> <span class="k">import</span> <span class="n">QgsMapToolEmitPoint</span>
-<span class="kn">from</span> <span class="nn">PyQt4.QtCore</span> <span class="k">import</span> <span class="n">QSettings</span><span class="p">,</span> <span class="n">QTranslator</span><span class="p">,</span> <span class="n">qVersion</span><span class="p">,</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">QFileInfo</span>
+<span class="kn">from</span> <span class="nn">PyQt4.QtCore</span> <span class="k">import</span> <span class="n">QSettings</span><span class="p">,</span> <span class="n">QTranslator</span><span class="p">,</span> <span class="n">qVersion</span><span class="p">,</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">QFileInfo</span><span class="p">,</span><span class="n">QVariant</span>
 <span class="kn">from</span> <span class="nn">PyQt4.QtGui</span> <span class="k">import</span> <span class="n">QAction</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QMessageBox</span>
 
 
 <span class="kn">import</span> <span class="nn">resources</span>
 <span class="kn">from</span> <span class="nn">calidad_car_dialog</span> <span class="k">import</span> <span class="n">Ui_Dialog</span> <span class="k">as</span> <span class="n">CalidadCARDialog</span>
 <span class="kn">from</span> <span class="nn">dialogo_csv</span> <span class="k">import</span> <span class="n">CSVDialog</span>
+<span class="kn">from</span> <span class="nn">dialogo_concentracion</span> <span class="k">import</span> <span class="n">DialogoConcentracion</span>
 <span class="kn">import</span> <span class="nn">os.path</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
 
 <span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">randint</span>
+
 <span class="kn">import</span> <span class="nn">geometry</span>
+<span class="kn">from</span> <span class="nn">src</span> <span class="k">import</span> <span class="n">layer_manager</span> <span class="k">as</span> <span class="n">manager</span>
 
 <div class="viewcode-block" id="CalidadCAR"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR">[documentos]</a><span class="k">class</span> <span class="nc">CalidadCAR</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Implementación del plugin.&quot;&quot;&quot;</span>
@@ -202,21 +205,30 @@
             <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cargarCapas</span><span class="p">,</span>
             <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">mainWindow</span><span class="p">())</span>
 
-        <span class="n">icon_path</span> <span class="o">=</span> <span class="s1">&#39;:/plugins/CalidadCAR/icons/csv-join-icon-add.png&#39;</span>
+        <span class="n">icon_path</span> <span class="o">=</span> <span class="s1">&#39;:/plugins/CalidadCAR/icons/csv-join.png&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">addCsvAction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span>
             <span class="n">icon_path</span><span class="p">,</span>
             <span class="n">text</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;Unir CSV&#39;</span><span class="p">),</span>
             <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">addCsv</span><span class="p">,</span>
             <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">mainWindow</span><span class="p">())</span>
 
-        <span class="n">icon_path</span> <span class="o">=</span> <span class="s1">&#39;:/plugins/CalidadCAR/icons/add-section-icon.png&#39;</span>
+        <span class="n">icon_path</span> <span class="o">=</span> <span class="s1">&#39;:/plugins/CalidadCAR/icons/add-section.png&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">addSectionAction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span>
             <span class="n">icon_path</span><span class="p">,</span>
             <span class="n">text</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;Agregar sección&#39;</span><span class="p">),</span>
             <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">addSection</span><span class="p">,</span>
             <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">mainWindow</span><span class="p">())</span>
 
-        <span class="n">icon_path</span> <span class="o">=</span> <span class="s1">&#39;:/plugins/CalidadCAR/icons/start-icon.png&#39;</span>
+        <span class="c1"># TODO: Agregar icono de esta acción</span>
+        <span class="n">icon_path</span> <span class="o">=</span> <span class="s1">&#39;:/plugins/CalidadCAR/icons/icon.png&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intersctionAction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span>
+            <span class="n">icon_path</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;Agregar puntos de concentración&#39;</span><span class="p">),</span>
+            <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">concentrationPoints</span><span class="p">,</span>
+            <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">mainWindow</span><span class="p">())</span>
+
+        <span class="c1"># icon_path = &#39;:/plugins/CalidadCAR/icons/start-icon.png&#39;</span>
+        <span class="n">icon_path</span> <span class="o">=</span> <span class="s1">&#39;:/plugins/CalidadCAR/icons/execute.png&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">intersctionAction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span>
             <span class="n">icon_path</span><span class="p">,</span>
             <span class="n">text</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;Calcular&#39;</span><span class="p">),</span>
@@ -237,17 +249,15 @@
 <div class="viewcode-block" id="CalidadCAR.clean"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.clean">[documentos]</a>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Recarga el plugin, limpiando todas las capas cargadas, excepto, las</span>
 <span class="sd">           capas de salida de información.&quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
-            <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">removeMapLayer</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+        <span class="n">manager</span><span class="o">.</span><span class="n">remove_layers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span>
 
-        <span class="n">csv_layers</span> <span class="o">=</span> <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">mapLayersByName</span><span class="p">(</span><span class="s2">&quot;csv&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">csv_layers</span><span class="p">:</span>
-            <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">removeMapLayer</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+        <span class="n">csv_layers</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_all_layers</span><span class="p">(</span><span class="s2">&quot;csv&quot;</span><span class="p">)</span>
+        <span class="n">manager</span><span class="o">.</span><span class="n">remove_layers</span><span class="p">(</span><span class="n">csv_layers</span><span class="p">)</span>
 
-        <span class="n">tempLayer</span> <span class="o">=</span> <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">mapLayersByName</span><span class="p">(</span><span class="s2">&quot;temp&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">tempLayer</span><span class="p">:</span>
-            <span class="n">layer</span><span class="o">.</span><span class="n">commitChanges</span><span class="p">()</span>
-            <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">removeMapLayer</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+        <span class="n">tempLayer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s2">&quot;temp&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tempLayer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">tempLayer</span><span class="o">.</span><span class="n">commitChanges</span><span class="p">()</span>
+            <span class="n">manager</span><span class="o">.</span><span class="n">remove_layers</span><span class="p">([</span><span class="n">tempLayer</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span></div>
 
@@ -259,16 +269,15 @@
 <span class="sd">           de la capa de secciones.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tempLayer</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">seccionesLayer</span> <span class="o">=</span> <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">mapLayersByName</span><span class="p">(</span><span class="s2">&quot;secciones&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+
+        <span class="n">seccionesLayer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;secciones&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">seccionesLayer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;No se encontró la capa de secciones.&#39;</span><span class="p">,</span>
-                    <span class="sa">u</span><span class="s1">&#39;Asegurate de agregarla con la opción de cargar fondos.&#39;</span><span class="p">)</span>
+            <span class="sa">u</span><span class="s1">&#39;Asegurate de agregarla en el diálogo de cargar fondos.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">tempLayer</span> <span class="o">=</span> <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">mapLayersByName</span><span class="p">(</span><span class="s2">&quot;temp&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+        <span class="n">tempLayer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tempLayer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">crs</span> <span class="o">=</span> <span class="n">seccionesLayer</span><span class="o">.</span><span class="n">crs</span><span class="p">()</span><span class="o">.</span><span class="n">authid</span><span class="p">()</span>
 
             <span class="n">tempLayer</span> <span class="o">=</span> <span class="n">QgsVectorLayer</span><span class="p">(</span><span class="s1">&#39;LineString?crs=&#39;</span><span class="o">+</span><span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;temp&#39;</span><span class="p">,</span> <span class="s1">&#39;memory&#39;</span><span class="p">)</span>
@@ -371,27 +380,25 @@
         <span class="n">tempLayer</span><span class="o">.</span><span class="n">updateExtents</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">tempLayer</span></div>
 
-<div class="viewcode-block" id="CalidadCAR.intersection"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.intersection">[documentos]</a>    <span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Este método se encarga de recopilar toda la información, para posteriormente</span>
-<span class="sd">           aplicarle la lógica del plugin.</span>
+<div class="viewcode-block" id="CalidadCAR.concentrationPoints"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.concentrationPoints">[documentos]</a>    <span class="k">def</span> <span class="nf">concentrationPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Este método se encarga de recopilar toda la información, para permitirle al usuario ingresar los puntos de concentración.</span>
 
-<span class="sd">           Para que el usuario pueda realizar esta operación, necesariamente, tienen</span>
-<span class="sd">           que estar cargadas la capa de ejes, y la capa de secciones transversales.</span>
+<span class="sd">           Para que el usuario pueda realizar esta operación, necesariamente, tienen que estar cargadas la capa de ejes, y la capa de secciones transversales.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">secciones</span> <span class="o">=</span> <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">mapLayersByName</span><span class="p">(</span><span class="s2">&quot;secciones&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">eje</span> <span class="o">=</span> <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">mapLayersByName</span><span class="p">(</span><span class="s2">&quot;ejes&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+        <span class="n">secciones</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;secciones&#39;</span><span class="p">)</span>
+        <span class="n">eje</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;ejes&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">secciones</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">eje</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;No se encontraron algunas de las capas necesarias para realizar esta operación.&#39;</span><span class="p">,</span>
-                    <span class="sa">u</span><span class="s1">&#39;Asegurate de agregar la capa de secciones, y la capa del eje con la opción Configurar Fondo.&#39;</span><span class="p">)</span>
+                    <span class="sa">u</span><span class="s1">&#39;Asegurate de agregar la capa de secciones, y la capa del eje en el diálogo de Cargar Fondos.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="n">work_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">addFeature</span><span class="p">(</span><span class="n">secciones</span><span class="p">)</span>
 
-        <span class="k">try</span><span class="p">:</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">temp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="sd">&quot;&quot;&quot;En caso de que existan secciones temporales, se combinaran con la</span>
 <span class="sd">               capa de secciones, para crear la capa work_layer&quot;&quot;&quot;</span>
-            <span class="n">temp</span> <span class="o">=</span> <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">mapLayersByName</span><span class="p">(</span><span class="s2">&quot;temp&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="k">for</span> <span class="n">new_feature</span> <span class="ow">in</span> <span class="n">temp</span><span class="o">.</span><span class="n">getFeatures</span><span class="p">():</span>
                 <span class="n">segements</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">getSegments</span><span class="p">(</span><span class="n">work_layer</span><span class="p">)</span>
@@ -401,11 +408,30 @@
                 <span class="c1"># print &#39;IDX: &#39;, idx</span>
                 <span class="n">work_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">addFeature</span><span class="p">(</span><span class="n">work_layer</span><span class="p">,</span> <span class="n">new_feature</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
 
-        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-            <span class="k">pass</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">manager</span><span class="o">.</span><span class="n">remove_layers</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
 
         <span class="c1">#Mostrar la capa de trabajo work_layer</span>
-        <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">addMapLayer</span><span class="p">(</span><span class="n">work_layer</span><span class="p">)</span>
+        <span class="n">manager</span><span class="o">.</span><span class="n">add_layers</span><span class="p">([</span><span class="n">work_layer</span><span class="p">])</span>
+
+        <span class="n">work_layer</span><span class="o">.</span><span class="n">dataProvider</span><span class="p">()</span><span class="o">.</span><span class="n">addAttributes</span><span class="p">([</span><span class="n">QgsField</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;Concentración&#39;</span><span class="p">,</span> <span class="n">QVariant</span><span class="o">.</span><span class="n">Int</span><span class="p">)])</span>
+        <span class="n">work_layer</span><span class="o">.</span><span class="n">startEditing</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">showAttributeTable</span><span class="p">(</span><span class="n">work_layer</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CalidadCAR.intersection"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.intersection">[documentos]</a>    <span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Se encarga de aplicar el modelo matemático a la información para determinar la calidad del agua.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># TODO: Verificar que todos los puntos de concentración sean no nulos</span>
+        <span class="c1"># TODO: Separar información necesaria en vectores de numpy</span>
+
+        <span class="n">work_layer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">)</span>
+        <span class="n">eje</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;ejes&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">work_layer</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">eje</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;No se encontraron algunas de las capas necesarias para realizar esta operación.&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;Asegurate de agregar los puntos de concentración, y la capa del eje en el diálogo de Cargar Fondos.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
 
         <span class="c1">#Crar un DataFrame de pandas con la tabla de atributos de la capa de trabajo</span>
         <span class="n">table</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">attributes</span><span class="p">()</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">work_layer</span><span class="o">.</span><span class="n">getFeatures</span><span class="p">()]</span>
@@ -429,11 +455,11 @@
 <span class="sd">           contiene esta, con la tabla de atributos de la capa de secciones,</span>
 <span class="sd">           la cual tendrá que existir, para que se pueda realizar esta operación.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">shp</span> <span class="o">=</span> <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">mapLayersByName</span><span class="p">(</span><span class="s2">&quot;secciones&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+        <span class="n">shp</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;secciones&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">shp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;No se encontró la capa de secciones.&#39;</span><span class="p">,</span>
-            <span class="sa">u</span><span class="s1">&#39;Asegurate de agregarla con la opción de Cargar fondos.&#39;</span><span class="p">)</span>
+            <span class="sa">u</span><span class="s1">&#39;Asegurate de agregarla en el diálogo de Cargar fondos.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="n">sheet</span> <span class="o">=</span> <span class="kc">None</span>
@@ -471,7 +497,6 @@
             <span class="c1"># self.addSectionAction.setEnabled(True)</span>
             <span class="c1"># self.intersctionAction.setEnabled(True)</span>
 
-
 <div class="viewcode-block" id="CalidadCAR.unload"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.unload">[documentos]</a>    <span class="k">def</span> <span class="nf">unload</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Remueve el menú del plugin, y las acciones de la barra de herramientas</span>
 <span class="sd">           de la interfaz de QGIS.&quot;&quot;&quot;</span>
@@ -483,17 +508,14 @@
         <span class="c1"># remove the toolbar</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolbar</span></div>
 
-
 <div class="viewcode-block" id="CalidadCAR.addLayers"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.addLayers">[documentos]</a>    <span class="k">def</span> <span class="nf">addLayers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Carga las capas que el usuario ingreso en el dialog de cargar fondos,</span>
 <span class="sd">           los fondos se volverán a cargar cada vez que se llame este método, en</span>
 <span class="sd">           caso de que el usuario quiera recargar un fondo.&quot;&quot;&quot;</span>
 
-        <span class="c1">#Eliminar los fondos cargados</span>
-        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
-            <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">removeMapLayer</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
-
+        <span class="n">manager</span><span class="o">.</span><span class="n">remove_layers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
+
         <span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dlg</span><span class="o">.</span><span class="n">getFilePaths</span><span class="p">()</span>
 
         <span class="c1">#Cargar los fondos que se encuentrán en el dialogo de cargar fondos.</span>
@@ -502,52 +524,23 @@
             <span class="n">layerInfo</span> <span class="o">=</span> <span class="n">QFileInfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">layerInfo</span><span class="o">.</span><span class="n">suffix</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;tif&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">addRasterLayer</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+                <span class="n">layer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">load_raster_layer</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
+
             <span class="k">elif</span> <span class="n">layerInfo</span><span class="o">.</span><span class="n">suffix</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;shp&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">addVectorLayer</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;secciones&#39;</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;ejes&#39;</span><span class="p">:</span>
+                    <span class="n">layer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">load_vector_layer</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">layer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">load_vector_layer</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="mi">57</span><span class="p">,</span> <span class="mi">165</span><span class="p">,</span> <span class="mi">232</span><span class="p">))</span>
 
-        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">:</span>
-            <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">addMapLayer</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span></div>
+                <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CalidadCAR.addVectorLayer"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.addVectorLayer">[documentos]</a>    <span class="k">def</span> <span class="nf">addVectorLayer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Agrega una capa vectorizada a self.layers</span>
-
-<span class="sd">        :param path: Ruta de la capa que se va a cargar.</span>
-<span class="sd">        :type path: str</span>
-
-<span class="sd">        :param name: Nombre de la capa que se va a cargar, este nombre será el</span>
-<span class="sd">            identificador de la capa.</span>
-<span class="sd">        :type name: str</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">layer</span> <span class="o">=</span> <span class="n">QgsVectorLayer</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;ogr&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">layer</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
-            <span class="k">return</span>
-
-        <span class="c1"># Cambiar el color del layer</span>
-        <span class="n">symbol_layer</span> <span class="o">=</span> <span class="n">layer</span><span class="o">.</span><span class="n">rendererV2</span><span class="p">()</span><span class="o">.</span><span class="n">symbols</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">symbolLayer</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;ejes&#39;</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;secciones&#39;</span><span class="p">:</span>
-            <span class="n">symbol_layer</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">symbol_layer</span><span class="o">.</span><span class="n">setColor</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span><span class="mi">163</span><span class="p">))</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="CalidadCAR.addRasterLayer"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.addRasterLayer">[documentos]</a>    <span class="k">def</span> <span class="nf">addRasterLayer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Agrega una capa rasterizada a self.layers</span>
-
-<span class="sd">        :param path: Ruta de la capa que se va a cargar.</span>
-<span class="sd">        :type path: str</span>
-
-<span class="sd">        :param name: Nombre de la capa que se va a cargar, este nombre será el</span>
-<span class="sd">            identificador de la capa.</span>
-<span class="sd">        :type name: str</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">rlayer</span> <span class="o">=</span> <span class="n">QgsRasterLayer</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">rlayer</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span> <span class="k">return</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">rlayer</span><span class="p">)</span></div>
+        <span class="n">manager</span><span class="o">.</span><span class="n">add_layers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CalidadCAR.cargarCapas"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.cargarCapas">[documentos]</a>    <span class="k">def</span> <span class="nf">cargarCapas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Run method that performs all the real work&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Función que se ejecuta cuando el usuario hace click en la acción de Cargar Fondos&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dlg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dlg</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
@@ -555,8 +548,7 @@
             <span class="c1"># self.addCsvAction.setEnabled(True)</span>
 
 <div class="viewcode-block" id="CalidadCAR.errorDialog"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.errorDialog">[documentos]</a>    <span class="k">def</span> <span class="nf">errorDialog</span><span class="p">(</span><span class="n">selg</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">detail</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Dialogo de error que se lanzará cuando el usuario intente hacer una</span>
-<span class="sd">           operación que no esta permitida.</span>
+        <span class="sd">&quot;&quot;&quot;Dialogo de error que se lanzará cuando el usuario intente hacer una operación que no esta permitida.</span>
 
 <span class="sd">        :param text: Identificador principal del error.</span>
 <span class="sd">        :type text: str</span>

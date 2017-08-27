@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
+"""Este módulo es el que articula toda la funcionalidad del plugin,
+y esta compuesto por la clase CalidadCAR."""
 
-"""
 from qgis.core import (QgsVectorLayer, QgsRasterLayer, QgsCoordinateReferenceSystem,
 QgsMapLayerRegistry, QgsCoordinateReferenceSystem, QgsVectorJoinInfo,
 QGis, QgsPoint, QgsFeature, QgsGeometry, QgsField)
@@ -338,7 +338,7 @@ class CalidadCAR:
         return tempLayer
 
     def concentrationPoints(self):
-        """Este método se encarga de recopilar toda la información, para permitirle al usuario ingresar los puntos de concentración
+        """Este método se encarga de recopilar toda la información, para permitirle al usuario ingresar los puntos de concentración.
 
            Para que el usuario pueda realizar esta operación, necesariamente, tienen que estar cargadas la capa de ejes, y la capa de secciones transversales.
         """
@@ -497,7 +497,7 @@ class CalidadCAR:
         manager.add_layers(self.layers)
 
     def cargarCapas(self):
-        """Run method that performs all the real work"""
+        """Función que se ejecuta cuando el usuario hace click en la acción de Cargar Fondos"""
         self.dlg.show()
         result = self.dlg.exec_()
         if result:
@@ -505,8 +505,7 @@ class CalidadCAR:
             # self.addCsvAction.setEnabled(True)
 
     def errorDialog(selg, text, detail):
-        """Dialogo de error que se lanzará cuando el usuario intente hacer una
-           operación que no esta permitida.
+        """Dialogo de error que se lanzará cuando el usuario intente hacer una operación que no esta permitida.
 
         :param text: Identificador principal del error.
         :type text: str

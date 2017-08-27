@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+"""Este módulo propociona puntos de acceso al registro de capas de QGIS
+(QgsMapLayerRegistry.instance()), para hacer el código más legible."""
 from PyQt4.QtGui import QColor
 from qgis.core import ( QgsMapLayerRegistry,
                         QgsVectorLayer,
