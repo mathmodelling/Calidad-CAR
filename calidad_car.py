@@ -372,7 +372,7 @@ class CalidadCAR:
         #Mostrar la capa de trabajo work_layer
         manager.add_layers([work_layer])
 
-        work_layer.dataProvider().addAttributes([QgsField(u'Concentración', QVariant.Int)])
+        work_layer.dataProvider().addAttributes([QgsField(u'concentracion', QVariant.Int)])
         work_layer.startEditing()
         self.iface.showAttributeTable(work_layer)
 
@@ -390,6 +390,12 @@ class CalidadCAR:
             self.errorDialog(u'No se encontraron algunas de las capas necesarias para realizar esta operación.', u'Asegurate de agregar los puntos de concentración, y la capa del eje en el diálogo de Cargar Fondos.')
             return
 
+        idx = work_layer.fieldNameIndex('concentracion')
+        for feature in work_layer.getFeatures():
+            if feature.attributes()[idx] is None:
+                # TODO: Lanzar excepción por punto de concentracion nulo
+                return
+
         #Crar un DataFrame de pandas con la tabla de atributos de la capa de trabajo
         table = [row.attributes() for row in work_layer.getFeatures()]
         field_names = [field.name() for field in work_layer.pendingFields() ]
@@ -398,7 +404,7 @@ class CalidadCAR:
 
         #Crear un DataFrame de pandas con las distancias de la sucesión de secciones
         points = geometry.intersectionPoints(eje, work_layer)
-
+        #dasd asdnkjasd jksandkjas
         distances = [0]
         for i in xrange(len(points) - 1):
             distances.append(geometry.distance(points[i], points[i + 1]))
