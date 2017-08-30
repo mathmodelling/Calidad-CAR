@@ -177,7 +177,7 @@ class CalidadCAR:
             parent=self.iface.mainWindow())
 
         # TODO: Agregar icono de esta acción
-        icon_path = ':/plugins/CalidadCAR/icons/icon.png'
+        icon_path = ':/plugins/CalidadCAR/icons/concentration-icon.png'
         self.intersctionAction = self.add_action(
             icon_path,
             text=self.tr(u'Agregar puntos de concentración'),
@@ -404,7 +404,6 @@ class CalidadCAR:
 
         #Crear un DataFrame de pandas con las distancias de la sucesión de secciones
         points = geometry.intersectionPoints(eje, work_layer)
-        #dasd asdnkjasd jksandkjas
         distances = [0]
         for i in xrange(len(points) - 1):
             distances.append(geometry.distance(points[i], points[i + 1]))

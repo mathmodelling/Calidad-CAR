@@ -7,5 +7,6 @@
         <file>icons/refresh-icon.png</file>
         <file>icons/start-icon.png</file>
         <file>icons/execute.png</file>
+        <file>icons/concentration-icon.png</file>
     </qresource>
 </RCC>
