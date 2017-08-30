@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
+"""Este módulo es el que articula toda la funcionalidad del plugin,
+y esta compuesto por la clase CalidadCAR."""
 
-"""
 from qgis.core import (QgsVectorLayer, QgsRasterLayer, QgsCoordinateReferenceSystem,
 QgsMapLayerRegistry, QgsCoordinateReferenceSystem, QgsVectorJoinInfo,
 QGis, QgsPoint, QgsFeature, QgsGeometry, QgsField)
@@ -19,7 +19,9 @@ import os.path
 import pandas
 
 from random import randint
+
 import geometry
+from src import layer_manager as manager
 
 class CalidadCAR:
     """Implementación del plugin."""
@@ -160,21 +162,30 @@ class CalidadCAR:
             callback=self.cargarCapas,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icons/csv-join-icon-add.png'
+        icon_path = ':/plugins/CalidadCAR/icons/csv-join.png'
         self.addCsvAction = self.add_action(
             icon_path,
             text=self.tr(u'Unir CSV'),
             callback=self.addCsv,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icons/add-section-icon.png'
+        icon_path = ':/plugins/CalidadCAR/icons/add-section.png'
         self.addSectionAction = self.add_action(
             icon_path,
             text=self.tr(u'Agregar sección'),
             callback=self.addSection,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icons/start-icon.png'
+        # TODO: Agregar icono de esta acción
+        icon_path = ':/plugins/CalidadCAR/icons/icon.png'
+        self.intersctionAction = self.add_action(
+            icon_path,
+            text=self.tr(u'Agregar puntos de concentración'),
+            callback=self.concentrationPoints,
+            parent=self.iface.mainWindow())
+
+        # icon_path = ':/plugins/CalidadCAR/icons/start-icon.png'
+        icon_path = ':/plugins/CalidadCAR/icons/execute.png'
         self.intersctionAction = self.add_action(
             icon_path,
             text=self.tr(u'Calcular'),
@@ -195,17 +206,15 @@ class CalidadCAR:
     def clean(self):
         """Recarga el plugin, limpiando todas las capas cargadas, excepto, las
            capas de salida de información."""
-        for layer in self.layers:
-            QgsMapLayerRegistry.instance().removeMapLayer(layer)
+        manager.remove_layers(self.layers)
 
-        csv_layers = QgsMapLayerRegistry.instance().mapLayersByName("csv")
-        for layer in csv_layers:
-            QgsMapLayerRegistry.instance().removeMapLayer(layer)
+        csv_layers = manager.get_all_layers("csv")
+        manager.remove_layers(csv_layers)
 
-        tempLayer = QgsMapLayerRegistry.instance().mapLayersByName("temp")
-        for layer in tempLayer:
-            layer.commitChanges()
-            QgsMapLayerRegistry.instance().removeMapLayer(layer)
+        tempLayer = manager.get_layer("temp")
+        if tempLayer is not None:
+            tempLayer.commitChanges()
+            manager.remove_layers([tempLayer])
 
         self.layers = []
 
@@ -217,16 +226,15 @@ class CalidadCAR:
            de la capa de secciones.
         """
         tempLayer = None
-        try:
-            seccionesLayer = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
-        except IndexError:
+
+        seccionesLayer = manager.get_layer('secciones')
+        if seccionesLayer is None:
             self.errorDialog(u'No se encontró la capa de secciones.',
-                    u'Asegurate de agregarla con la opción de cargar fondos.')
+            u'Asegurate de agregarla en el diálogo de cargar fondos.')
             return
 
-        try:
-            tempLayer = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
-        except IndexError:
+        tempLayer = manager.get_layer('temp')
+        if tempLayer is None:
             crs = seccionesLayer.crs().authid()
 
             tempLayer = QgsVectorLayer('LineString?crs='+crs, 'temp', 'memory')
@@ -329,27 +337,25 @@ class CalidadCAR:
         tempLayer.updateExtents()
         return tempLayer
 
-    def intersection(self):
-        """Este método se encarga de recopilar toda la información, para posteriormente
-           aplicarle la lógica del plugin.
+    def concentrationPoints(self):
+        """Este método se encarga de recopilar toda la información, para permitirle al usuario ingresar los puntos de concentración.
 
-           Para que el usuario pueda realizar esta operación, necesariamente, tienen
-           que estar cargadas la capa de ejes, y la capa de secciones transversales.
+           Para que el usuario pueda realizar esta operación, necesariamente, tienen que estar cargadas la capa de ejes, y la capa de secciones transversales.
         """
-        try:
-            secciones = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
-            eje = QgsMapLayerRegistry.instance().mapLayersByName("ejes")[0]
-        except IndexError:
+        secciones = manager.get_layer('secciones')
+        eje = manager.get_layer('ejes')
+
+        if secciones == None or eje == None:
             self.errorDialog(u'No se encontraron algunas de las capas necesarias para realizar esta operación.',
-                    u'Asegurate de agregar la capa de secciones, y la capa del eje con la opción Configurar Fondo.')
+                    u'Asegurate de agregar la capa de secciones, y la capa del eje en el diálogo de Cargar Fondos.')
             return
 
         work_layer = self.addFeature(secciones)
 
-        try:
+        temp = manager.get_layer('temp')
+        if temp is not None:
             """En caso de que existan secciones temporales, se combinaran con la
                capa de secciones, para crear la capa work_layer"""
-            temp = QgsMapLayerRegistry.instance().mapLayersByName("temp")[0]
 
             for new_feature in temp.getFeatures():
                 segements = geometry.getSegments(work_layer)
@@ -359,16 +365,37 @@ class CalidadCAR:
                 # print 'IDX: ', idx
                 work_layer = self.addFeature(work_layer, new_feature, idx)
 
-        except IndexError:
-            pass
+        output = manager.get_layer('output')
+        if output is not None:
+            manager.remove_layers([output])
 
         #Mostrar la capa de trabajo work_layer
-        QgsMapLayerRegistry.instance().addMapLayer(work_layer)
+        manager.add_layers([work_layer])
 
-        work_layer.dataProvider().addAttributes([QgsField(u'Concentración', QVariant.Int)])
+        work_layer.dataProvider().addAttributes([QgsField(u'concentracion', QVariant.Int)])
         work_layer.startEditing()
         self.iface.showAttributeTable(work_layer)
-        
+
+    def intersection(self):
+        """Se encarga de aplicar el modelo matemático a la información para determinar la calidad del agua.
+        """
+
+        # TODO: Verificar que todos los puntos de concentración sean no nulos
+        # TODO: Separar información necesaria en vectores de numpy
+
+        work_layer = manager.get_layer('output')
+        eje = manager.get_layer('ejes')
+
+        if work_layer is None or eje is None:
+            self.errorDialog(u'No se encontraron algunas de las capas necesarias para realizar esta operación.', u'Asegurate de agregar los puntos de concentración, y la capa del eje en el diálogo de Cargar Fondos.')
+            return
+
+        idx = work_layer.fieldNameIndex('concentracion')
+        for feature in work_layer.getFeatures():
+            if feature.attributes()[idx] is None:
+                # TODO: Lanzar excepción por punto de concentracion nulo
+                return
+
         #Crar un DataFrame de pandas con la tabla de atributos de la capa de trabajo
         table = [row.attributes() for row in work_layer.getFeatures()]
         field_names = [field.name() for field in work_layer.pendingFields() ]
@@ -377,7 +404,7 @@ class CalidadCAR:
 
         #Crear un DataFrame de pandas con las distancias de la sucesión de secciones
         points = geometry.intersectionPoints(eje, work_layer)
-
+        #dasd asdnkjasd jksandkjas
         distances = [0]
         for i in xrange(len(points) - 1):
             distances.append(geometry.distance(points[i], points[i + 1]))
@@ -386,17 +413,16 @@ class CalidadCAR:
         pd_dataframe = pandas.DataFrame(distances, columns = ['Distancia'])
         print pd_dataframe
 
-
     def addCsv(self):
         """Crea una capa a partir de un archivo CSV, y une la información que
            contiene esta, con la tabla de atributos de la capa de secciones,
            la cual tendrá que existir, para que se pueda realizar esta operación.
         """
-        try:
-            shp = QgsMapLayerRegistry.instance().mapLayersByName("secciones")[0]
-        except IndexError:
+        shp = manager.get_layer('secciones')
+
+        if shp is None:
             self.errorDialog(u'No se encontró la capa de secciones.',
-            u'Asegurate de agregarla con la opción de Cargar fondos.')
+            u'Asegurate de agregarla en el diálogo de Cargar fondos.')
             return
 
         sheet = None
@@ -434,7 +460,6 @@ class CalidadCAR:
             # self.addSectionAction.setEnabled(True)
             # self.intersctionAction.setEnabled(True)
 
-
     def unload(self):
         """Remueve el menú del plugin, y las acciones de la barra de herramientas
            de la interfaz de QGIS."""
@@ -446,17 +471,14 @@ class CalidadCAR:
         # remove the toolbar
         del self.toolbar
 
-
     def addLayers(self):
         """Carga las capas que el usuario ingreso en el dialog de cargar fondos,
            los fondos se volverán a cargar cada vez que se llame este método, en
            caso de que el usuario quiera recargar un fondo."""
 
-        #Eliminar los fondos cargados
-        for layer in self.layers:
-            QgsMapLayerRegistry.instance().removeMapLayer(layer)
-
+        manager.remove_layers(self.layers)
         self.layers = []
+
         files = self.dlg.getFilePaths()
 
         #Cargar los fondos que se encuentrán en el dialogo de cargar fondos.
@@ -465,52 +487,23 @@ class CalidadCAR:
             layerInfo = QFileInfo(path)
 
             if layerInfo.suffix() == 'tif':
-                self.addRasterLayer(path, name)
+                layer = manager.load_raster_layer(path, name)
+                if layer is not None:
+                    self.layers.append(layer)
+
             elif layerInfo.suffix() == 'shp':
-                self.addVectorLayer(path, name)
+                if name == 'secciones' or name == 'ejes':
+                    layer = manager.load_vector_layer(path, name)
+                else:
+                    layer = manager.load_vector_layer(path, name, (57, 165, 232))
 
-        for layer in self.layers:
-            QgsMapLayerRegistry.instance().addMapLayer(layer)
+                if layer is not None:
+                    self.layers.append(layer)
 
-    def addVectorLayer(self, path, name):
-        """Agrega una capa vectorizada a self.layers
-
-        :param path: Ruta de la capa que se va a cargar.
-        :type path: str
-
-        :param name: Nombre de la capa que se va a cargar, este nombre será el
-            identificador de la capa.
-        :type name: str
-        """
-        layer = QgsVectorLayer(path, name, 'ogr')
-        if not layer.isValid():
-            return
-
-        # Cambiar el color del layer
-        symbol_layer = layer.rendererV2().symbols()[0].symbolLayer(0)
-        if name == 'ejes' or name == 'secciones':
-            symbol_layer.setColor(QColor(0, 0, 0))
-        else:
-            symbol_layer.setColor(QColor(randint(0, 50),randint(0, 255),163))
-
-        self.layers.append(layer)
-
-    def addRasterLayer(self, path, name):
-        """Agrega una capa rasterizada a self.layers
-
-        :param path: Ruta de la capa que se va a cargar.
-        :type path: str
-
-        :param name: Nombre de la capa que se va a cargar, este nombre será el
-            identificador de la capa.
-        :type name: str
-        """
-        rlayer = QgsRasterLayer(path, name)
-        if not rlayer.isValid(): return
-        self.layers.append(rlayer)
+        manager.add_layers(self.layers)
 
     def cargarCapas(self):
-        """Run method that performs all the real work"""
+        """Función que se ejecuta cuando el usuario hace click en la acción de Cargar Fondos"""
         self.dlg.show()
         result = self.dlg.exec_()
         if result:
@@ -518,8 +511,7 @@ class CalidadCAR:
             # self.addCsvAction.setEnabled(True)
 
     def errorDialog(selg, text, detail):
-        """Dialogo de error que se lanzará cuando el usuario intente hacer una
-           operación que no esta permitida.
+        """Dialogo de error que se lanzará cuando el usuario intente hacer una operación que no esta permitida.
 
         :param text: Identificador principal del error.
         :type text: str

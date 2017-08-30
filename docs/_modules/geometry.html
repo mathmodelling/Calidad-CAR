@@ -42,17 +42,20 @@
             
   <h1>Código fuente para geometry</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Este módulo contiene utilidades geometricas, que se utilizan en la</span>
+<span class="sd">clase CalidadCAR.&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">qgis.core</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="k">import</span> <span class="n">sqrt</span>
 
 <div class="viewcode-block" id="getSegments"><a class="viewcode-back" href="../help/documentacion.html#geometry.getSegments">[documentos]</a><span class="k">def</span> <span class="nf">getSegments</span><span class="p">(</span><span class="n">layer</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Get the segments of a layer</span>
+    <span class="sd">&quot;&quot;&quot;Retorna los segmentos de layer.</span>
 
-<span class="sd">    :param layer</span>
+<span class="sd">    :param layer: Capa de la cual se van a obtener los segementos</span>
 <span class="sd">    :type layer: QgsVectorLayer</span>
 
-<span class="sd">    :returns: The list of segements</span>
-<span class="sd">    :rtype: Polyline List</span>
+<span class="sd">    :returns: La lista de segmentos</span>
+<span class="sd">    :rtype: Lista de Polylines</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">segments</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -63,6 +66,7 @@
 
 <div class="viewcode-block" id="distance"><a class="viewcode-back" href="../help/documentacion.html#geometry.distance">[documentos]</a><span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Cálcula la distancia entre un punto a, y un punto b.</span>
+
 <span class="sd">    :param a: Punto a</span>
 <span class="sd">    :type a: QgsPoint</span>
 
@@ -97,10 +101,10 @@
 <div class="viewcode-block" id="intersectionPoints"><a class="viewcode-back" href="../help/documentacion.html#geometry.intersectionPoints">[documentos]</a><span class="k">def</span> <span class="nf">intersectionPoints</span><span class="p">(</span><span class="n">layerA</span><span class="p">,</span> <span class="n">layerB</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Obtiene los puntos de intersección entre dos capas.</span>
 
-<span class="sd">    :param layerA</span>
+<span class="sd">    :param layerA: Capa que se va a intersectar con layerB.</span>
 <span class="sd">    :type layerA: QgsVectorLayer</span>
 
-<span class="sd">    :param layerB</span>
+<span class="sd">    :param layerB: Capa que se va a intersectar con layerA.</span>
 <span class="sd">    :type layerB: QgsVectorLayer</span>
 
 <span class="sd">    :returns: La lista de los puntos de intersección</span>
@@ -140,10 +144,10 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 <div class="viewcode-block" id="intersection"><a class="viewcode-back" href="../help/documentacion.html#geometry.intersection">[documentos]</a><span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Optiene el punto de insersección entre dos geometrías</span>
+    <span class="sd">&quot;&quot;&quot;Optiene el punto de insersección entre dos geometrías.</span>
 
-<span class="sd">    :param A: Geometría A</span>
-<span class="sd">    :type A: QgsGeometry</span>
+<span class="sd">    :param A: Geometría A fsdfsdf</span>
+<span class="sd">    :type A: QgsGeometry fsdfsd</span>
 
 <span class="sd">    :param B: Geometría B</span>
 <span class="sd">    :type B: QgsGeometry</span>

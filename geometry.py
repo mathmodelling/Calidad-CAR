@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
+
+"""Este módulo contiene utilidades geometricas, que se utilizan en la
+clase CalidadCAR."""
 from qgis.core import *
 from math import sqrt
 
 def getSegments(layer):
-    """Get the segments of a layer
+    """Retorna los segmentos de layer.
 
-    :param layer
+    :param layer: Capa de la cual se van a obtener los segementos
     :type layer: QgsVectorLayer
 
-    :returns: The list of segements
-    :rtype: Polyline List
+    :returns: La lista de segmentos
+    :rtype: Lista de Polylines
     """
     segments = []
 
@@ -20,6 +23,7 @@ def getSegments(layer):
 
 def distance(a, b):
     """Cálcula la distancia entre un punto a, y un punto b.
+
     :param a: Punto a
     :type a: QgsPoint
 
@@ -54,10 +58,10 @@ def buildConvexPolygon(segments):
 def intersectionPoints(layerA, layerB):
     """Obtiene los puntos de intersección entre dos capas.
 
-    :param layerA
+    :param layerA: Capa que se va a intersectar con layerB.
     :type layerA: QgsVectorLayer
 
-    :param layerB
+    :param layerB: Capa que se va a intersectar con layerA.
     :type layerB: QgsVectorLayer
 
     :returns: La lista de los puntos de intersección
@@ -97,10 +101,10 @@ def intersectionLayerGeometry(layer, geometry):
     return None
 
 def intersection(A, B):
-    """Optiene el punto de insersección entre dos geometrías
+    """Optiene el punto de insersección entre dos geometrías.
 
-    :param A: Geometría A
-    :type A: QgsGeometry
+    :param A: Geometría A fsdfsdf
+    :type A: QgsGeometry fsdfsd
 
     :param B: Geometría B
     :type B: QgsGeometry
