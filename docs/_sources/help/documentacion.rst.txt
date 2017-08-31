@@ -23,6 +23,12 @@ Módulo layer_manager
 .. automodule:: src.layer_manager
    :members:
 
+***********************
+Módulo util
+***********************
+
+.. automodule:: util
+   :members:
 
 *********************
 Componentes gráficos

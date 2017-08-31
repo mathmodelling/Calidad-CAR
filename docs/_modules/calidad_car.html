@@ -45,26 +45,42 @@
 <span class="sd">&quot;&quot;&quot;Este módulo es el que articula toda la funcionalidad del plugin,</span>
 <span class="sd">y esta compuesto por la clase CalidadCAR.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">qgis.core</span> <span class="k">import</span> <span class="p">(</span><span class="n">QgsVectorLayer</span><span class="p">,</span> <span class="n">QgsRasterLayer</span><span class="p">,</span> <span class="n">QgsCoordinateReferenceSystem</span><span class="p">,</span>
-<span class="n">QgsMapLayerRegistry</span><span class="p">,</span> <span class="n">QgsCoordinateReferenceSystem</span><span class="p">,</span> <span class="n">QgsVectorJoinInfo</span><span class="p">,</span>
-<span class="n">QGis</span><span class="p">,</span> <span class="n">QgsPoint</span><span class="p">,</span> <span class="n">QgsFeature</span><span class="p">,</span> <span class="n">QgsGeometry</span><span class="p">,</span> <span class="n">QgsField</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">qgis.core</span> <span class="k">import</span> <span class="p">(</span> <span class="n">QGis</span><span class="p">,</span>
+                        <span class="n">QgsField</span><span class="p">,</span>
+                        <span class="n">QgsPoint</span><span class="p">,</span>
+                        <span class="n">QgsFeature</span><span class="p">,</span>
+                        <span class="n">QgsGeometry</span><span class="p">,</span>
+                        <span class="n">QgsVectorLayer</span><span class="p">,</span>
+                        <span class="n">QgsRasterLayer</span><span class="p">,</span>
+                        <span class="n">QgsVectorJoinInfo</span><span class="p">,</span>
+                        <span class="n">QgsMapLayerRegistry</span><span class="p">,</span>
+                        <span class="n">QgsCoordinateReferenceSystem</span><span class="p">,</span>
+                        <span class="n">QgsCoordinateReferenceSystem</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">qgis.gui</span> <span class="k">import</span> <span class="n">QgsMapToolEmitPoint</span>
-<span class="kn">from</span> <span class="nn">PyQt4.QtCore</span> <span class="k">import</span> <span class="n">QSettings</span><span class="p">,</span> <span class="n">QTranslator</span><span class="p">,</span> <span class="n">qVersion</span><span class="p">,</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">QFileInfo</span><span class="p">,</span><span class="n">QVariant</span>
-<span class="kn">from</span> <span class="nn">PyQt4.QtGui</span> <span class="k">import</span> <span class="n">QAction</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="kn">from</span> <span class="nn">PyQt4.QtCore</span> <span class="k">import</span> <span class="p">(</span> <span class="n">QVariant</span><span class="p">,</span>
+                           <span class="n">qVersion</span><span class="p">,</span>
+                           <span class="n">QSettings</span><span class="p">,</span>
+                           <span class="n">QFileInfo</span><span class="p">,</span>
+                           <span class="n">QTranslator</span><span class="p">,</span>
+                           <span class="n">QCoreApplication</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">PyQt4.QtGui</span> <span class="k">import</span> <span class="p">(</span> <span class="n">QIcon</span><span class="p">,</span>
+                          <span class="n">QColor</span><span class="p">,</span>
+                          <span class="n">QAction</span><span class="p">,</span>
+                          <span class="n">QMessageBox</span><span class="p">)</span>
 
 
-<span class="kn">import</span> <span class="nn">resources</span>
-<span class="kn">from</span> <span class="nn">calidad_car_dialog</span> <span class="k">import</span> <span class="n">Ui_Dialog</span> <span class="k">as</span> <span class="n">CalidadCARDialog</span>
-<span class="kn">from</span> <span class="nn">dialogo_csv</span> <span class="k">import</span> <span class="n">CSVDialog</span>
-<span class="kn">from</span> <span class="nn">dialogo_concentracion</span> <span class="k">import</span> <span class="n">DialogoConcentracion</span>
+<span class="kn">import</span> <span class="nn">util</span>
 <span class="kn">import</span> <span class="nn">os.path</span>
-<span class="kn">import</span> <span class="nn">pandas</span>
-
-<span class="kn">from</span> <span class="nn">random</span> <span class="k">import</span> <span class="n">randint</span>
-
 <span class="kn">import</span> <span class="nn">geometry</span>
+<span class="kn">import</span> <span class="nn">resources</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">dialogo_csv</span> <span class="k">import</span> <span class="n">CSVDialog</span>
 <span class="kn">from</span> <span class="nn">src</span> <span class="k">import</span> <span class="n">layer_manager</span> <span class="k">as</span> <span class="n">manager</span>
+<span class="kn">from</span> <span class="nn">dialogo_concentracion</span> <span class="k">import</span> <span class="n">DialogoConcentracion</span>
+<span class="kn">from</span> <span class="nn">calidad_car_dialog</span> <span class="k">import</span> <span class="n">Ui_Dialog</span> <span class="k">as</span> <span class="n">CalidadCARDialog</span>
+<span class="c1"># import pandas</span>
 
 <div class="viewcode-block" id="CalidadCAR"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR">[documentos]</a><span class="k">class</span> <span class="nc">CalidadCAR</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Implementación del plugin.&quot;&quot;&quot;</span>
@@ -119,7 +135,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># noinspection PyTypeChecker,PyArgumentList,PyCallByClass</span>
         <span class="k">return</span> <span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="s1">&#39;CalidadCAR&#39;</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span></div>
-
 
 <div class="viewcode-block" id="CalidadCAR.add_action"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.add_action">[documentos]</a>    <span class="k">def</span> <span class="nf">add_action</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -219,8 +234,7 @@
             <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">addSection</span><span class="p">,</span>
             <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">mainWindow</span><span class="p">())</span>
 
-        <span class="c1"># TODO: Agregar icono de esta acción</span>
-        <span class="n">icon_path</span> <span class="o">=</span> <span class="s1">&#39;:/plugins/CalidadCAR/icons/icon.png&#39;</span>
+        <span class="n">icon_path</span> <span class="o">=</span> <span class="s1">&#39;:/plugins/CalidadCAR/icons/concentration-icon.png&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">intersctionAction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span>
             <span class="n">icon_path</span><span class="p">,</span>
             <span class="n">text</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;Agregar puntos de concentración&#39;</span><span class="p">),</span>
@@ -243,7 +257,6 @@
             <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">mainWindow</span><span class="p">())</span></div>
 
         <span class="c1"># self.intersctionAction.setEnabled(False)</span>
-        <span class="c1"># self.addSectionAction.setEnabled(False)</span>
         <span class="c1"># self.addCsvAction.setEnabled(False)</span>
 
 <div class="viewcode-block" id="CalidadCAR.clean"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.clean">[documentos]</a>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -259,6 +272,7 @@
             <span class="n">tempLayer</span><span class="o">.</span><span class="n">commitChanges</span><span class="p">()</span>
             <span class="n">manager</span><span class="o">.</span><span class="n">remove_layers</span><span class="p">([</span><span class="n">tempLayer</span><span class="p">])</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">addCsvAction</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span></div>
 
 <div class="viewcode-block" id="CalidadCAR.addSection"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.addSection">[documentos]</a>    <span class="k">def</span> <span class="nf">addSection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -268,13 +282,23 @@
 <span class="sd">           En caso de que no exista la capa temp, se creara una nueva, con el crs</span>
 <span class="sd">           de la capa de secciones.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">addCsvAction</span><span class="o">.</span><span class="n">isEnabled</span><span class="p">():</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;Agregar sección transversal&#39;</span>
+            <span class="n">detail</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;Una vez creada la capa de secciones no podrás unir más archivos CSV a la tabla de atributos de la capa de secciones.</span><span class="se">\n\n</span><span class="s1">¿Deseas crear la capa de secciones?&#39;</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">util</span><span class="o">.</span><span class="n">questionDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">detail</span><span class="p">):</span>
+                <span class="k">return</span>
+
         <span class="n">tempLayer</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">seccionesLayer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;secciones&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">seccionesLayer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;No se encontró la capa de secciones.&#39;</span><span class="p">,</span>
+            <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;No se encontró la capa de secciones.&#39;</span><span class="p">,</span>
             <span class="sa">u</span><span class="s1">&#39;Asegurate de agregarla en el diálogo de cargar fondos.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
+
+        <span class="c1">#Bloquear acción de realizar más uniones con archivos CSV</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addCsvAction</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="n">tempLayer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">tempLayer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -389,7 +413,7 @@
         <span class="n">eje</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;ejes&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">secciones</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">eje</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;No se encontraron algunas de las capas necesarias para realizar esta operación.&#39;</span><span class="p">,</span>
+            <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;No se encontraron algunas de las capas necesarias para realizar esta operación.&#39;</span><span class="p">,</span>
                     <span class="sa">u</span><span class="s1">&#39;Asegurate de agregar la capa de secciones, y la capa del eje en el diálogo de Cargar Fondos.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
@@ -415,7 +439,7 @@
         <span class="c1">#Mostrar la capa de trabajo work_layer</span>
         <span class="n">manager</span><span class="o">.</span><span class="n">add_layers</span><span class="p">([</span><span class="n">work_layer</span><span class="p">])</span>
 
-        <span class="n">work_layer</span><span class="o">.</span><span class="n">dataProvider</span><span class="p">()</span><span class="o">.</span><span class="n">addAttributes</span><span class="p">([</span><span class="n">QgsField</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;Concentración&#39;</span><span class="p">,</span> <span class="n">QVariant</span><span class="o">.</span><span class="n">Int</span><span class="p">)])</span>
+        <span class="n">work_layer</span><span class="o">.</span><span class="n">dataProvider</span><span class="p">()</span><span class="o">.</span><span class="n">addAttributes</span><span class="p">([</span><span class="n">QgsField</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;concentracion&#39;</span><span class="p">,</span> <span class="n">QVariant</span><span class="o">.</span><span class="n">Double</span><span class="p">)])</span>
         <span class="n">work_layer</span><span class="o">.</span><span class="n">startEditing</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">showAttributeTable</span><span class="p">(</span><span class="n">work_layer</span><span class="p">)</span></div>
 
@@ -423,32 +447,47 @@
         <span class="sd">&quot;&quot;&quot;Se encarga de aplicar el modelo matemático a la información para determinar la calidad del agua.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># TODO: Verificar que todos los puntos de concentración sean no nulos</span>
-        <span class="c1"># TODO: Separar información necesaria en vectores de numpy</span>
-
         <span class="n">work_layer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">)</span>
         <span class="n">eje</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;ejes&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">work_layer</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">eje</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;No se encontraron algunas de las capas necesarias para realizar esta operación.&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;Asegurate de agregar los puntos de concentración, y la capa del eje en el diálogo de Cargar Fondos.&#39;</span><span class="p">)</span>
+            <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;No se encontraron algunas de las capas necesarias para realizar esta operación.&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;Asegurate de agregar los puntos de concentración, y la capa del eje en el diálogo de Cargar Fondos.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="c1">#Crar un DataFrame de pandas con la tabla de atributos de la capa de trabajo</span>
-        <span class="n">table</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">attributes</span><span class="p">()</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">work_layer</span><span class="o">.</span><span class="n">getFeatures</span><span class="p">()]</span>
-        <span class="n">field_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">work_layer</span><span class="o">.</span><span class="n">pendingFields</span><span class="p">()</span> <span class="p">]</span>
-        <span class="n">pd_frame</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">field_names</span><span class="p">)</span>
-        <span class="nb">print</span> <span class="n">pd_frame</span>
+        <span class="n">concentration_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">vel_values</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="c1">#Crear un DataFrame de pandas con las distancias de la sucesión de secciones</span>
+        <span class="n">field_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">work_layer</span><span class="o">.</span><span class="n">pendingFields</span><span class="p">()]</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;Selecciona la columna en la que se encuentra la información &#39;</span> <span class="o">+</span>\
+               <span class="s1">&#39; de la velocidad:&#39;</span>
+
+        <span class="n">vel_name</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">comboBoxDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;Velocidad&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">field_names</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vel_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;La información de la velocidad es necesaria.&#39;</span><span class="p">,</span>
+        		<span class="sa">u</span><span class="s1">&#39;Puedes agregarla con la opción de Unir CSV&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">concen_idx</span> <span class="o">=</span> <span class="n">work_layer</span><span class="o">.</span><span class="n">fieldNameIndex</span><span class="p">(</span><span class="s1">&#39;concentracion&#39;</span><span class="p">)</span>
+        <span class="n">vel_idx</span> <span class="o">=</span> <span class="n">work_layer</span><span class="o">.</span><span class="n">fieldNameIndex</span><span class="p">(</span><span class="n">vel_name</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">work_layer</span><span class="o">.</span><span class="n">getFeatures</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">concentration_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">attributes</span><span class="p">()[</span><span class="n">concen_idx</span><span class="p">]))</span>
+                <span class="n">vel_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">attributes</span><span class="p">()[</span><span class="n">vel_idx</span><span class="p">]))</span>
+            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;Uno de los valores en la columna de velocidad o puntos de concentración es nulo&#39;</span><span class="p">,</span>
+                <span class="sa">u</span><span class="s1">&#39;Asegurate de que no hay valores nulos en la tabla.&#39;</span><span class="p">)</span>
+                <span class="k">return</span>
+
         <span class="n">points</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">intersectionPoints</span><span class="p">(</span><span class="n">eje</span><span class="p">,</span> <span class="n">work_layer</span><span class="p">)</span>
-
         <span class="n">distances</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">geometry</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
         <span class="c1"># print distances</span>
-
-        <span class="n">pd_dataframe</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">distances</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Distancia&#39;</span><span class="p">])</span>
-        <span class="nb">print</span> <span class="n">pd_dataframe</span></div>
+        <span class="n">condiciones_iniciales</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">distances</span><span class="p">,</span> <span class="n">concentration_values</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+        <span class="nb">print</span> <span class="n">condiciones_iniciales</span>
+        <span class="n">velocidad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vel_values</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="n">velocidad</span></div>
 
 <div class="viewcode-block" id="CalidadCAR.addCsv"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.addCsv">[documentos]</a>    <span class="k">def</span> <span class="nf">addCsv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Crea una capa a partir de un archivo CSV, y une la información que</span>
@@ -458,7 +497,7 @@
         <span class="n">shp</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;secciones&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">shp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;No se encontró la capa de secciones.&#39;</span><span class="p">,</span>
+            <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;No se encontró la capa de secciones.&#39;</span><span class="p">,</span>
             <span class="sa">u</span><span class="s1">&#39;Asegurate de agregarla en el diálogo de Cargar fondos.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
@@ -544,24 +583,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">dlg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dlg</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">addLayers</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">addLayers</span><span class="p">()</span></div></div>
             <span class="c1"># self.addCsvAction.setEnabled(True)</span>
-
-<div class="viewcode-block" id="CalidadCAR.errorDialog"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.errorDialog">[documentos]</a>    <span class="k">def</span> <span class="nf">errorDialog</span><span class="p">(</span><span class="n">selg</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">detail</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Dialogo de error que se lanzará cuando el usuario intente hacer una operación que no esta permitida.</span>
-
-<span class="sd">        :param text: Identificador principal del error.</span>
-<span class="sd">        :type text: str</span>
-
-<span class="sd">        :param name: Información detallada del error.</span>
-<span class="sd">        :type name: str</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
-        <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
-        <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-        <span class="n">msg</span><span class="o">.</span><span class="n">setInformativeText</span><span class="p">(</span><span class="n">detail</span><span class="p">)</span>
-        <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">)</span>
-        <span class="n">msg</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div></div>
 </pre></div>
 
           </div>

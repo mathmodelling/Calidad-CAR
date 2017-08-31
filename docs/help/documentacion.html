@@ -188,24 +188,6 @@ capas de salida de información.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="calidad_car.CalidadCAR.errorDialog">
-<code class="descname">errorDialog</code><span class="sig-paren">(</span><em>selg</em>, <em>text</em>, <em>detail</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/calidad_car.html#CalidadCAR.errorDialog"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#calidad_car.CalidadCAR.errorDialog" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Dialogo de error que se lanzará cuando el usuario intente hacer una operación que no esta permitida.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
-<li><strong>text</strong> (<em>str</em>) – Identificador principal del error.</li>
-<li><strong>name</strong> (<em>str</em>) – Información detallada del error.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="calidad_car.CalidadCAR.initGui">
 <code class="descname">initGui</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/calidad_car.html#CalidadCAR.initGui"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#calidad_car.CalidadCAR.initGui" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Crea las entradas del menu, y las acciones de la barra de herramientas
@@ -536,6 +518,78 @@ describir.</td>
 </dd></dl>
 
 </div>
+<div class="section" id="module-util">
+<span id="modulo-util"></span><h2>Módulo util<a class="headerlink" href="#module-util" title="Enlazar permanentemente con este título">¶</a></h2>
+<dl class="function">
+<dt id="util.comboBoxDialog">
+<code class="descclassname">util.</code><code class="descname">comboBoxDialog</code><span class="sig-paren">(</span><em>self</em>, <em>title</em>, <em>text</em>, <em>values</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/util.html#comboBoxDialog"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#util.comboBoxDialog" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Este diálogo le pide al usuario que seleccione una opción de un combobox y la retorna.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>title</strong> (<em>str</em>) – Título del diálogo</li>
+<li><strong>text</strong> (<em>str</em>) – Texto descriptivo del diálogo</li>
+<li><strong>values</strong> (<em>List str</em>) – Opciones con las que se va a llenar el combobox</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first">En caso de Aceptar retorna la opción que escogio, retorna None en caso de Cancelar</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.errorDialog">
+<code class="descclassname">util.</code><code class="descname">errorDialog</code><span class="sig-paren">(</span><em>self</em>, <em>text</em>, <em>detail</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/util.html#errorDialog"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#util.errorDialog" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Dialogo de error que se lanzará cuando el usuario intente hacer una operación que no esta permitida.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>text</strong> (<em>str</em>) – Identificador principal del error.</li>
+<li><strong>name</strong> (<em>str</em>) – Información detallada del error.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="util.questionDialog">
+<code class="descclassname">util.</code><code class="descname">questionDialog</code><span class="sig-paren">(</span><em>self</em>, <em>title</em>, <em>detail</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/util.html#questionDialog"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#util.questionDialog" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Este díalogo le hace una pregunta de Si/No al usuario.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>title</strong> (<em>str</em>) – Título del diálogo</li>
+<li><strong>detail</strong> (<em>str</em>) – Texto descriptivo del diálogo</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first">La respuesta del usuario</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
 <div class="section" id="componentes-graficos">
 <h2>Componentes gráficos<a class="headerlink" href="#componentes-graficos" title="Enlazar permanentemente con este título">¶</a></h2>
 <div class="section" id="module-calidad_car_dialog">
@@ -811,6 +865,7 @@ CSV.</p>
 <li class="toctree-l2"><a class="reference internal" href="#module-calidad_car">Módulo calidad_car</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-geometry">Módulo geometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-src.layer_manager">Módulo layer_manager</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-util">Módulo util</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#componentes-graficos">Componentes gráficos</a></li>
 </ul>
 </li>

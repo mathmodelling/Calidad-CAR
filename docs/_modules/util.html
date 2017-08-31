@@ -1,0 +1,166 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>util &#8212; documentación de CalidadCAR - 1.0.0</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/translations.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Índice" href="../genindex.html" />
+    <link rel="search" title="Búsqueda" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Código fuente para util</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">from</span> <span class="nn">PyQt4.QtGui</span> <span class="k">import</span> <span class="n">QMessageBox</span>
+<span class="kn">from</span> <span class="nn">dialogo_combobox</span> <span class="k">import</span> <span class="n">ComboBoxDialog</span>
+
+<div class="viewcode-block" id="questionDialog"><a class="viewcode-back" href="../help/documentacion.html#util.questionDialog">[documentos]</a><span class="k">def</span> <span class="nf">questionDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">detail</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Este díalogo le hace una pregunta de Si/No al usuario.</span>
+
+<span class="sd">    :param title: Título del diálogo</span>
+<span class="sd">    :type title: str</span>
+
+<span class="sd">    :param detail: Texto descriptivo del diálogo</span>
+<span class="sd">    :type detail: str</span>
+
+<span class="sd">    :returns: La respuesta del usuario</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">reply</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">question</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">mainWindow</span><span class="p">(),</span> <span class="n">title</span><span class="p">,</span> <span class="n">detail</span><span class="p">,</span>
+        <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span> <span class="o">|</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">No</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">reply</span> <span class="o">==</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span></div>
+
+<div class="viewcode-block" id="errorDialog"><a class="viewcode-back" href="../help/documentacion.html#util.errorDialog">[documentos]</a><span class="k">def</span> <span class="nf">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">detail</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dialogo de error que se lanzará cuando el usuario intente hacer una operación que no esta permitida.</span>
+
+<span class="sd">    :param text: Identificador principal del error.</span>
+<span class="sd">    :type text: str</span>
+
+<span class="sd">    :param name: Información detallada del error.</span>
+<span class="sd">    :type name: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+    <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
+    <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">msg</span><span class="o">.</span><span class="n">setInformativeText</span><span class="p">(</span><span class="n">detail</span><span class="p">)</span>
+    <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Error&quot;</span><span class="p">)</span>
+    <span class="n">msg</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="comboBoxDialog"><a class="viewcode-back" href="../help/documentacion.html#util.comboBoxDialog">[documentos]</a><span class="k">def</span> <span class="nf">comboBoxDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Este diálogo le pide al usuario que seleccione una opción de un combobox y la retorna.</span>
+
+<span class="sd">    :param title: Título del diálogo</span>
+<span class="sd">    :type title: str</span>
+
+<span class="sd">    :param text: Texto descriptivo del diálogo</span>
+<span class="sd">    :type text: str</span>
+
+<span class="sd">    :param values: Opciones con las que se va a llenar el combobox</span>
+<span class="sd">    :type values: List str</span>
+
+<span class="sd">    :returns: En caso de Aceptar retorna la opción que escogio, retorna None en caso de Cancelar</span>
+<span class="sd">    :rtype: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dialog</span> <span class="o">=</span> <span class="n">ComboBoxDialog</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">values</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">dialog</span><span class="o">.</span><span class="n">getSelectedItem</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">CalidadCAR</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navegación</h3>
+<p class="caption"><span class="caption-text">Contenido:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../help/manual_usuario.html">Manual de usuario</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/documentacion.html">Documentación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/instalacion.html">Instalación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/generar_documentacion.html">Generar Documentación</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/componentes_graficos.html">Componentes gráficos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../help/recursos.html">Agregar recursos al plugin</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Código de módulo</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Búsqueda rápida</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Ir a" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, David Castelblanco.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
