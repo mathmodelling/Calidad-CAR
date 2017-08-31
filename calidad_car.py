@@ -16,9 +16,8 @@ from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
 from dialogo_csv import CSVDialog
 from dialogo_concentracion import DialogoConcentracion
 import os.path
-import pandas
-
-from random import randint
+# import pandas
+import numpy as np
 
 import geometry
 from src import layer_manager as manager
@@ -76,7 +75,6 @@ class CalidadCAR:
         """
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('CalidadCAR', message)
-
 
     def add_action(
         self,
@@ -176,7 +174,6 @@ class CalidadCAR:
             callback=self.addSection,
             parent=self.iface.mainWindow())
 
-        # TODO: Agregar icono de esta acción
         icon_path = ':/plugins/CalidadCAR/icons/concentration-icon.png'
         self.intersctionAction = self.add_action(
             icon_path,
@@ -200,7 +197,6 @@ class CalidadCAR:
             parent=self.iface.mainWindow())
 
         # self.intersctionAction.setEnabled(False)
-        # self.addSectionAction.setEnabled(False)
         # self.addCsvAction.setEnabled(False)
 
     def clean(self):
@@ -216,6 +212,7 @@ class CalidadCAR:
             tempLayer.commitChanges()
             manager.remove_layers([tempLayer])
 
+        self.addCsvAction.setEnabled(True)
         self.layers = []
 
     def addSection(self):
@@ -225,6 +222,13 @@ class CalidadCAR:
            En caso de que no exista la capa temp, se creara una nueva, con el crs
            de la capa de secciones.
         """
+
+        title = u'Agregar sección transversal'
+        detail = u'Una vez creada la capa de secciones no podrás unir más archivos CSV a la tabla de atributos de la capa de secciones.\n\n¿Deseas crear la capa de secciones?'
+
+        if not self.questionDialog(title, detail):
+            return
+
         tempLayer = None
 
         seccionesLayer = manager.get_layer('secciones')
@@ -232,6 +236,9 @@ class CalidadCAR:
             self.errorDialog(u'No se encontró la capa de secciones.',
             u'Asegurate de agregarla en el diálogo de cargar fondos.')
             return
+
+        #Bloquear acción de realizar más uniones con archivos CSV
+        self.addCsvAction.setEnabled(False)
 
         tempLayer = manager.get_layer('temp')
         if tempLayer is None:
@@ -381,7 +388,6 @@ class CalidadCAR:
         """
 
         # TODO: Verificar que todos los puntos de concentración sean no nulos
-        # TODO: Separar información necesaria en vectores de numpy
 
         work_layer = manager.get_layer('output')
         eje = manager.get_layer('ejes')
@@ -390,27 +396,27 @@ class CalidadCAR:
             self.errorDialog(u'No se encontraron algunas de las capas necesarias para realizar esta operación.', u'Asegurate de agregar los puntos de concentración, y la capa del eje en el diálogo de Cargar Fondos.')
             return
 
-        idx = work_layer.fieldNameIndex('concentracion')
+        concentration_values = []
+        vel_values = []
+
+        concen_idx = work_layer.fieldNameIndex('concentracion')
+        vel_idx = work_layer.fieldNameIndex('csv_Vel Chnl')
+
         for feature in work_layer.getFeatures():
-            if feature.attributes()[idx] is None:
-                # TODO: Lanzar excepción por punto de concentracion nulo
-                return
+            concentration_values.append(feature.attributes()[concen_idx])
+            vel_values.append(feature.attributes()[vel_idx])
+            # if feature.attributes()[idx] is None:
+                #En caso de que un valor de concentraión sea nulo
+                # return
 
-        #Crar un DataFrame de pandas con la tabla de atributos de la capa de trabajo
-        table = [row.attributes() for row in work_layer.getFeatures()]
-        field_names = [field.name() for field in work_layer.pendingFields() ]
-        pd_frame = pandas.DataFrame(table, columns = field_names)
-        print pd_frame
-
-        #Crear un DataFrame de pandas con las distancias de la sucesión de secciones
         points = geometry.intersectionPoints(eje, work_layer)
         distances = [0]
         for i in xrange(len(points) - 1):
             distances.append(geometry.distance(points[i], points[i + 1]))
         # print distances
+        condiciones_iniciales = np.matrix([distances, concentration_values])
 
-        pd_dataframe = pandas.DataFrame(distances, columns = ['Distancia'])
-        print pd_dataframe
+        velocidad = np.array(vel_values)
 
     def addCsv(self):
         """Crea una capa a partir de un archivo CSV, y une la información que
@@ -509,7 +515,13 @@ class CalidadCAR:
             self.addLayers()
             # self.addCsvAction.setEnabled(True)
 
-    def errorDialog(selg, text, detail):
+    def questionDialog(self, title, detail):
+        reply = QMessageBox.question(self.iface.mainWindow(), title, detail,
+            QMessageBox.Yes | QMessageBox.No)
+
+        return reply == QMessageBox.Yes
+
+    def errorDialog(self, text, detail):
         """Dialogo de error que se lanzará cuando el usuario intente hacer una operación que no esta permitida.
 
         :param text: Identificador principal del error.
