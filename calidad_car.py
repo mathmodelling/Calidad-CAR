@@ -33,6 +33,7 @@ import geometry
 import resources
 import numpy as np
 
+from src.modelling import calidad_car
 from dialogo_csv import CSVDialog
 from src import layer_manager as manager
 from dialogo_concentracion import DialogoConcentracion
@@ -440,11 +441,29 @@ class CalidadCAR:
         distances = [0]
         for i in xrange(len(points) - 1):
             distances.append(geometry.distance(points[i], points[i + 1]))
-        # print distances
+
         condiciones_iniciales = np.array([distances, concentration_values]).T
-        print condiciones_iniciales
         velocidad = np.array(vel_values)
-        print velocidad
+        difusion = np.array([1.5 for x in velocidad])
+
+        ##### Modelling
+        paso_x = 10
+        np.set_printoptions(precision=2)
+        sol, paso_t = calidad_car.uso_00(condiciones_iniciales, velocidad, difusion)
+        print calidad_car.grafica(sol, '20/08/2017', paso_t, paso_x, srow=2, scol=80, flag=0).to_string()
+
+
+        ##### TEST
+        # vel = [10.0 * i for i in range(42)]
+        # conc = [0.0 for i in range(42)]
+        # c_i = np.array([vel, conc]).T
+        # va = np.array([1.0 for i in range(42)])
+        # cd = np.array([1.5 for i in range(42)])
+
+        # sol, paso_t = calidad_car.uso_00(c_i, va, cd)
+        # print calidad_car.grafica(sol, '20/08/2017', paso_t, paso_x, srow=2, scol=80, flag=0).to_string()
+
+
 
     def addCsv(self):
         """Crea una capa a partir de un archivo CSV, y une la información que
