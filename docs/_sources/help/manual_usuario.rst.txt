@@ -1,31 +1,33 @@
 Manual de usuario
 ==================
 
-Una vez instalado el plugin CalidadCAR, de desplegará la seiguiente barra de herramientas:
+Una vez instalado el plugin CalidadCAR, el usuario podrá ver la siguiente barra de herramientas:
 
 .. image:: images/barra_herramientas.png
 
-La cual contiene los siguientes procedimientos que pordá realizar el usuario:
+La cual contiene los siguientes procedimientos que podrá realizar el usuario:
 
 1. `Cargar fondos`_.
 2. `Unir CSV`_.
-3. `Agregar secciónes`_.
-4. `Cálcular`_.
-5. `Limpiar`_.
+3. `Agregar secciones`_.
+4. `Agregar puntos de concentración`_.
+5. `Cálcular`_.
+6. `Limpiar`_.
 
 *****************
 Cargar fondos
 *****************
 
-Con esta acción el usuario puede cargar las capas necesarias, para poder realizar _____________, para poder realizar esta operación el usario tendrá que hacer click en el icono resaltado que se ve en la siguiente imagen.
+Con esta acción el usuario puede cargar las capas que contienen la información necesaria para que se pueda aplicar el modelo matemático.
+Para poder realizar esta operación el usuario tendrá que hacer click en el icono resaltado que se ve en la siguiente imagen.
 
-.. image:: images/cargar_fondos.png
+.. image:: images/accion_cargar_fondos.png
 
 La cual desplegará el siguiente dialogo en el que el usuario podrá buscar los diferentes archivos en su sistema de archivos, para cargar las capas.
 
 .. image:: images/cargar_fondos_dialogo.png
 
-Una vez seleccionadas todas las capas que el usuario desea cargar, se desplegarán los dialogos correspondientes para solicitar el sistema de coordenadas de cada capa que se va a cargar.
+Una vez seleccionadas todas las capas que el usuario desea cargar, se desplegarán los diálogos correspondientes para solicitar el sistema de coordenadas de cada capa que se va a cargar.
 
 .. image:: images/cargar_fondo_crs.png
 
@@ -41,23 +43,27 @@ En la siguiente imagen se puede ver el canvas de QGIS una vez el usuario ha real
 Unir CSV
 **************
 
-Este procedimiento consiste en cargar un archivo CSV, el cual se unira con la tabla de atributos de la capa de secciones, la cual tendrá que estar cargada, para que el usuario pueda realizar esta operación.
+Este procedimiento consiste en cargar un archivo CSV, el cual se unirá con la tabla de atributos de la capa de secciones, la cual tendrá que estar cargada, para que el usuario pueda realizar esta operación.
+
+El usuario podrá realizar este procedimiento haciendo click en el icono resaltado en la siguiente imagen:
+
+.. image:: images/accion_agregar_csv.png
 
 En la siguiente imagen se puede ver el dialogo que le pedirá al usuario la información necesaria para cargar el archivo CSV, y para poder unirlo con la capa de secciones.
 
 .. image:: images/dialogo_unir_csv.png
 
-Si el usuario desea realizar la union de otro archivo CSV con la para de secciones, tendrá que repetir el procedimiento que se acabo de describir.
+Si el usuario desea realizar la unión de otro archivo CSV con la para de secciones, tendrá que repetir el procedimiento que se acabo de describir.
 
 ***********************
-Agregar secciónes
+Agregar secciones
 ***********************
 
 Haciendo click sobre el botón subrayado en la siguiente imagen el usuario podrá agregar secciones transversales.
 
-.. image:: images/agregar_seccion.png
+.. image:: images/accion_agregar_seccion.png
 
-Al hacer click sobre el botón de agregar sección se creara una capa de QGIS temporal en la que el usuario podrá dubujar las secciones que deseé, esto le habilitará al usuario el botón de *Añadir cadena circular*, el cual se ve resaltado en la siguiente imagen.
+Al hacer click sobre el botón de agregar sección se creara una capa de QGIS temporal en la que el usuario podrá dibujar las secciones que deseé, esto le habilitará al usuario el botón de *Añadir cadena circular*, el cual se ve resaltado en la siguiente imagen.
 
 .. image:: images/agregar_seccion_opcion.png
 
@@ -65,17 +71,35 @@ Después de hacer click sobre el click sobre el botón de *Añadir cadena circul
 
 .. image:: images/dibujar_seccion.png
 
-En la imagen de arriba se puede ver la sección que se acabó de agregar (La sección con puntos rojos), Apretando el click derecho del mouse se finalizará la operación de agregarle puntos a la sección, y se le desplegrá al usuario un diálogo en el cual el podrá ingresar la información relacionada con la sección, como se puede ver en la siguiente imagen.
+En la imagen de arriba se puede ver la sección que se acabó de agregar (La sección con puntos rojos), Apretando el click derecho del mouse se finalizará la operación de agregarle puntos a la sección, y se le desplegará al usuario un diálogo en el cual el podrá ingresar la información relacionada con la sección, como se puede ver en la siguiente imagen.
 
 .. image:: images/informacion_seccion.png
 
 .. note:: Para poder agregar una sección es necesario que el usuario haya cargado previamente la capa de ejes, y la capa de secciones.
 
-.. note:: Es importante que la sección que se va a agregar se intersecte con la el *eje* de la capa de ejes.
+.. note:: Es importante que la sección que se va a agregar tenga un punto de intersección con el *eje* de la capa de ejes.
+
+*********************************
+Agregar puntos de concentración
+*********************************
+
+Haciendo click sobre el botón subrayado de la siguiente imagen el usuario podrá agregar los puntos de concentración.
+
+.. image:: images/accion_agregar_concentracion.png
+
+Al hacer esto, se abrirá la tabla de atributos de una nueva capa, la cual tiene las posibles uniones que el usuario haya realizado entre la capa de secciones con archivos CSV, y las secciones que el usuario agrego (en caso de haberlo hecho), con una nueva columna en la cual el usuario podrá ingresar los valores de concentración para cada sección.
+
+En la siguiente imagen se puede ver un ejemplo de la tabla de atributos que se desplegará para que el usuario ingrese los puntos de concentración.
+
+.. image:: images/puntos_concentracion.png
 
 **************
 Cálcular
 **************
+
+Una vez que el usuario ha ingresado la información necesaria de forma correcta, este podrá hacer click en el icono resaltado en la siguiente imagen, para aplicar el modelo matemático a la información.
+
+.. image:: images/accion_calcular.png
 
 **************
 Limpiar
@@ -83,6 +107,4 @@ Limpiar
 
 Al hacer click en el botón resaltado en la siguiente imagen el usuario limpiara el espacio de trabajo, cerrando las capas cargadas, en caso que deseé realizar el mismo proceso con capas diferentes.
 
-.. image:: images/recargar_plugin.png
-
-.. note:: Las capas que contengan información de salida, fruto del proceso ___________ no se cerrarán.
+.. image:: images/accion_recargar.png

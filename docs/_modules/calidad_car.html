@@ -76,6 +76,7 @@
 <span class="kn">import</span> <span class="nn">resources</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+<span class="kn">from</span> <span class="nn">src.modelling</span> <span class="k">import</span> <span class="n">calidad_car</span>
 <span class="kn">from</span> <span class="nn">dialogo_csv</span> <span class="k">import</span> <span class="n">CSVDialog</span>
 <span class="kn">from</span> <span class="nn">src</span> <span class="k">import</span> <span class="n">layer_manager</span> <span class="k">as</span> <span class="n">manager</span>
 <span class="kn">from</span> <span class="nn">dialogo_concentracion</span> <span class="k">import</span> <span class="n">DialogoConcentracion</span>
@@ -483,11 +484,29 @@
         <span class="n">distances</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
             <span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">geometry</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
-        <span class="c1"># print distances</span>
+
         <span class="n">condiciones_iniciales</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">distances</span><span class="p">,</span> <span class="n">concentration_values</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
-        <span class="nb">print</span> <span class="n">condiciones_iniciales</span>
         <span class="n">velocidad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vel_values</span><span class="p">)</span>
-        <span class="nb">print</span> <span class="n">velocidad</span></div>
+        <span class="n">difusion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.5</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">velocidad</span><span class="p">])</span>
+
+        <span class="c1">##### Modelling</span>
+        <span class="n">paso_x</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">sol</span><span class="p">,</span> <span class="n">paso_t</span> <span class="o">=</span> <span class="n">calidad_car</span><span class="o">.</span><span class="n">uso_00</span><span class="p">(</span><span class="n">condiciones_iniciales</span><span class="p">,</span> <span class="n">velocidad</span><span class="p">,</span> <span class="n">difusion</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="n">calidad_car</span><span class="o">.</span><span class="n">grafica</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="s1">&#39;20/08/2017&#39;</span><span class="p">,</span> <span class="n">paso_t</span><span class="p">,</span> <span class="n">paso_x</span><span class="p">,</span> <span class="n">srow</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">scol</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span></div>
+
+
+        <span class="c1">##### TEST</span>
+        <span class="c1"># vel = [10.0 * i for i in range(42)]</span>
+        <span class="c1"># conc = [0.0 for i in range(42)]</span>
+        <span class="c1"># c_i = np.array([vel, conc]).T</span>
+        <span class="c1"># va = np.array([1.0 for i in range(42)])</span>
+        <span class="c1"># cd = np.array([1.5 for i in range(42)])</span>
+
+        <span class="c1"># sol, paso_t = calidad_car.uso_00(c_i, va, cd)</span>
+        <span class="c1"># print calidad_car.grafica(sol, &#39;20/08/2017&#39;, paso_t, paso_x, srow=2, scol=80, flag=0).to_string()</span>
+
+
 
 <div class="viewcode-block" id="CalidadCAR.addCsv"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.addCsv">[documentos]</a>    <span class="k">def</span> <span class="nf">addCsv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Crea una capa a partir de un archivo CSV, y une la información que</span>
