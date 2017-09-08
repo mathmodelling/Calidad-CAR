@@ -2,9 +2,7 @@
 
 import numpy as np
 import time
-import datetime
-import pandas as pd
-import matplotlib
+import datetime as dtm
 import matplotlib.pyplot as plt
 
 __author__ = 'Profesor Efraín Domínguez Calle, PhD.'
@@ -19,22 +17,22 @@ __status__ = "En desarrollo"
 # Modelo unidimensional para la simulación de migración de contaminantes en corrientes superficiales
 # Versión del código: 0.0 - Julio del 2017
 # Se debe usar en la interfase gráfica del sistema de modelación Calidad-Car pero también se puede usar de
-# forma independiente
+# forma independiente...
 
 
 def calidad_explicito(ci, v, d):
     """
-    Esta función modela la transición de la concentración del momento t al momento t + dt para todos los
+    Esta función modela la transición de la concentración del momento t al momento t + dt para todos los 
     nodos espaciales de la corriente superficial
-
-    :param ci: matrix (bidimensional) de concentración inicial en el canal y su respectiva distancia x la concentración
+    
+    :param ci: matrix (bidimensional) de concentración inicial en el canal y su respectiva distancia x la concentración 
     va en g/m3, la distancia en metros
     :param v: vector de velocidad promedio del agua en m/s, tiene las velocidades promedio para cada sección
      y para cada momento de tiempo
     :param d: vector de coeficiente de difusión
-    :return: c, dt: la concentración del contaminante en todos los nodos x para el momento de tiempo t + dt y el valor
+    :return: c, dt: la concentración del contaminante en todos los nodos x para el momento de tiempo t + dt y el valor 
     de dt que cumple la condición de estabilidad de Courant o CFL
-
+    
     """
     # dx - paso de cálculo longitudinal en metros, se supone dx = constante
     dx = ci[1, 0] - ci[0, 0]
@@ -77,58 +75,29 @@ def calidad_explicito(ci, v, d):
 
 def ejemplo_de_uso_00():
     """
-    Ejemplo 0.0:
-    Un canal de l = 100 metros de largo con puntos de monitoreo cada dx=10. La velocidad medida en los puntos de
-    monitoreo v = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], el coeficiente de difusión es d = [1.5, 1.5, 1.5,
+    Ejemplo 0.0: 
+    Un canal de l = 100 metros de largo con puntos de monitoreo cada dx=10. La velocidad medida en los puntos de 
+    monitoreo v = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0], el coeficiente de difusión es d = [1.5, 1.5, 1.5, 
     1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5]. la concentración inicial es [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     :return: None
-
+    
     """
     # Numero de pasos en el teimpo a ejecutar
     nt = 20
+    # Número de nodos espaciales
+    nx = 10
     # Condición inicial
     c_i = np.array([[0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0],
                     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]).T
     # Condición de frontera
     c_f = np.arange(0.0, nt + 1.0)
-    amplitud, fase, frecuencia, z = 1.0, 0.0, 0.5, 1.0
+    amplitud, fase, frecuencia, z = 1.0, 0.0, 0.35, 1.0
     c_f = amplitud * np.sin(frecuencia * c_f + fase) + z
     # velocidad del agua en cada punto de monitoreo
-    va = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+    va = np.zeros(10) + 0.5
     # coeficiente de difusión en cada punto de monitoreo
     cd = np.array([1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5])
-    mcon = np.empty((nt, np.size(c_i, axis=0)))
-    # Asignación de condición inicial
-    mcon[0, :] = c_i[:, 1]
-    for i in range(1, nt):
-        # Asignación de condición de frontera. Se hace cambiando primer valor de c_i
-        c_i[0, 1] = c_f[i]
-        # Evolución de la concentración para t + dt
-        con, t_step = calidad_explicito(c_i, va, cd)
-        # Se guardan las concentraciones del momento t+dt
-        mcon[i, :] = con
-        # Actualizar condición inicial
-        c_i[:, 1] = con
-    return mcon, t_step
-
-def uso_00(c_i, va, cd):
-    """
-
-    """
-    # Numero de pasos en el teimpo a ejecutar
-    nt = 20
-    # Condición inicial
-    # c_i = np.array([[0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0],
-                    # [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]).T
-    # Condición de frontera
-    c_f = np.arange(0.0, nt + 1.0)
-    amplitud, fase, frecuencia, z = 1.0, 0.0, 0.5, 1.0
-    c_f = amplitud * np.sin(frecuencia * c_f + fase) + z
-    # velocidad del agua en cada punto de monitoreo
-    # va = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
-    # coeficiente de difusión en cada punto de monitoreo
-    # cd = np.array([1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5, 1.5])
-    mcon = np.empty((nt, np.size(c_i, axis=0)))
+    mcon = np.empty((nt + 1, np.size(c_i, axis=0)))
     # Asignación de condición inicial
     mcon[0, :] = c_i[:, 1]
     for i in range(1, nt):
@@ -143,13 +112,13 @@ def uso_00(c_i, va, cd):
     return mcon, t_step
 
 
-def grafica(cs, hi, dt, dx, flag=0, scol=0, srow=0):
+def grafica(cs, dt, dx, flag=0, scol=0, srow=0, hi=time.strftime("%d/%b/%Y %H:%M:%S", time.localtime())):
     """
     Esta función grafica la evolucipon de la concentración  en una sección del tramo de modelación
     :type scol: int
-    :param cs: Es el arreglo resultado de la modelación desde el momento inicial 't' hasta el momento 't+nt*dt'.
-    Las filas representan tiempo, las columnas el espacio.
-    :param hi: Es la hora inicial de referencia para la modelación
+    :param cs: Es el arreglo resultado de la modelación desde el momento inicial 't' hasta el momento 't+nt*dt'. 
+    Las filas representan tiempo, las columnas el espacio. nt es el número de filas
+    :param hi: Es la hora inicial de referencia para la modelación, ejemplo '20/08/2017 12:30:00'
     :param dt: Es el paso de calculo en el tiempo
     :param dx: Es el paso de calculo en el espacio
     :param flag: establece ploteo por tiempo flag = 0 o por espacio flag = 1
@@ -159,36 +128,46 @@ def grafica(cs, hi, dt, dx, flag=0, scol=0, srow=0):
     """
     ncols = np.size(cs, axis=1)
     nrows = np.size(cs, axis=0)
-    print 'nrows: %s, ncols: %s, cs.shape: %s '% (nrows, ncols, cs.shape)
-    fechas = pd.date_range(hi, periods=nrows, freq=str(int(dt)) + 'S')
+    print 'nrows: %s, ncols: %s, cs.shape: %s ' % (nrows, ncols, cs.shape)
+    # Convertir hora inicial de referencia -hi- en tiempo estructurado con tupla de 9 elementos
+    print 'hi:', hi
+    hi_structime = time.strptime(hi, "%d/%b/%Y %H:%M:%S")
+    # Convertir el tiempo estructurado en segundos desde la epoca 12:00am, January 1, 1970(epoch)
+    hi_secs = time.mktime(hi_structime)
+    print 'hi_secs:', hi_secs
+    # fechas = pd.date_range(hi, periods=nrows, freq=str(int(dt)) + 'S')
+    tiempo = dt * nrows - dt
+    fechas = [dtm.datetime.fromtimestamp(i) for i in np.arange(hi_secs, hi_secs + tiempo + dt, dt)]
+
     # absc - abscisado
     absc = np.arange(0, ncols * dx, dx)
-    print 'fechas:', fechas.shape, 'abscisas:', absc.shape
-    df = pd.DataFrame(cs, index=fechas, columns=absc)
+    # print 'fechas:', fechas.shape, 'abscisas:', absc.shape
+    # df = pd.DataFrame(cs, index=fechas, columns=absc)
     if flag == 0:
-        scol = int(scol)
-        df[scol].plot()
+        # df[scol].plot()
+        plt.plot(fechas, cs[:, 7], 'k-.')
         plt.title(u'Distancia:' + str(scol))
         plt.xlabel(u'Tiempo, $[s]$')
         plt.ylabel(u'Concentración, $[g/m^3]$')
     else:
-        print type(srow)
-        df.iloc[srow].plot()
-        plt.title(u"Momento de tiempo - " + str(df.iloc[srow].name))
+        # df.iloc[srow].plot()
+        plt.plot(absc, cs[srow, :])
+        plt.title(u"Momento de tiempo - " + str(srow))
         plt.xlabel(u"Distancia en metros")
         plt.ylabel(u'Concentración, $[g/m^3]$')
     plt.show()
-    return df
+    return
 
 
 if __name__ == "__main__":
     # Número de nodos temporales
     paso_x = 10
     np.set_printoptions(precision=2)
-    inicio = datetime.datetime.fromtimestamp(time.time())
+    inicio = dtm.datetime.fromtimestamp(time.time())
     print 'Estoy comenzando a las ', inicio.strftime('%Y-%m-%d %H:%M:%S')
     sol, paso_t = ejemplo_de_uso_00()
-    print grafica(sol, '20/08/2017', paso_t, paso_x, srow=2, scol=80, flag=1).to_string()
-    final = datetime.datetime.fromtimestamp(time.time())
+    hora_inicial = '20/08/2017 12:30:00'
+    print grafica(sol, paso_t, paso_x, srow=11, scol=80, flag=1)
+    final = dtm.datetime.fromtimestamp(time.time())
     print 'Termine a las %s ', final.strftime('%Y-%m-%d %H:%M:%S')
     print 'Gasté: ', final - inicio
