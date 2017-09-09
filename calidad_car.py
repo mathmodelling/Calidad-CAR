@@ -26,19 +26,19 @@ from PyQt4.QtGui import ( QIcon,
                           QAction,
                           QMessageBox)
 
-
+import time
 import util
 import os.path
 import geometry
 import resources
 import numpy as np
+import datetime as dtm
 
 from src.modelling import calidad_car
 from dialogo_csv import CSVDialog
 from src import layer_manager as manager
 from dialogo_concentracion import DialogoConcentracion
 from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
-# import pandas
 
 class CalidadCAR:
     """Implementación del plugin."""
@@ -445,24 +445,36 @@ class CalidadCAR:
         condiciones_iniciales = np.array([distances, concentration_values]).T
         velocidad = np.array(vel_values)
         difusion = np.array([1.5 for x in velocidad])
-
+        self.apply_modelling(condiciones_iniciales, velocidad, difusion, 0)
         ##### Modelling
+
+    def apply_modelling(self, c_i, va, cd, flag):
+        # Numero de pasos en el teimpo a ejecutar
+        nt = 20
+        # Número de nodos espaciales
+        nx = 10
         paso_x = 10
         np.set_printoptions(precision=2)
-        sol, paso_t = calidad_car.uso_00(condiciones_iniciales, velocidad, difusion)
-        print calidad_car.grafica(sol, '20/08/2017', paso_t, paso_x, srow=2, scol=80, flag=0).to_string()
+        inicio = dtm.datetime.fromtimestamp(time.time())
+        print 'Estoy comenzando a las ', inicio.strftime('%Y-%m-%d %H:%M:%S')
 
+        c_f = np.arange(0.0, nt + 1.0)
+        amplitud, fase, frecuencia, z = 1.0, 0.0, 0.35, 1.0
 
-        ##### TEST
-        # vel = [10.0 * i for i in range(42)]
-        # conc = [0.0 for i in range(42)]
-        # c_i = np.array([vel, conc]).T
-        # va = np.array([1.0 for i in range(42)])
-        # cd = np.array([1.5 for i in range(42)])
+        mcon = np.empty((nt + 1, np.size(c_i, axis=0)))
+        mcon[0, :] = c_i[:, 1]
+        for i in range(1, nt):
+            # Asignación de condición de frontera. Se hace cambiando primer valor de c_i
+            c_i[0, 1] = c_f[i]
+            # Evolución de la concentración para t + dt
+            con, t_step = calidad_car.calidad_explicito(c_i, va, cd)
+            # Se guardan las concentraciones del momento t+dt
+            mcon[i, :] = con
+            # Actualizar condición inicial
+            c_i[:, 1] = con
+        # return mcon, t_step
 
-        # sol, paso_t = calidad_car.uso_00(c_i, va, cd)
-        # print calidad_car.grafica(sol, '20/08/2017', paso_t, paso_x, srow=2, scol=80, flag=0).to_string()
-
+        print calidad_car.grafica(mcon, t_step, paso_x, srow=2, scol=80, flag=flag)
 
 
     def addCsv(self):
