@@ -7,17 +7,17 @@
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=CalidadCAR
+name=Calidad-CAR
 qgisMinimumVersion=2.0
-description=Calidad Car is a tool for mathematical modelling of water quality in rivers.
-version=0.3
+description=Calidad-CAR is a tool for mathematical modelling of water quality in rivers.
+version=0.4
 author=Efrain Domínguez, David Castelblanco
 email=edoc@mathmodelling.org, cbdavides@gmail.com
 
-about=CAR-Calidad is a tool for mathematical modelling of water quality in rivers. This tool assumes user all ready has the results of water movement modelling with the Hec-Ras modelling system. CAR-Calidad does not require additional modules other than python modules already installed within QGIS.
+about=Calidad-CAR is a tool for mathematical modelling of water quality in rivers. This tool assumes user all ready has the results of water movement modelling with the Hec-Ras modelling system. Calidad-CAR does not require additional modules other than python modules already installed within QGIS.
 
-tracker=https://github.com/cbdavide/CalidadCAR-Plugin/issues
-repository=https://github.com/cbdavide/CalidadCAR-Plugin
+tracker=https://github.com/cbdavide/Calidad-CAR/issues
+repository=https://github.com/cbdavide/Calidad-CAR
 # End of mandatory metadata
 
 # Recommended items:
@@ -28,7 +28,7 @@ repository=https://github.com/cbdavide/CalidadCAR-Plugin
 # Tags are comma separated with spaces allowed
 tags=water quality, mathematical modelling
 
-homepage=https://github.com/cbdavide/CalidadCAR-Plugin
+homepage=https://github.com/cbdavide/Calidad-CAR
 category=Plugins
 icon=icon.png
 # experimental flag
