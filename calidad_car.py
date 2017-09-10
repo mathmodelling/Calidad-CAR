@@ -9,7 +9,6 @@ from qgis.core import ( QGis,
                         QgsGeometry,
                         QgsVectorLayer,
                         QgsRasterLayer,
-                        QgsVectorJoinInfo,
                         QgsMapLayerRegistry,
                         QgsCoordinateReferenceSystem,
                         QgsCoordinateReferenceSystem)
@@ -26,16 +25,23 @@ from PyQt4.QtGui import ( QIcon,
                           QAction,
                           QMessageBox)
 
+
+from src.actions import ( CSVAction,
+                          LayerAction,
+                          AddSectionAction,
+                          ConcentrationPointsAction)
+
 import time
 import util
+import copy
 import os.path
 import geometry
 import resources
 import numpy as np
 import datetime as dtm
 
-from src.modelling import calidad_car
 from dialogo_csv import CSVDialog
+from src.modelling import calidad_car
 from src import layer_manager as manager
 from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
 
@@ -219,7 +225,11 @@ class CalidadCAR:
     def clean(self):
         """Recarga el plugin, limpiando todas las capas cargadas, excepto, las
            capas de salida de información."""
-        manager.remove_layers(self.layers)
+        eje = manager.get_layer('ejes')
+        fondo = manager.get_layer('fondo')
+        hidro = manager.get_layer('hidrografia')
+        secciones = manager.get_layer('secciones')
+        manager.remove_layers([eje, fondo, hidro, secciones])
 
         csv_layers = manager.get_all_layers("csv")
         manager.remove_layers(csv_layers)
@@ -246,159 +256,31 @@ class CalidadCAR:
             if not util.questionDialog(self, title, detail):
                 return
 
-        tempLayer = None
+        action = AddSectionAction()
 
-        seccionesLayer = manager.get_layer('secciones')
-        if seccionesLayer is None:
+        if not action.pre():
             util.errorDialog(self, u'No se encontró la capa de secciones.',
             u'Asegurate de agregarla en el diálogo de cargar fondos.')
             return
 
-        #Bloquear acción de realizar más uniones con archivos CSV
-        self.addCsvAction.setEnabled(False)
-
-        tempLayer = manager.get_layer('temp')
-        if tempLayer is None:
-            crs = seccionesLayer.crs().authid()
-
-            tempLayer = QgsVectorLayer('LineString?crs='+crs, 'temp', 'memory')
-
-            pr = tempLayer.dataProvider()
-            fields = seccionesLayer.pendingFields()
-            pr.addAttributes(fields)
-
-            QgsMapLayerRegistry.instance().addMapLayer(tempLayer)
-
-        self.iface.setActiveLayer(tempLayer)
-        tempLayer.startEditing()
-
-    def check(self, segments, point):
-        """Verifica si un punto se encuentra entre dos segmentos
-
-        :param segments: Lista de segmentos entre los que se puede encontrar el punto.
-        :type segments: Lista de QgsSegments
-
-        :param point: punto sobre el cual se va a hacer la verificación
-        :type point: QgsPoint
-
-        :returns: Un booleano que indica si la condición se cumple o no.
-        :rtype: Boolean
-        """
-        if len(segments) == 1 : return False
-        polygon = geometry.buildConvexPolygon(segments)
-        # layer =  QgsVectorLayer('Polygon?crs=epsg:3116', 'poly' , "memory")
-        # pr = layer.dataProvider()
-        # poly = QgsFeature()
-        # poly.setGeometry(polygon)
-        # pr.addFeatures([poly])
-        # layer.updateExtents()
-        # QgsMapLayerRegistry.instance().addMapLayers([layer])
-        return polygon.contains(point)
-
-    def place(self, segments, p):
-        """Ubica un punto entre los dos segmentos consecutivos a los que pertenece.
-
-        :param segments: Lista de segmentos
-        :type segments: Lista de QgsSegments
-
-        :param p: punto que se va a ubicar en la lista de segmentos
-        :type point: QgsPoint
-
-        """
-        low, hi = 0, len(segments)
-        mid, cont = 0, 0
-
-        while(low <= hi):
-            mid =  low + ((hi - low) / 2)
-            if self.check(segments[low : mid + 1], p):
-                hi = mid
-            else:
-                low = mid
-            cont += 1
-            #Sacurity trigger
-            if cont == 20: break
-
-        return low
-
-    # def place(self, segments, p):
-    #     for i in xrange(len(segments) - 1):
-    #         if self.check([segments[i], segments[i + 1]], p):
-    #             return i
-    #     return None
-
-    def addFeature(self, layerA, feature = None, idx = -1):
-        """Inserta una característica (feature) en una capa en un orden establecido
-
-        :param layerA: Capa en la que se va a insertar la característica (feature)
-        :type layerA: QgsVectorLayer
-
-        :param feature: Característica (feature) que se va a insertar en la capa.
-        :type feature: QgsFeature
-
-        :param idx: Indice de la nueva característica (feature) que se va a insertar.
-        :type idx: Integer
-
-        :returns: Una nueva capa con la característica insertada en el pocisión idx.
-        :rtype: QgsVectorLayer
-        """
-        crs = layerA.crs().authid()
-        tempLayer = QgsVectorLayer('LineString?crs='+crs, 'output', 'memory')
-        pr = tempLayer.dataProvider()
-        fields = layerA.pendingFields()
-
-        for f in fields:
-            pr.addAttributes([f])
-
-        features = list(layerA.getFeatures())
-        if idx != -1:
-            features.insert(idx + 1, feature)
-
-        tempLayer.updateFields()
-
-        for feature in features:
-            pr.addFeatures([feature])
-
-        tempLayer.updateExtents()
-        return tempLayer
+        action.pro()
+        action.pos(self.iface, self.addCsvAction)
 
     def concentrationPoints(self):
         """Este método se encarga de recopilar toda la información, para permitirle al usuario ingresar los puntos de concentración.
 
            Para que el usuario pueda realizar esta operación, necesariamente, tienen que estar cargadas la capa de ejes, y la capa de secciones transversales.
         """
-        secciones = manager.get_layer('secciones')
-        eje = manager.get_layer('ejes')
 
-        if secciones == None or eje == None:
+        action = ConcentrationPointsAction()
+
+        if not action.pre():
             util.errorDialog(self, u'No se encontraron algunas de las capas necesarias para realizar esta operación.',
                     u'Asegurate de agregar la capa de secciones, y la capa del eje en el diálogo de Cargar Fondos.')
             return
 
-        work_layer = self.addFeature(secciones)
-
-        temp = manager.get_layer('temp')
-        if temp is not None:
-            """En caso de que existan secciones temporales, se combinaran con la
-               capa de secciones, para crear la capa work_layer"""
-
-            for new_feature in temp.getFeatures():
-                segements = geometry.getSegments(work_layer)
-                point = geometry.intersectionLayerGeometry(eje, new_feature.geometry())
-                if point is None: continue
-                idx = self.place(segements, point)
-                # print 'IDX: ', idx
-                work_layer = self.addFeature(work_layer, new_feature, idx)
-
-        output = manager.get_layer('output')
-        if output is not None:
-            manager.remove_layers([output])
-
-        #Mostrar la capa de trabajo work_layer
-        manager.add_layers([work_layer])
-
-        work_layer.dataProvider().addAttributes([QgsField(u'concentracion', QVariant.Double)])
-        work_layer.startEditing()
-        self.iface.showAttributeTable(work_layer)
+        action.pro()
+        action.pos(self.iface)
 
     def intersection(self):
         """Se encarga de aplicar el modelo matemático a la información para determinar la calidad del agua.
@@ -444,7 +326,13 @@ class CalidadCAR:
         condiciones_iniciales = np.array([distances, concentration_values]).T
         velocidad = np.array(vel_values)
         difusion = np.array([1.5 for x in velocidad])
+
+        ci2 = copy.deepcopy(condiciones_iniciales)
+        va2 = copy.deepcopy(velocidad)
+        cd2 = copy.deepcopy(difusion)
+
         self.apply_modelling(condiciones_iniciales, velocidad, difusion, 0)
+        self.apply_modelling(ci2, va2, cd2, 1)
         ##### Modelling
 
     def apply_modelling(self, c_i, va, cd, flag):
@@ -475,53 +363,33 @@ class CalidadCAR:
 
         print calidad_car.grafica(mcon, t_step, paso_x, srow=2, scol=80, flag=flag)
 
-
     def addCsv(self):
         """Crea una capa a partir de un archivo CSV, y une la información que
            contiene esta, con la tabla de atributos de la capa de secciones,
            la cual tendrá que existir, para que se pueda realizar esta operación.
         """
-        shp = manager.get_layer('secciones')
+
+        action = CSVAction()
+
+        shp = action.pre()
 
         if shp is None:
             util.errorDialog(self, u'No se encontró la capa de secciones.',
             u'Asegurate de agregarla en el diálogo de Cargar fondos.')
             return
 
-        sheet = None
-        field_names = [field.name() for field in shp.pendingFields() ]
+        field_names = action.pro()
+
         csvDialog = CSVDialog(field_names)
         result = csvDialog.exec_()
+
         if result and csvDialog.getLayer():
-            # print csvDialog.getSelectedColumns()
 
-            sheet = csvDialog.getLayer()
-            QgsMapLayerRegistry.instance().addMapLayer(sheet)
-
-            #Columnas del archivo CSV
-            columns = csvDialog.getSelectedColumns()
-            #Filtra las columnas existentes, para evitar información duplicada
-            field_names = [field.name() for field in shp.pendingFields() ]
-
-            columns = [col for col in columns if 'csv' + col not in field_names]
-
-            if columns == []:
-                #No hay columnas nuevas para unir
-                return
-
-            shpField = csvDialog.getJoinFieldTarget()
-            csvField = csvDialog.getJoinField()
-            joinObject = QgsVectorJoinInfo()
-            joinObject.joinLayerId = sheet.id()
-            joinObject.joinFieldName = csvField
-            joinObject.targetFieldName = shpField
-
-            joinObject.setJoinFieldNamesSubset(columns)
-            joinObject.memoryCache = True
-            shp.addJoin(joinObject)
-
-            # self.addSectionAction.setEnabled(True)
-            # self.intersctionAction.setEnabled(True)
+            action.pos( csvDialog.getLayer(),
+                        csvDialog.getSelectedColumns(),
+                        csvDialog.getJoinField(),
+                        field_names,
+                        csvDialog.getJoinFieldTarget())
 
     def unload(self):
         """Remueve el menú del plugin, y las acciones de la barra de herramientas
@@ -534,41 +402,13 @@ class CalidadCAR:
         # remove the toolbar
         del self.toolbar
 
-    def addLayers(self):
-        """Carga las capas que el usuario ingreso en el dialog de cargar fondos,
-           los fondos se volverán a cargar cada vez que se llame este método, en
-           caso de que el usuario quiera recargar un fondo."""
-
-        manager.remove_layers(self.layers)
-        self.layers = []
-
-        files = self.dlg.getFilePaths()
-
-        #Cargar los fondos que se encuentrán en el dialogo de cargar fondos.
-        for layer in files:
-            path, name = layer
-            layerInfo = QFileInfo(path)
-
-            if layerInfo.suffix() == 'tif':
-                layer = manager.load_raster_layer(path, name)
-                if layer is not None:
-                    self.layers.append(layer)
-
-            elif layerInfo.suffix() == 'shp':
-                if name == 'secciones' or name == 'ejes':
-                    layer = manager.load_vector_layer(path, name)
-                else:
-                    layer = manager.load_vector_layer(path, name, (57, 165, 232))
-
-                if layer is not None:
-                    self.layers.append(layer)
-
-        manager.add_layers(self.layers)
-
     def cargarCapas(self):
         """Función que se ejecuta cuando el usuario hace click en la acción de Cargar Fondos"""
         self.dlg.show()
         result = self.dlg.exec_()
+
         if result:
-            self.addLayers()
-            # self.addCsvAction.setEnabled(True)
+            action = LayerAction()
+            action.pre()
+            action.pro(self.dlg.getFilePaths())
+            self.layers = action.pos()
