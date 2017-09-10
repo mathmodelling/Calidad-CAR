@@ -37,7 +37,6 @@ import datetime as dtm
 from src.modelling import calidad_car
 from dialogo_csv import CSVDialog
 from src import layer_manager as manager
-from dialogo_concentracion import DialogoConcentracion
 from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
 
 class CalidadCAR:
