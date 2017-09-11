@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import time
 import geometry
+import numpy as np
+import datetime as dtm
 import layer_manager as manager
-from PyQt4.QtCore import (QFileInfo, QVariant)
+from modelling import calidad_car
 from abc import ABCMeta, abstractmethod
+from PyQt4.QtCore import (QFileInfo, QVariant)
+
 from qgis.core import ( QgsField,
                         QgsVectorJoinInfo,
                         QgsVectorLayer)
@@ -258,3 +263,78 @@ class ConcentrationPointsAction(BaseAction):
         # layer.updateExtents()
         # QgsMapLayerRegistry.instance().addMapLayers([layer])
         return polygon.contains(point)
+
+class ModellingAction(BaseAction):
+    def __init__(self):
+        self.eje = None
+        self.work_layer = None
+
+    def pre(self):
+        #Verifica que las capas necesarias estan cargagas
+        self.eje = manager.get_layer('ejes')
+        self.work_layer = manager.get_layer('output')
+
+        return self.eje is not None and self.work_layer is not None
+
+    def pro(self):
+        #Inicializa variables y retorna los nombres de las colmunmas de la tabla
+        #de atributos de la capa de trabajo output
+        self.concentration_values = []
+        self.vel_values = []
+
+        self.field_names = [field.name() for field in self.work_layer.pendingFields()]
+
+        return self.field_names
+
+    def pos(self, vel_name):
+        concen_idx = self.work_layer.fieldNameIndex('concentracion')
+        vel_idx = self.work_layer.fieldNameIndex(vel_name)
+
+        for feature in self.work_layer.getFeatures():
+            #Esto podría lanzar una exepción
+            self.concentration_values.append(float(feature.attributes()[concen_idx]))
+            self.vel_values.append(float(feature.attributes()[vel_idx]))
+
+        points = geometry.intersectionPoints(self.eje, self.work_layer)
+        distances = [0]
+        for i in xrange(len(points) - 1):
+            distances.append(geometry.distance(points[i], points[i + 1]))
+
+        condiciones_iniciales = np.array([distances, self.concentration_values]).T
+        velocidad = np.array(self.vel_values)
+        difusion = np.array([1.5 for x in velocidad])
+
+        # ci2 = copy.deepcopy(condiciones_iniciales)
+        # va2 = copy.deepcopy(velocidad)
+        # cd2 = copy.deepcopy(difusion)
+
+        self.apply_modelling(condiciones_iniciales, velocidad, difusion, 0)
+        # self.apply_modelling(ci2, va2, cd2, 1)
+
+    def apply_modelling(self, c_i, va, cd, flag):
+        # Numero de pasos en el teimpo a ejecutar
+        nt = 20
+        # Número de nodos espaciales
+        nx = 10
+        paso_x = 10
+        np.set_printoptions(precision=2)
+        inicio = dtm.datetime.fromtimestamp(time.time())
+        print 'Estoy comenzando a las ', inicio.strftime('%Y-%m-%d %H:%M:%S')
+
+        c_f = np.arange(0.0, nt + 1.0)
+        amplitud, fase, frecuencia, z = 1.0, 0.0, 0.35, 1.0
+
+        mcon = np.empty((nt + 1, np.size(c_i, axis=0)))
+        mcon[0, :] = c_i[:, 1]
+        for i in range(1, nt):
+            # Asignación de condición de frontera. Se hace cambiando primer valor de c_i
+            c_i[0, 1] = c_f[i]
+            # Evolución de la concentración para t + dt
+            con, t_step = calidad_car.calidad_explicito(c_i, va, cd)
+            # Se guardan las concentraciones del momento t+dt
+            mcon[i, :] = con
+            # Actualizar condición inicial
+            c_i[:, 1] = con
+        # return mcon, t_step
+
+        print calidad_car.grafica(mcon, t_step, paso_x, srow=2, scol=80, flag=flag)

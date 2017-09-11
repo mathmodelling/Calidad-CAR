@@ -29,7 +29,8 @@ from PyQt4.QtGui import ( QIcon,
 from src.actions import ( CSVAction,
                           LayerAction,
                           AddSectionAction,
-                          ConcentrationPointsAction)
+                          ConcentrationPointsAction,
+                          ModellingAction)
 
 import time
 import util
@@ -286,82 +287,30 @@ class CalidadCAR:
         """Se encarga de aplicar el modelo matemático a la información para determinar la calidad del agua.
         """
 
-        work_layer = manager.get_layer('output')
-        eje = manager.get_layer('ejes')
+        action = ModellingAction()
 
-        if work_layer is None or eje is None:
+        if not action.pre():
             util.errorDialog(self, u'No se encontraron algunas de las capas necesarias para realizar esta operación.', u'Asegurate de agregar los puntos de concentración, y la capa del eje en el diálogo de Cargar Fondos.')
             return
 
-        concentration_values = []
-        vel_values = []
+        field_names = action.pro()
 
-        field_names = [field.name() for field in work_layer.pendingFields()]
+        #Desplegar diálogo para preguntarle al usuario cual es el campo de la velocidad
         text = u'Selecciona la columna en la que se encuentra la información ' +\
                ' de la velocidad:'
-
         vel_name = util.comboBoxDialog(self, u'Velocidad', text, field_names)
+
         if vel_name is None:
             util.errorDialog(self, u'La información de la velocidad es necesaria.',
         		u'Puedes agregarla con la opción de Unir CSV')
             return
 
-        concen_idx = work_layer.fieldNameIndex('concentracion')
-        vel_idx = work_layer.fieldNameIndex(vel_name)
-
-        for feature in work_layer.getFeatures():
-            try:
-                concentration_values.append(float(feature.attributes()[concen_idx]))
-                vel_values.append(float(feature.attributes()[vel_idx]))
-            except TypeError:
-                util.errorDialog(self, u'Uno de los valores en la columna de velocidad o puntos de concentración es nulo',
-                u'Asegurate de que no hay valores nulos en la tabla.')
-                return
-
-        points = geometry.intersectionPoints(eje, work_layer)
-        distances = [0]
-        for i in xrange(len(points) - 1):
-            distances.append(geometry.distance(points[i], points[i + 1]))
-
-        condiciones_iniciales = np.array([distances, concentration_values]).T
-        velocidad = np.array(vel_values)
-        difusion = np.array([1.5 for x in velocidad])
-
-        ci2 = copy.deepcopy(condiciones_iniciales)
-        va2 = copy.deepcopy(velocidad)
-        cd2 = copy.deepcopy(difusion)
-
-        self.apply_modelling(condiciones_iniciales, velocidad, difusion, 0)
-        self.apply_modelling(ci2, va2, cd2, 1)
-        ##### Modelling
-
-    def apply_modelling(self, c_i, va, cd, flag):
-        # Numero de pasos en el teimpo a ejecutar
-        nt = 20
-        # Número de nodos espaciales
-        nx = 10
-        paso_x = 10
-        np.set_printoptions(precision=2)
-        inicio = dtm.datetime.fromtimestamp(time.time())
-        print 'Estoy comenzando a las ', inicio.strftime('%Y-%m-%d %H:%M:%S')
-
-        c_f = np.arange(0.0, nt + 1.0)
-        amplitud, fase, frecuencia, z = 1.0, 0.0, 0.35, 1.0
-
-        mcon = np.empty((nt + 1, np.size(c_i, axis=0)))
-        mcon[0, :] = c_i[:, 1]
-        for i in range(1, nt):
-            # Asignación de condición de frontera. Se hace cambiando primer valor de c_i
-            c_i[0, 1] = c_f[i]
-            # Evolución de la concentración para t + dt
-            con, t_step = calidad_car.calidad_explicito(c_i, va, cd)
-            # Se guardan las concentraciones del momento t+dt
-            mcon[i, :] = con
-            # Actualizar condición inicial
-            c_i[:, 1] = con
-        # return mcon, t_step
-
-        print calidad_car.grafica(mcon, t_step, paso_x, srow=2, scol=80, flag=flag)
+        try:
+            action.pos(vel_name)
+        except TypeError:
+            util.errorDialog(self, u'Uno de los valores en la columna de velocidad o puntos de concentración es nulo',
+            u'Asegurate de que no hay valores nulos en la tabla.')
+            return
 
     def addCsv(self):
         """Crea una capa a partir de un archivo CSV, y une la información que
