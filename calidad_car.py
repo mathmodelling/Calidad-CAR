@@ -41,6 +41,7 @@ import resources
 import numpy as np
 import datetime as dtm
 
+from dialogo_parametros import SettingsDialog
 from dialogo_csv import CSVDialog
 from src.modelling import calidad_car
 from src import layer_manager as manager
@@ -295,18 +296,17 @@ class CalidadCAR:
 
         field_names = action.pro()
 
-        #Desplegar diálogo para preguntarle al usuario cual es el campo de la velocidad
-        text = u'Selecciona la columna en la que se encuentra la información ' +\
-               ' de la velocidad:'
-        vel_name = util.comboBoxDialog(self, u'Velocidad', text, field_names)
+        #Desplegar diálogo
+        dialog = SettingsDialog(field_names)
+        r = dialog.exec_()
 
-        if vel_name is None:
-            util.errorDialog(self, u'La información de la velocidad es necesaria.',
-        		u'Puedes agregarla con la opción de Unir CSV')
-            return
+        if not r: return
+
+        vel_name = dialog.getVelocidad()
+        conc_name = dialog.getConcentracion()
 
         try:
-            action.pos(vel_name)
+            action.pos(vel_name, conc_name)
         except (TypeError, ValueError):
             util.errorDialog(self, u'Uno de los valores en la columna de velocidad o puntos de concentración es nulo',
             u'Asegurate de que no hay valores nulos en la tabla.')

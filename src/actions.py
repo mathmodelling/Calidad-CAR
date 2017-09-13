@@ -287,9 +287,9 @@ class ModellingAction(BaseAction):
 
         return self.field_names
 
-    def pos(self, vel_name):
+    def pos(self, vel_name, conc_name):
         np.set_printoptions(precision=2)
-        concen_idx = self.work_layer.fieldNameIndex('csv_concentracion')
+        concen_idx = self.work_layer.fieldNameIndex(conc_name)
         vel_idx = self.work_layer.fieldNameIndex(vel_name)
 
         for feature in self.work_layer.getFeatures():
