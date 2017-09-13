@@ -199,12 +199,12 @@ class CalidadCAR:
             callback=self.addSection,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icons/concentration-icon.png'
-        self.intersctionAction = self.add_action(
-            icon_path,
-            text=self.tr(u'Agregar puntos de concentración'),
-            callback=self.concentrationPoints,
-            parent=self.iface.mainWindow())
+        # icon_path = ':/plugins/CalidadCAR/icons/concentration-icon.png'
+        # self.intersctionAction = self.add_action(
+        #     icon_path,
+        #     text=self.tr(u'Agregar puntos de concentración'),
+        #     callback=self.concentrationPoints,
+        #     parent=self.iface.mainWindow())
 
         # icon_path = ':/plugins/CalidadCAR/icons/start-icon.png'
         icon_path = ':/plugins/CalidadCAR/icons/execute.png'
@@ -287,6 +287,16 @@ class CalidadCAR:
     def intersection(self):
         """Se encarga de aplicar el modelo matemático a la información para determinar la calidad del agua.
         """
+
+        action = ConcentrationPointsAction()
+
+        if not action.pre():
+            util.errorDialog(self, u'No se encontraron algunas de las capas necesarias para realizar esta operación.',
+                    u'Asegurate de agregar la capa de secciones, y la capa del eje en el diálogo de Cargar Fondos.')
+            return
+
+        action.pro()
+        action.pos(self.iface)
 
         action = ModellingAction()
 
