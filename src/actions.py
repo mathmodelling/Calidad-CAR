@@ -169,10 +169,9 @@ class ConcentrationPointsAction(BaseAction):
 
         #Mostrar la capa de trabajo work_layer
         manager.add_layers([self.work_layer])
-
-        self.work_layer.dataProvider().addAttributes([QgsField(u'concentracion', QVariant.Double)])
-        self.work_layer.startEditing()
-        iface.showAttributeTable(self.work_layer)
+        # self.work_layer.dataProvider().addAttributes([QgsField(u'concentracion', QVariant.Double)])
+        # self.work_layer.startEditing()
+        # iface.showAttributeTable(self.work_layer)
 
 
     def addFeature(self, layerA, feature = None, idx = -1):
@@ -279,6 +278,7 @@ class ModellingAction(BaseAction):
     def pro(self):
         #Inicializa variables y retorna los nombres de las colmunmas de la tabla
         #de atributos de la capa de trabajo output
+
         self.concentration_values = []
         self.vel_values = []
 
@@ -287,42 +287,47 @@ class ModellingAction(BaseAction):
         return self.field_names
 
     def pos(self, vel_name):
-        concen_idx = self.work_layer.fieldNameIndex('concentracion')
+        np.set_printoptions(precision=2)
+        concen_idx = self.work_layer.fieldNameIndex('csv_concentracion')
         vel_idx = self.work_layer.fieldNameIndex(vel_name)
 
         for feature in self.work_layer.getFeatures():
             #Esto podría lanzar una exepción
-            self.concentration_values.append(float(feature.attributes()[concen_idx]))
-            self.vel_values.append(float(feature.attributes()[vel_idx]))
+            #Precisión de 4 digitos, para evitar problemas con matplotlib
+            cnt = format(feature.attributes()[concen_idx], '.4f')
+            velo = format(feature.attributes()[vel_idx], '.4f')
+            self.concentration_values.append(float(cnt))
+            self.vel_values.append(float(velo))
 
         points = geometry.intersectionPoints(self.eje, self.work_layer)
-        distances = [0]
-        for i in xrange(len(points) - 1):
-            distances.append(geometry.distance(points[i], points[i + 1]))
+        distances = []
+        for i in xrange(len(points)):
+            #Precisión de 4 digitos, para evitar problemas con matplotlib
+            dist = geometry.distance(points[0], points[i])
+            distances.append(float(format(dist, '.4f')))
 
-        condiciones_iniciales = np.array([distances, self.concentration_values]).T
-        velocidad = np.array(self.vel_values)
-        difusion = np.array([1.5 for x in velocidad])
+        for dist in distances:
+            print type(dist)
 
-        # ci2 = copy.deepcopy(condiciones_iniciales)
-        # va2 = copy.deepcopy(velocidad)
-        # cd2 = copy.deepcopy(difusion)
+        dx = np.array(distances)
+        cn = np.array(self.concentration_values)
 
-        self.apply_modelling(condiciones_iniciales, velocidad, difusion, 0)
-        # self.apply_modelling(ci2, va2, cd2, 1)
+        c_i = np.array([dx, cn]).T
+        # condiciones_iniciales = np.array([distances, self.concentration_values]).T
+        va = np.array(self.vel_values)
+        cd = np.array([1.5 for x in self.vel_values])
+
+        self.apply_modelling(c_i, va, cd, 0)
 
     def apply_modelling(self, c_i, va, cd, flag):
         # Numero de pasos en el teimpo a ejecutar
         nt = 20
         # Número de nodos espaciales
         nx = 10
-        paso_x = 10
-        np.set_printoptions(precision=2)
-        inicio = dtm.datetime.fromtimestamp(time.time())
-        print 'Estoy comenzando a las ', inicio.strftime('%Y-%m-%d %H:%M:%S')
 
         c_f = np.arange(0.0, nt + 1.0)
         amplitud, fase, frecuencia, z = 1.0, 0.0, 0.35, 1.0
+        c_f = amplitud * np.sin(frecuencia * c_f + fase) + z
 
         mcon = np.empty((nt + 1, np.size(c_i, axis=0)))
         mcon[0, :] = c_i[:, 1]
@@ -337,4 +342,6 @@ class ModellingAction(BaseAction):
             c_i[:, 1] = con
         # return mcon, t_step
 
-        print calidad_car.grafica(mcon, t_step, paso_x, srow=2, scol=80, flag=flag)
+        paso_x = 10
+
+        print calidad_car.grafica(mcon, t_step, paso_x, srow=11, scol=80, flag=flag)

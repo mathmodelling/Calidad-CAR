@@ -307,7 +307,7 @@ class CalidadCAR:
 
         try:
             action.pos(vel_name)
-        except TypeError:
+        except (TypeError, ValueError):
             util.errorDialog(self, u'Uno de los valores en la columna de velocidad o puntos de concentración es nulo',
             u'Asegurate de que no hay valores nulos en la tabla.')
             return
