@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import copy
 import time
 import geometry
 import numpy as np
@@ -306,18 +307,18 @@ class ModellingAction(BaseAction):
             dist = geometry.distance(points[0], points[i])
             distances.append(float(format(dist, '.4f')))
 
-        for dist in distances:
-            print type(dist)
-
         dx = np.array(distances)
         cn = np.array(self.concentration_values)
 
         c_i = np.array([dx, cn]).T
-        # condiciones_iniciales = np.array([distances, self.concentration_values]).T
         va = np.array(self.vel_values)
         cd = np.array([1.5 for x in self.vel_values])
 
-        self.apply_modelling(c_i, va, cd, 0)
+        c_i_copy = copy.deepcopy(c_i)
+        va_copy = copy.deepcopy(va)
+        cd_copy = copy.deepcopy(cd)
+
+        self.apply_modelling(c_i_copy, va_copy, cd_copy, 1)
 
     def apply_modelling(self, c_i, va, cd, flag):
         # Numero de pasos en el teimpo a ejecutar
