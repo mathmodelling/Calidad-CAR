@@ -314,9 +314,10 @@ class CalidadCAR:
 
         vel_name = dialog.getVelocidad()
         conc_name = dialog.getConcentracion()
+        flag = dialog.getFlag()
 
         try:
-            action.pos(vel_name, conc_name)
+            action.pos(vel_name, conc_name, flag)
         except (TypeError, ValueError):
             util.errorDialog(self, u'Uno de los valores en la columna de velocidad o puntos de concentración es nulo',
             u'Asegurate de que no hay valores nulos en la tabla.')

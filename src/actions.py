@@ -287,7 +287,7 @@ class ModellingAction(BaseAction):
 
         return self.field_names
 
-    def pos(self, vel_name, conc_name):
+    def pos(self, vel_name, conc_name, flag = 0):
         np.set_printoptions(precision=2)
         concen_idx = self.work_layer.fieldNameIndex(conc_name)
         vel_idx = self.work_layer.fieldNameIndex(vel_name)
@@ -318,7 +318,7 @@ class ModellingAction(BaseAction):
         va_copy = copy.deepcopy(va)
         cd_copy = copy.deepcopy(cd)
 
-        self.apply_modelling(c_i_copy, va_copy, cd_copy, 1)
+        self.apply_modelling(c_i_copy, va_copy, cd_copy, flag)
 
     def apply_modelling(self, c_i, va, cd, flag):
         # Numero de pasos en el teimpo a ejecutar

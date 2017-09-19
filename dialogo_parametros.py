@@ -23,3 +23,8 @@ class SettingsDialog(QtGui.QDialog, Ui_Dialog):
 
     def getConcentracion(self):
         return str(self.comboConcentracion.currentText())
+
+    def getFlag(self):
+        if self.radioButtonTime.isChecked():
+            return 0
+        return 1

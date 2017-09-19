@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>460</width>
-    <height>286</height>
+    <height>417</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>240</y>
+     <y>370</y>
      <width>421</width>
      <height>32</height>
     </rect>
@@ -29,7 +29,7 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -42,7 +42,7 @@
     <item>
      <widget class="QLabel" name="label">
       <property name="text">
-       <string>Selecciona la columna en la que se encuentra la información de la velocidad</string>
+       <string>Selecciona la columna en la que se encuentra la información de la velocidad:</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -54,7 +54,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -67,7 +67,7 @@
     <item>
      <widget class="QLabel" name="label_2">
       <property name="text">
-       <string>Selecciona la columna en la que se encuentra la información de los puntos de concentración</string>
+       <string>Selecciona la columna en la que se encuentra la información de los puntos de concentración:</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -78,6 +78,58 @@
      <widget class="QComboBox" name="comboConcentracion"/>
     </item>
    </layout>
+  </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>220</y>
+     <width>421</width>
+     <height>141</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Salida</string>
+   </property>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>30</y>
+      <width>401</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Selecciona la gráfica de concentración de que deseas ver:</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButtonTime">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>60</y>
+      <width>201</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Concentración / Tiempo</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="radioButtonDist">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>90</y>
+      <width>201</width>
+      <height>26</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Concentración / Distancia</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
