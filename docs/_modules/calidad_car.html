@@ -52,7 +52,6 @@
                         <span class="n">QgsGeometry</span><span class="p">,</span>
                         <span class="n">QgsVectorLayer</span><span class="p">,</span>
                         <span class="n">QgsRasterLayer</span><span class="p">,</span>
-                        <span class="n">QgsVectorJoinInfo</span><span class="p">,</span>
                         <span class="n">QgsMapLayerRegistry</span><span class="p">,</span>
                         <span class="n">QgsCoordinateReferenceSystem</span><span class="p">,</span>
                         <span class="n">QgsCoordinateReferenceSystem</span><span class="p">)</span>
@@ -70,18 +69,26 @@
                           <span class="n">QMessageBox</span><span class="p">)</span>
 
 
+<span class="kn">from</span> <span class="nn">src.actions</span> <span class="k">import</span> <span class="p">(</span> <span class="n">CSVAction</span><span class="p">,</span>
+                          <span class="n">LayerAction</span><span class="p">,</span>
+                          <span class="n">AddSectionAction</span><span class="p">,</span>
+                          <span class="n">ConcentrationPointsAction</span><span class="p">,</span>
+                          <span class="n">ModellingAction</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">util</span>
+<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">os.path</span>
 <span class="kn">import</span> <span class="nn">geometry</span>
 <span class="kn">import</span> <span class="nn">resources</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dtm</span>
 
-<span class="kn">from</span> <span class="nn">src.modelling</span> <span class="k">import</span> <span class="n">calidad_car</span>
+<span class="kn">from</span> <span class="nn">dialogo_parametros</span> <span class="k">import</span> <span class="n">SettingsDialog</span>
 <span class="kn">from</span> <span class="nn">dialogo_csv</span> <span class="k">import</span> <span class="n">CSVDialog</span>
+<span class="kn">from</span> <span class="nn">src.modelling</span> <span class="k">import</span> <span class="n">calidad_car</span>
 <span class="kn">from</span> <span class="nn">src</span> <span class="k">import</span> <span class="n">layer_manager</span> <span class="k">as</span> <span class="n">manager</span>
-<span class="kn">from</span> <span class="nn">dialogo_concentracion</span> <span class="k">import</span> <span class="n">DialogoConcentracion</span>
 <span class="kn">from</span> <span class="nn">calidad_car_dialog</span> <span class="k">import</span> <span class="n">Ui_Dialog</span> <span class="k">as</span> <span class="n">CalidadCARDialog</span>
-<span class="c1"># import pandas</span>
 
 <div class="viewcode-block" id="CalidadCAR"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR">[documentos]</a><span class="k">class</span> <span class="nc">CalidadCAR</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Implementación del plugin.&quot;&quot;&quot;</span>
@@ -89,9 +96,7 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iface</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Constructor.</span>
 
-<span class="sd">        :param iface: Una instancia de la interfaz que será pasada a esta clase,</span>
-<span class="sd">            la cual proveé una ligadura con la cual se podrá manipular la aplicación</span>
-<span class="sd">            de QGIS en tiempo de ejecución.</span>
+<span class="sd">        :param iface: Una instancia de la interfaz que será pasada a esta clase, la cual proveé una ligadura con la cual se podrá manipular la aplicación de QGIS en tiempo de ejecución.</span>
 <span class="sd">        :type iface: QgsInterface</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iface</span> <span class="o">=</span> <span class="n">iface</span>
@@ -235,12 +240,12 @@
             <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">addSection</span><span class="p">,</span>
             <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">mainWindow</span><span class="p">())</span>
 
-        <span class="n">icon_path</span> <span class="o">=</span> <span class="s1">&#39;:/plugins/CalidadCAR/icons/concentration-icon.png&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">intersctionAction</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_action</span><span class="p">(</span>
-            <span class="n">icon_path</span><span class="p">,</span>
-            <span class="n">text</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tr</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;Agregar puntos de concentración&#39;</span><span class="p">),</span>
-            <span class="n">callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">concentrationPoints</span><span class="p">,</span>
-            <span class="n">parent</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">mainWindow</span><span class="p">())</span>
+        <span class="c1"># icon_path = &#39;:/plugins/CalidadCAR/icons/concentration-icon.png&#39;</span>
+        <span class="c1"># self.intersctionAction = self.add_action(</span>
+        <span class="c1">#     icon_path,</span>
+        <span class="c1">#     text=self.tr(u&#39;Agregar puntos de concentración&#39;),</span>
+        <span class="c1">#     callback=self.concentrationPoints,</span>
+        <span class="c1">#     parent=self.iface.mainWindow())</span>
 
         <span class="c1"># icon_path = &#39;:/plugins/CalidadCAR/icons/start-icon.png&#39;</span>
         <span class="n">icon_path</span> <span class="o">=</span> <span class="s1">&#39;:/plugins/CalidadCAR/icons/execute.png&#39;</span>
@@ -263,7 +268,11 @@
 <div class="viewcode-block" id="CalidadCAR.clean"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.clean">[documentos]</a>    <span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Recarga el plugin, limpiando todas las capas cargadas, excepto, las</span>
 <span class="sd">           capas de salida de información.&quot;&quot;&quot;</span>
-        <span class="n">manager</span><span class="o">.</span><span class="n">remove_layers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span>
+        <span class="n">eje</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;ejes&#39;</span><span class="p">)</span>
+        <span class="n">fondo</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;fondo&#39;</span><span class="p">)</span>
+        <span class="n">hidro</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;hidrografia&#39;</span><span class="p">)</span>
+        <span class="n">secciones</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;secciones&#39;</span><span class="p">)</span>
+        <span class="n">manager</span><span class="o">.</span><span class="n">remove_layers</span><span class="p">([</span><span class="n">eje</span><span class="p">,</span> <span class="n">fondo</span><span class="p">,</span> <span class="n">hidro</span><span class="p">,</span> <span class="n">secciones</span><span class="p">])</span>
 
         <span class="n">csv_layers</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_all_layers</span><span class="p">(</span><span class="s2">&quot;csv&quot;</span><span class="p">)</span>
         <span class="n">manager</span><span class="o">.</span><span class="n">remove_layers</span><span class="p">(</span><span class="n">csv_layers</span><span class="p">)</span>
@@ -290,270 +299,98 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">util</span><span class="o">.</span><span class="n">questionDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">detail</span><span class="p">):</span>
                 <span class="k">return</span>
 
-        <span class="n">tempLayer</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">AddSectionAction</span><span class="p">()</span>
 
-        <span class="n">seccionesLayer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;secciones&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">seccionesLayer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="o">.</span><span class="n">pre</span><span class="p">():</span>
             <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;No se encontró la capa de secciones.&#39;</span><span class="p">,</span>
             <span class="sa">u</span><span class="s1">&#39;Asegurate de agregarla en el diálogo de cargar fondos.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="c1">#Bloquear acción de realizar más uniones con archivos CSV</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">addCsvAction</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-
-        <span class="n">tempLayer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">tempLayer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">crs</span> <span class="o">=</span> <span class="n">seccionesLayer</span><span class="o">.</span><span class="n">crs</span><span class="p">()</span><span class="o">.</span><span class="n">authid</span><span class="p">()</span>
-
-            <span class="n">tempLayer</span> <span class="o">=</span> <span class="n">QgsVectorLayer</span><span class="p">(</span><span class="s1">&#39;LineString?crs=&#39;</span><span class="o">+</span><span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;temp&#39;</span><span class="p">,</span> <span class="s1">&#39;memory&#39;</span><span class="p">)</span>
-
-            <span class="n">pr</span> <span class="o">=</span> <span class="n">tempLayer</span><span class="o">.</span><span class="n">dataProvider</span><span class="p">()</span>
-            <span class="n">fields</span> <span class="o">=</span> <span class="n">seccionesLayer</span><span class="o">.</span><span class="n">pendingFields</span><span class="p">()</span>
-            <span class="n">pr</span><span class="o">.</span><span class="n">addAttributes</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
-
-            <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">addMapLayer</span><span class="p">(</span><span class="n">tempLayer</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">setActiveLayer</span><span class="p">(</span><span class="n">tempLayer</span><span class="p">)</span>
-        <span class="n">tempLayer</span><span class="o">.</span><span class="n">startEditing</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="CalidadCAR.check"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.check">[documentos]</a>    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Verifica si un punto se encuentra entre dos segmentos</span>
-
-<span class="sd">        :param segments: Lista de segmentos entre los que se puede encontrar el punto.</span>
-<span class="sd">        :type segments: Lista de QgsSegments</span>
-
-<span class="sd">        :param point: punto sobre el cual se va a hacer la verificación</span>
-<span class="sd">        :type point: QgsPoint</span>
-
-<span class="sd">        :returns: Un booleano que indica si la condición se cumple o no.</span>
-<span class="sd">        :rtype: Boolean</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="p">:</span> <span class="k">return</span> <span class="kc">False</span>
-        <span class="n">polygon</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">buildConvexPolygon</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span>
-        <span class="c1"># layer =  QgsVectorLayer(&#39;Polygon?crs=epsg:3116&#39;, &#39;poly&#39; , &quot;memory&quot;)</span>
-        <span class="c1"># pr = layer.dataProvider()</span>
-        <span class="c1"># poly = QgsFeature()</span>
-        <span class="c1"># poly.setGeometry(polygon)</span>
-        <span class="c1"># pr.addFeatures([poly])</span>
-        <span class="c1"># layer.updateExtents()</span>
-        <span class="c1"># QgsMapLayerRegistry.instance().addMapLayers([layer])</span>
-        <span class="k">return</span> <span class="n">polygon</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">point</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="CalidadCAR.place"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.place">[documentos]</a>    <span class="k">def</span> <span class="nf">place</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">segments</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Ubica un punto entre los dos segmentos consecutivos a los que pertenece.</span>
-
-<span class="sd">        :param segments: Lista de segmentos</span>
-<span class="sd">        :type segments: Lista de QgsSegments</span>
-
-<span class="sd">        :param p: punto que se va a ubicar en la lista de segmentos</span>
-<span class="sd">        :type point: QgsPoint</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">low</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span>
-        <span class="n">mid</span><span class="p">,</span> <span class="n">cont</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
-
-        <span class="k">while</span><span class="p">(</span><span class="n">low</span> <span class="o">&lt;=</span> <span class="n">hi</span><span class="p">):</span>
-            <span class="n">mid</span> <span class="o">=</span>  <span class="n">low</span> <span class="o">+</span> <span class="p">((</span><span class="n">hi</span> <span class="o">-</span> <span class="n">low</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="n">low</span> <span class="p">:</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="p">):</span>
-                <span class="n">hi</span> <span class="o">=</span> <span class="n">mid</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">low</span> <span class="o">=</span> <span class="n">mid</span>
-            <span class="n">cont</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="c1">#Sacurity trigger</span>
-            <span class="k">if</span> <span class="n">cont</span> <span class="o">==</span> <span class="mi">20</span><span class="p">:</span> <span class="k">break</span>
-
-        <span class="k">return</span> <span class="n">low</span></div>
-
-    <span class="c1"># def place(self, segments, p):</span>
-    <span class="c1">#     for i in xrange(len(segments) - 1):</span>
-    <span class="c1">#         if self.check([segments[i], segments[i + 1]], p):</span>
-    <span class="c1">#             return i</span>
-    <span class="c1">#     return None</span>
-
-<div class="viewcode-block" id="CalidadCAR.addFeature"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.addFeature">[documentos]</a>    <span class="k">def</span> <span class="nf">addFeature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layerA</span><span class="p">,</span> <span class="n">feature</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Inserta una característica (feature) en una capa en un orden establecido</span>
-
-<span class="sd">        :param layerA: Capa en la que se va a insertar la característica (feature)</span>
-<span class="sd">        :type layerA: QgsVectorLayer</span>
-
-<span class="sd">        :param feature: Característica (feature) que se va a insertar en la capa.</span>
-<span class="sd">        :type feature: QgsFeature</span>
-
-<span class="sd">        :param idx: Indice de la nueva característica (feature) que se va a insertar.</span>
-<span class="sd">        :type idx: Integer</span>
-
-<span class="sd">        :returns: Una nueva capa con la característica insertada en el pocisión idx.</span>
-<span class="sd">        :rtype: QgsVectorLayer</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">crs</span> <span class="o">=</span> <span class="n">layerA</span><span class="o">.</span><span class="n">crs</span><span class="p">()</span><span class="o">.</span><span class="n">authid</span><span class="p">()</span>
-        <span class="n">tempLayer</span> <span class="o">=</span> <span class="n">QgsVectorLayer</span><span class="p">(</span><span class="s1">&#39;LineString?crs=&#39;</span><span class="o">+</span><span class="n">crs</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;memory&#39;</span><span class="p">)</span>
-        <span class="n">pr</span> <span class="o">=</span> <span class="n">tempLayer</span><span class="o">.</span><span class="n">dataProvider</span><span class="p">()</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="n">layerA</span><span class="o">.</span><span class="n">pendingFields</span><span class="p">()</span>
-
-        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
-            <span class="n">pr</span><span class="o">.</span><span class="n">addAttributes</span><span class="p">([</span><span class="n">f</span><span class="p">])</span>
-
-        <span class="n">features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">layerA</span><span class="o">.</span><span class="n">getFeatures</span><span class="p">())</span>
-        <span class="k">if</span> <span class="n">idx</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-            <span class="n">features</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span>
-
-        <span class="n">tempLayer</span><span class="o">.</span><span class="n">updateFields</span><span class="p">()</span>
-
-        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">features</span><span class="p">:</span>
-            <span class="n">pr</span><span class="o">.</span><span class="n">addFeatures</span><span class="p">([</span><span class="n">feature</span><span class="p">])</span>
-
-        <span class="n">tempLayer</span><span class="o">.</span><span class="n">updateExtents</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">tempLayer</span></div>
+        <span class="n">action</span><span class="o">.</span><span class="n">pro</span><span class="p">()</span>
+        <span class="n">action</span><span class="o">.</span><span class="n">pos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">addCsvAction</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CalidadCAR.concentrationPoints"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.concentrationPoints">[documentos]</a>    <span class="k">def</span> <span class="nf">concentrationPoints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Este método se encarga de recopilar toda la información, para permitirle al usuario ingresar los puntos de concentración.</span>
 
 <span class="sd">           Para que el usuario pueda realizar esta operación, necesariamente, tienen que estar cargadas la capa de ejes, y la capa de secciones transversales.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">secciones</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;secciones&#39;</span><span class="p">)</span>
-        <span class="n">eje</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;ejes&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">secciones</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">eje</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">ConcentrationPointsAction</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="o">.</span><span class="n">pre</span><span class="p">():</span>
             <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;No se encontraron algunas de las capas necesarias para realizar esta operación.&#39;</span><span class="p">,</span>
                     <span class="sa">u</span><span class="s1">&#39;Asegurate de agregar la capa de secciones, y la capa del eje en el diálogo de Cargar Fondos.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="n">work_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">addFeature</span><span class="p">(</span><span class="n">secciones</span><span class="p">)</span>
-
-        <span class="n">temp</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;temp&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">temp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="sd">&quot;&quot;&quot;En caso de que existan secciones temporales, se combinaran con la</span>
-<span class="sd">               capa de secciones, para crear la capa work_layer&quot;&quot;&quot;</span>
-
-            <span class="k">for</span> <span class="n">new_feature</span> <span class="ow">in</span> <span class="n">temp</span><span class="o">.</span><span class="n">getFeatures</span><span class="p">():</span>
-                <span class="n">segements</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">getSegments</span><span class="p">(</span><span class="n">work_layer</span><span class="p">)</span>
-                <span class="n">point</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">intersectionLayerGeometry</span><span class="p">(</span><span class="n">eje</span><span class="p">,</span> <span class="n">new_feature</span><span class="o">.</span><span class="n">geometry</span><span class="p">())</span>
-                <span class="k">if</span> <span class="n">point</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">continue</span>
-                <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">place</span><span class="p">(</span><span class="n">segements</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span>
-                <span class="c1"># print &#39;IDX: &#39;, idx</span>
-                <span class="n">work_layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">addFeature</span><span class="p">(</span><span class="n">work_layer</span><span class="p">,</span> <span class="n">new_feature</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span>
-
-        <span class="n">output</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">manager</span><span class="o">.</span><span class="n">remove_layers</span><span class="p">([</span><span class="n">output</span><span class="p">])</span>
-
-        <span class="c1">#Mostrar la capa de trabajo work_layer</span>
-        <span class="n">manager</span><span class="o">.</span><span class="n">add_layers</span><span class="p">([</span><span class="n">work_layer</span><span class="p">])</span>
-
-        <span class="n">work_layer</span><span class="o">.</span><span class="n">dataProvider</span><span class="p">()</span><span class="o">.</span><span class="n">addAttributes</span><span class="p">([</span><span class="n">QgsField</span><span class="p">(</span><span class="sa">u</span><span class="s1">&#39;concentracion&#39;</span><span class="p">,</span> <span class="n">QVariant</span><span class="o">.</span><span class="n">Double</span><span class="p">)])</span>
-        <span class="n">work_layer</span><span class="o">.</span><span class="n">startEditing</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="o">.</span><span class="n">showAttributeTable</span><span class="p">(</span><span class="n">work_layer</span><span class="p">)</span></div>
+        <span class="n">action</span><span class="o">.</span><span class="n">pro</span><span class="p">()</span>
+        <span class="n">action</span><span class="o">.</span><span class="n">pos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="CalidadCAR.intersection"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.intersection">[documentos]</a>    <span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Se encarga de aplicar el modelo matemático a la información para determinar la calidad del agua.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">work_layer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">)</span>
-        <span class="n">eje</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;ejes&#39;</span><span class="p">)</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">ConcentrationPointsAction</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">work_layer</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">eje</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="o">.</span><span class="n">pre</span><span class="p">():</span>
+            <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;No se encontraron algunas de las capas necesarias para realizar esta operación.&#39;</span><span class="p">,</span>
+                    <span class="sa">u</span><span class="s1">&#39;Asegurate de agregar la capa de secciones, y la capa del eje en el diálogo de Cargar Fondos.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="n">action</span><span class="o">.</span><span class="n">pro</span><span class="p">()</span>
+        <span class="n">action</span><span class="o">.</span><span class="n">pos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iface</span><span class="p">)</span>
+
+        <span class="n">action</span> <span class="o">=</span> <span class="n">ModellingAction</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="o">.</span><span class="n">pre</span><span class="p">():</span>
             <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;No se encontraron algunas de las capas necesarias para realizar esta operación.&#39;</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;Asegurate de agregar los puntos de concentración, y la capa del eje en el diálogo de Cargar Fondos.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="n">concentration_values</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">vel_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">field_names</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">pro</span><span class="p">()</span>
 
-        <span class="n">field_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">work_layer</span><span class="o">.</span><span class="n">pendingFields</span><span class="p">()]</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;Selecciona la columna en la que se encuentra la información &#39;</span> <span class="o">+</span>\
-               <span class="s1">&#39; de la velocidad:&#39;</span>
+        <span class="c1">#Desplegar diálogo</span>
+        <span class="n">dialog</span> <span class="o">=</span> <span class="n">SettingsDialog</span><span class="p">(</span><span class="n">field_names</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
 
-        <span class="n">vel_name</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">comboBoxDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;Velocidad&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">field_names</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">vel_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;La información de la velocidad es necesaria.&#39;</span><span class="p">,</span>
-        		<span class="sa">u</span><span class="s1">&#39;Puedes agregarla con la opción de Unir CSV&#39;</span><span class="p">)</span>
-            <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">r</span><span class="p">:</span> <span class="k">return</span>
 
-        <span class="n">concen_idx</span> <span class="o">=</span> <span class="n">work_layer</span><span class="o">.</span><span class="n">fieldNameIndex</span><span class="p">(</span><span class="s1">&#39;concentracion&#39;</span><span class="p">)</span>
-        <span class="n">vel_idx</span> <span class="o">=</span> <span class="n">work_layer</span><span class="o">.</span><span class="n">fieldNameIndex</span><span class="p">(</span><span class="n">vel_name</span><span class="p">)</span>
+        <span class="n">vel_name</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">getVelocidad</span><span class="p">()</span>
+        <span class="n">conc_name</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">getConcentracion</span><span class="p">()</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">getFlag</span><span class="p">()</span>
 
-        <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">work_layer</span><span class="o">.</span><span class="n">getFeatures</span><span class="p">():</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">concentration_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">attributes</span><span class="p">()[</span><span class="n">concen_idx</span><span class="p">]))</span>
-                <span class="n">vel_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">attributes</span><span class="p">()[</span><span class="n">vel_idx</span><span class="p">]))</span>
-            <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-                <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;Uno de los valores en la columna de velocidad o puntos de concentración es nulo&#39;</span><span class="p">,</span>
-                <span class="sa">u</span><span class="s1">&#39;Asegurate de que no hay valores nulos en la tabla.&#39;</span><span class="p">)</span>
-                <span class="k">return</span>
-
-        <span class="n">points</span> <span class="o">=</span> <span class="n">geometry</span><span class="o">.</span><span class="n">intersectionPoints</span><span class="p">(</span><span class="n">eje</span><span class="p">,</span> <span class="n">work_layer</span><span class="p">)</span>
-        <span class="n">distances</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="n">distances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">geometry</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
-
-        <span class="n">condiciones_iniciales</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">distances</span><span class="p">,</span> <span class="n">concentration_values</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
-        <span class="n">velocidad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vel_values</span><span class="p">)</span>
-        <span class="n">difusion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.5</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">velocidad</span><span class="p">])</span>
-
-        <span class="c1">##### Modelling</span>
-        <span class="n">paso_x</span> <span class="o">=</span> <span class="mi">10</span>
-        <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">sol</span><span class="p">,</span> <span class="n">paso_t</span> <span class="o">=</span> <span class="n">calidad_car</span><span class="o">.</span><span class="n">uso_00</span><span class="p">(</span><span class="n">condiciones_iniciales</span><span class="p">,</span> <span class="n">velocidad</span><span class="p">,</span> <span class="n">difusion</span><span class="p">)</span>
-        <span class="nb">print</span> <span class="n">calidad_car</span><span class="o">.</span><span class="n">grafica</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="s1">&#39;20/08/2017&#39;</span><span class="p">,</span> <span class="n">paso_t</span><span class="p">,</span> <span class="n">paso_x</span><span class="p">,</span> <span class="n">srow</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">scol</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span></div>
-
-
-        <span class="c1">##### TEST</span>
-        <span class="c1"># vel = [10.0 * i for i in range(42)]</span>
-        <span class="c1"># conc = [0.0 for i in range(42)]</span>
-        <span class="c1"># c_i = np.array([vel, conc]).T</span>
-        <span class="c1"># va = np.array([1.0 for i in range(42)])</span>
-        <span class="c1"># cd = np.array([1.5 for i in range(42)])</span>
-
-        <span class="c1"># sol, paso_t = calidad_car.uso_00(c_i, va, cd)</span>
-        <span class="c1"># print calidad_car.grafica(sol, &#39;20/08/2017&#39;, paso_t, paso_x, srow=2, scol=80, flag=0).to_string()</span>
-
-
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">action</span><span class="o">.</span><span class="n">pos</span><span class="p">(</span><span class="n">vel_name</span><span class="p">,</span> <span class="n">conc_name</span><span class="p">,</span> <span class="n">flag</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">):</span>
+            <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;Uno de los valores en la columna de velocidad o puntos de concentración es nulo&#39;</span><span class="p">,</span>
+            <span class="sa">u</span><span class="s1">&#39;Asegurate de que no hay valores nulos en la tabla.&#39;</span><span class="p">)</span>
+            <span class="k">return</span></div>
 
 <div class="viewcode-block" id="CalidadCAR.addCsv"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.addCsv">[documentos]</a>    <span class="k">def</span> <span class="nf">addCsv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Crea una capa a partir de un archivo CSV, y une la información que</span>
 <span class="sd">           contiene esta, con la tabla de atributos de la capa de secciones,</span>
 <span class="sd">           la cual tendrá que existir, para que se pueda realizar esta operación.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">shp</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">get_layer</span><span class="p">(</span><span class="s1">&#39;secciones&#39;</span><span class="p">)</span>
+
+        <span class="n">action</span> <span class="o">=</span> <span class="n">CSVAction</span><span class="p">()</span>
+
+        <span class="n">shp</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">pre</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">shp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;No se encontró la capa de secciones.&#39;</span><span class="p">,</span>
             <span class="sa">u</span><span class="s1">&#39;Asegurate de agregarla en el diálogo de Cargar fondos.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="n">sheet</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">field_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">shp</span><span class="o">.</span><span class="n">pendingFields</span><span class="p">()</span> <span class="p">]</span>
+        <span class="n">field_names</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">pro</span><span class="p">()</span>
+
         <span class="n">csvDialog</span> <span class="o">=</span> <span class="n">CSVDialog</span><span class="p">(</span><span class="n">field_names</span><span class="p">)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">csvDialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="n">result</span> <span class="ow">and</span> <span class="n">csvDialog</span><span class="o">.</span><span class="n">getLayer</span><span class="p">():</span>
-            <span class="c1"># print csvDialog.getSelectedColumns()</span>
 
-            <span class="n">sheet</span> <span class="o">=</span> <span class="n">csvDialog</span><span class="o">.</span><span class="n">getLayer</span><span class="p">()</span>
-            <span class="n">QgsMapLayerRegistry</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">addMapLayer</span><span class="p">(</span><span class="n">sheet</span><span class="p">)</span>
-
-            <span class="c1">#Columnas del archivo CSV</span>
-            <span class="n">columns</span> <span class="o">=</span> <span class="n">csvDialog</span><span class="o">.</span><span class="n">getSelectedColumns</span><span class="p">()</span>
-            <span class="c1">#Filtra las columnas existentes, para evitar información duplicada</span>
-            <span class="n">field_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="o">.</span><span class="n">name</span><span class="p">()</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">shp</span><span class="o">.</span><span class="n">pendingFields</span><span class="p">()</span> <span class="p">]</span>
-
-            <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;csv&#39;</span> <span class="o">+</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">field_names</span><span class="p">]</span>
-
-            <span class="k">if</span> <span class="n">columns</span> <span class="o">==</span> <span class="p">[]:</span>
-                <span class="c1">#No hay columnas nuevas para unir</span>
-                <span class="k">return</span>
-
-            <span class="n">shpField</span> <span class="o">=</span> <span class="n">csvDialog</span><span class="o">.</span><span class="n">getJoinFieldTarget</span><span class="p">()</span>
-            <span class="n">csvField</span> <span class="o">=</span> <span class="n">csvDialog</span><span class="o">.</span><span class="n">getJoinField</span><span class="p">()</span>
-            <span class="n">joinObject</span> <span class="o">=</span> <span class="n">QgsVectorJoinInfo</span><span class="p">()</span>
-            <span class="n">joinObject</span><span class="o">.</span><span class="n">joinLayerId</span> <span class="o">=</span> <span class="n">sheet</span><span class="o">.</span><span class="n">id</span><span class="p">()</span>
-            <span class="n">joinObject</span><span class="o">.</span><span class="n">joinFieldName</span> <span class="o">=</span> <span class="n">csvField</span>
-            <span class="n">joinObject</span><span class="o">.</span><span class="n">targetFieldName</span> <span class="o">=</span> <span class="n">shpField</span>
-
-            <span class="n">joinObject</span><span class="o">.</span><span class="n">setJoinFieldNamesSubset</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
-            <span class="n">joinObject</span><span class="o">.</span><span class="n">memoryCache</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">shp</span><span class="o">.</span><span class="n">addJoin</span><span class="p">(</span><span class="n">joinObject</span><span class="p">)</span></div>
-
-            <span class="c1"># self.addSectionAction.setEnabled(True)</span>
-            <span class="c1"># self.intersctionAction.setEnabled(True)</span>
+            <span class="n">action</span><span class="o">.</span><span class="n">pos</span><span class="p">(</span> <span class="n">csvDialog</span><span class="o">.</span><span class="n">getLayer</span><span class="p">(),</span>
+                        <span class="n">csvDialog</span><span class="o">.</span><span class="n">getSelectedColumns</span><span class="p">(),</span>
+                        <span class="n">csvDialog</span><span class="o">.</span><span class="n">getJoinField</span><span class="p">(),</span>
+                        <span class="n">field_names</span><span class="p">,</span>
+                        <span class="n">csvDialog</span><span class="o">.</span><span class="n">getJoinFieldTarget</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="CalidadCAR.unload"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.unload">[documentos]</a>    <span class="k">def</span> <span class="nf">unload</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Remueve el menú del plugin, y las acciones de la barra de herramientas</span>
@@ -566,44 +403,16 @@
         <span class="c1"># remove the toolbar</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">toolbar</span></div>
 
-<div class="viewcode-block" id="CalidadCAR.addLayers"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.addLayers">[documentos]</a>    <span class="k">def</span> <span class="nf">addLayers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Carga las capas que el usuario ingreso en el dialog de cargar fondos,</span>
-<span class="sd">           los fondos se volverán a cargar cada vez que se llame este método, en</span>
-<span class="sd">           caso de que el usuario quiera recargar un fondo.&quot;&quot;&quot;</span>
-
-        <span class="n">manager</span><span class="o">.</span><span class="n">remove_layers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="n">files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dlg</span><span class="o">.</span><span class="n">getFilePaths</span><span class="p">()</span>
-
-        <span class="c1">#Cargar los fondos que se encuentrán en el dialogo de cargar fondos.</span>
-        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-            <span class="n">path</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">layer</span>
-            <span class="n">layerInfo</span> <span class="o">=</span> <span class="n">QFileInfo</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">layerInfo</span><span class="o">.</span><span class="n">suffix</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;tif&#39;</span><span class="p">:</span>
-                <span class="n">layer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">load_raster_layer</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
-
-            <span class="k">elif</span> <span class="n">layerInfo</span><span class="o">.</span><span class="n">suffix</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;shp&#39;</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;secciones&#39;</span> <span class="ow">or</span> <span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;ejes&#39;</span><span class="p">:</span>
-                    <span class="n">layer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">load_vector_layer</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">layer</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">load_vector_layer</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="mi">57</span><span class="p">,</span> <span class="mi">165</span><span class="p">,</span> <span class="mi">232</span><span class="p">))</span>
-
-                <span class="k">if</span> <span class="n">layer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">layer</span><span class="p">)</span>
-
-        <span class="n">manager</span><span class="o">.</span><span class="n">add_layers</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layers</span><span class="p">)</span></div>
-
 <div class="viewcode-block" id="CalidadCAR.cargarCapas"><a class="viewcode-back" href="../help/documentacion.html#calidad_car.CalidadCAR.cargarCapas">[documentos]</a>    <span class="k">def</span> <span class="nf">cargarCapas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Función que se ejecuta cuando el usuario hace click en la acción de Cargar Fondos&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dlg</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dlg</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">addLayers</span><span class="p">()</span></div></div>
-            <span class="c1"># self.addCsvAction.setEnabled(True)</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">LayerAction</span><span class="p">()</span>
+            <span class="n">action</span><span class="o">.</span><span class="n">pre</span><span class="p">()</span>
+            <span class="n">action</span><span class="o">.</span><span class="n">pro</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dlg</span><span class="o">.</span><span class="n">getFilePaths</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span></div></div>
 </pre></div>
 
           </div>

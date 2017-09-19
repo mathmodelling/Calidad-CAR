@@ -61,40 +61,6 @@ la cual tendrá que existir, para que se pueda realizar esta operación.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="calidad_car.CalidadCAR.addFeature">
-<code class="descname">addFeature</code><span class="sig-paren">(</span><em>layerA</em>, <em>feature=None</em>, <em>idx=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/calidad_car.html#CalidadCAR.addFeature"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#calidad_car.CalidadCAR.addFeature" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Inserta una característica (feature) en una capa en un orden establecido</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
-<li><strong>layerA</strong> (<em>QgsVectorLayer</em>) – Capa en la que se va a insertar la característica (feature)</li>
-<li><strong>feature</strong> (<em>QgsFeature</em>) – Característica (feature) que se va a insertar en la capa.</li>
-<li><strong>idx</strong> (<em>Integer</em>) – Indice de la nueva característica (feature) que se va a insertar.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first">Una nueva capa con la característica insertada en el pocisión idx.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first last">QgsVectorLayer</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="calidad_car.CalidadCAR.addLayers">
-<code class="descname">addLayers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/calidad_car.html#CalidadCAR.addLayers"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#calidad_car.CalidadCAR.addLayers" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Carga las capas que el usuario ingreso en el dialog de cargar fondos,
-los fondos se volverán a cargar cada vez que se llame este método, en
-caso de que el usuario quiera recargar un fondo.</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="calidad_car.CalidadCAR.addSection">
 <code class="descname">addSection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/calidad_car.html#CalidadCAR.addSection"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#calidad_car.CalidadCAR.addSection" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Utiliza una capa llamada temp, para insertar las nuevas secciones,
@@ -149,31 +115,6 @@ agregada a self.actions list.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="calidad_car.CalidadCAR.check">
-<code class="descname">check</code><span class="sig-paren">(</span><em>segments</em>, <em>point</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/calidad_car.html#CalidadCAR.check"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#calidad_car.CalidadCAR.check" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Verifica si un punto se encuentra entre dos segmentos</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
-<li><strong>segments</strong> (<em>Lista de QgsSegments</em>) – Lista de segmentos entre los que se puede encontrar el punto.</li>
-<li><strong>point</strong> (<em>QgsPoint</em>) – punto sobre el cual se va a hacer la verificación</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first">Un booleano que indica si la condición se cumple o no.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
-<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first last">Boolean</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="calidad_car.CalidadCAR.clean">
 <code class="descname">clean</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/calidad_car.html#CalidadCAR.clean"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#calidad_car.CalidadCAR.clean" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Recarga el plugin, limpiando todas las capas cargadas, excepto, las
@@ -201,24 +142,6 @@ dentro de la interfaz de QGIS</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="calidad_car.CalidadCAR.place">
-<code class="descname">place</code><span class="sig-paren">(</span><em>segments</em>, <em>p</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/calidad_car.html#CalidadCAR.place"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#calidad_car.CalidadCAR.place" title="Enlazar permanentemente con esta definición">¶</a></dt>
-<dd><p>Ubica un punto entre los dos segmentos consecutivos a los que pertenece.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
-<li><strong>segments</strong> (<em>Lista de QgsSegments</em>) – Lista de segmentos</li>
-<li><strong>p</strong> – punto que se va a ubicar en la lista de segmentos</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="calidad_car.CalidadCAR.tr">
 <code class="descname">tr</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/calidad_car.html#CalidadCAR.tr"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#calidad_car.CalidadCAR.tr" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Get the translation for a string using Qt translation API.</p>
@@ -243,6 +166,330 @@ dentro de la interfaz de QGIS</p>
 <code class="descname">unload</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/calidad_car.html#CalidadCAR.unload"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#calidad_car.CalidadCAR.unload" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Remueve el menú del plugin, y las acciones de la barra de herramientas
 de la interfaz de QGIS.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-src.actions">
+<span id="modulo-actions"></span><h2>Módulo actions<a class="headerlink" href="#module-src.actions" title="Enlazar permanentemente con este título">¶</a></h2>
+<dl class="class">
+<dt id="src.actions.AddSectionAction">
+<em class="property">class </em><code class="descclassname">src.actions.</code><code class="descname">AddSectionAction</code><a class="reference internal" href="../_modules/src/actions.html#AddSectionAction"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.AddSectionAction" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta acción se encarga de implementar la funcionalidad para agregar secciones.</p>
+<dl class="method">
+<dt id="src.actions.AddSectionAction.pos">
+<code class="descname">pos</code><span class="sig-paren">(</span><em>iface</em>, <em>csvAction</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#AddSectionAction.pos"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.AddSectionAction.pos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Deshabilita la acción de realizar unión entre la tabla de atributos de la capa de secciones y un archivo CSV, selecciona la capa temporal para agregar secciones, y la pone en modo de edición.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.AddSectionAction.pre">
+<code class="descname">pre</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#AddSectionAction.pre"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.AddSectionAction.pre" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Verifica si existe la capa de secciones.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Devuelve:</th><td class="field-body">Un booleano que indica si ya esta cargada la capa de secciones:</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.AddSectionAction.pro">
+<code class="descname">pro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#AddSectionAction.pro"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.AddSectionAction.pro" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Crea una capa temporal para almacenar las secciones, en caso de que no exista.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="src.actions.BaseAction">
+<em class="property">class </em><code class="descclassname">src.actions.</code><code class="descname">BaseAction</code><a class="reference internal" href="../_modules/src/actions.html#BaseAction"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.BaseAction" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Clase base que define la estructura de una acción.</p>
+<dl class="method">
+<dt id="src.actions.BaseAction.pos">
+<code class="descname">pos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#BaseAction.pos"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.BaseAction.pos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>En este método se pueden implementar procesos que se deben de realizar una vez se ha concluido con éxito el llamado al método pos.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.BaseAction.pre">
+<code class="descname">pre</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#BaseAction.pre"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.BaseAction.pre" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>En este método puede definir y verificar condiciones iniciales necesarias para que se pueda realizar una acción.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.BaseAction.pro">
+<code class="descname">pro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#BaseAction.pro"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.BaseAction.pro" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>En este método se puede implementar la funcionalidad esencial de la acción.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="src.actions.CSVAction">
+<em class="property">class </em><code class="descclassname">src.actions.</code><code class="descname">CSVAction</code><a class="reference internal" href="../_modules/src/actions.html#CSVAction"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.CSVAction" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta acción se encarga de cargar un archivo CSV, y de unirlo con la tabla de atributos de la capa de secciones.</p>
+<dl class="method">
+<dt id="src.actions.CSVAction.pos">
+<code class="descname">pos</code><span class="sig-paren">(</span><em>layer</em>, <em>csv_cols</em>, <em>csv_field</em>, <em>shp_cols</em>, <em>shp_field</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#CSVAction.pos"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.CSVAction.pos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Este método se encarga de realizar la unión entre el archivo CSV que se cargo, y la tabla de atributos de self.shp.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>layer</strong> (<em>QgsVectorLayer</em>) – Capa del archivo CSV.</li>
+<li><strong>csv_cols</strong> (<em>Lista str</em>) – Lista con las columnas de la capa CSV que se van a unir.</li>
+<li><strong>csv_field</strong> (<em>str</em>) – Campo de la capa CSV que se va a usar como columna de unión.</li>
+<li><strong>shp_cols</strong> (<em>Lista str</em>) – Lista de columnas de la tabla de atributos de self.shp que se van a unir.</li>
+<li><strong>shp_field</strong> (<em>str</em>) – Campo de la capa self.shp que se va a usar como columna de unión.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.CSVAction.pre">
+<code class="descname">pre</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#CSVAction.pre"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.CSVAction.pre" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Este método se encarga de obtener la capa de secciones del administrador de las capas cargadas (manager) y lo retorna.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Devuelve:</th><td class="field-body">La capa de secciones en caso de que la encuentre, retorna Nonde de otra forma.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">QgsVectorLayer</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.CSVAction.pro">
+<code class="descname">pro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#CSVAction.pro"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.CSVAction.pro" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Este método se encarga de guardar en una lista todos los nombres de las columnas de la tabla de atributos de self.shp y la retorna.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Devuelve:</th><td class="field-body">Lista con todos los nombres de las columnas de la tabla de atributos de self.shp</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Lista str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="src.actions.ConcentrationPointsAction">
+<em class="property">class </em><code class="descclassname">src.actions.</code><code class="descname">ConcentrationPointsAction</code><a class="reference internal" href="../_modules/src/actions.html#ConcentrationPointsAction"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.ConcentrationPointsAction" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta ación se encarga de fucionar la capa de secciones temporales (temp) con la capa de secciones.</p>
+<dl class="method">
+<dt id="src.actions.ConcentrationPointsAction.addFeature">
+<code class="descname">addFeature</code><span class="sig-paren">(</span><em>layerA</em>, <em>feature=None</em>, <em>idx=-1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#ConcentrationPointsAction.addFeature"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.ConcentrationPointsAction.addFeature" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Inserta una característica (feature) en una capa en un orden establecido</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>layerA</strong> (<em>QgsVectorLayer</em>) – Capa en la que se va a insertar la característica (feature)</li>
+<li><strong>feature</strong> (<em>QgsFeature</em>) – Característica (feature) que se va a insertar en la capa.</li>
+<li><strong>idx</strong> (<em>Integer</em>) – Indice de la nueva característica (feature) que se va a insertar.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first">Una nueva capa con la característica insertada en el pocisión idx.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first last">QgsVectorLayer</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.ConcentrationPointsAction.check">
+<code class="descname">check</code><span class="sig-paren">(</span><em>segments</em>, <em>point</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#ConcentrationPointsAction.check"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.ConcentrationPointsAction.check" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Verifica si un punto se encuentra entre dos segmentos</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>segments</strong> (<em>Lista de QgsSegments</em>) – Lista de segmentos entre los que se puede encontrar el punto.</li>
+<li><strong>point</strong> (<em>QgsPoint</em>) – punto sobre el cual se va a hacer la verificación</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first">Un booleano que indica si la condición se cumple o no.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first last">Boolean</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.ConcentrationPointsAction.place">
+<code class="descname">place</code><span class="sig-paren">(</span><em>segments</em>, <em>p</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#ConcentrationPointsAction.place"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.ConcentrationPointsAction.place" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Ubica un punto entre los dos segmentos consecutivos a los que pertenece.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>segments</strong> (<em>Lista de QgsSegments</em>) – Lista de segmentos</li>
+<li><strong>p</strong> – punto que se va a ubicar en la lista de segmentos</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.ConcentrationPointsAction.pos">
+<code class="descname">pos</code><span class="sig-paren">(</span><em>iface</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#ConcentrationPointsAction.pos"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.ConcentrationPointsAction.pos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Agrega la capa de salida (output) al gestor de capas de QGIS.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.ConcentrationPointsAction.pre">
+<code class="descname">pre</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#ConcentrationPointsAction.pre"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.ConcentrationPointsAction.pre" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Verifica que las capas necesarias para realizar esta acción estan cargadas.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Devuelve:</th><td class="field-body">Un booleano que indica si se cumple o no la condición.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.ConcentrationPointsAction.pro">
+<code class="descname">pro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#ConcentrationPointsAction.pro"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.ConcentrationPointsAction.pro" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Crea una capa de salida con las secciones de la capa de secciones, y las secciones agregadas por el usuario.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="src.actions.LayerAction">
+<em class="property">class </em><code class="descclassname">src.actions.</code><code class="descname">LayerAction</code><a class="reference internal" href="../_modules/src/actions.html#LayerAction"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.LayerAction" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta clase representa la acción encargada de cargar las capas necesarias.</p>
+<dl class="method">
+<dt id="src.actions.LayerAction.pos">
+<code class="descname">pos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#LayerAction.pos"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.LayerAction.pos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Este método se encarga de agregar todas las capas cargadas en el registro de QGIS (QgsMapLayerRegistry).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.LayerAction.pre">
+<code class="descname">pre</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#LayerAction.pre"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.LayerAction.pre" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Este método se encarga de eliminar todas las capas cargagas previamente en el registro de QGIS (QgsMapLayerRegistry).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.LayerAction.pro">
+<code class="descname">pro</code><span class="sig-paren">(</span><em>layers</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#LayerAction.pro"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.LayerAction.pro" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Este método se encarga de cargar todas las capas en layers, y de llenar self.layers</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><strong>layers</strong> (<em>Lista str</em>) – Lista de las rutas de todas las capas que se van a cargar.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="src.actions.ModellingAction">
+<em class="property">class </em><code class="descclassname">src.actions.</code><code class="descname">ModellingAction</code><a class="reference internal" href="../_modules/src/actions.html#ModellingAction"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.ModellingAction" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta acción se encarga de aplicar el modelo matemático sobre la información cargada por el usuario.</p>
+<dl class="method">
+<dt id="src.actions.ModellingAction.apply_modelling">
+<code class="descname">apply_modelling</code><span class="sig-paren">(</span><em>c_i</em>, <em>va</em>, <em>cd</em>, <em>flag</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#ModellingAction.apply_modelling"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.ModellingAction.apply_modelling" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Método auxilar que abstrae la forma en la que se aplica el modelo matemático.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.ModellingAction.pos">
+<code class="descname">pos</code><span class="sig-paren">(</span><em>vel_name</em>, <em>conc_name</em>, <em>flag=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#ModellingAction.pos"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.ModellingAction.pos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Aplica el modelo matemático sobre la información.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>vel_name</strong> (<em>str</em>) – Nombre de la columna en la que se encuetra la información de la velocidad.</li>
+<li><strong>conc_name</strong> (<em>str</em>) – Nombre de la columna en la que se encuetra la información de los puntos de concentracion.</li>
+<li><strong>flag</strong> – Bandera que indica que gráfica se va a desplegar.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.ModellingAction.pre">
+<code class="descname">pre</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#ModellingAction.pre"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.ModellingAction.pre" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Verifica que las capas necesarias para realizar esta acción estan cargadas.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Devuelve:</th><td class="field-body">Un booleano que indica si se cumple o no la condición.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.ModellingAction.pro">
+<code class="descname">pro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#ModellingAction.pro"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.ModellingAction.pro" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Inicializa variables necesarias para trabajar, y retorna los nombres de las columnas de la tabla de atributos de la capa de trabajo output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Devuelve:</th><td class="field-body">Lista de columnas de la capa de trabajo output.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">Lista str</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -863,6 +1110,7 @@ CSV.</p>
 <li class="toctree-l1"><a class="reference internal" href="manual_usuario.html">Manual de usuario</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Documentación</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-calidad_car">Módulo calidad_car</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-src.actions">Módulo actions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-geometry">Módulo geometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-src.layer_manager">Módulo layer_manager</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-util">Módulo util</a></li>

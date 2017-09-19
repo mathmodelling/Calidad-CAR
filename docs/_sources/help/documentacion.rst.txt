@@ -10,6 +10,13 @@ Módulo calidad_car
    :members:
 
 ********************
+Módulo actions
+********************
+
+.. automodule:: src.actions
+   :members:
+
+********************
 Módulo geometry
 ********************
 
