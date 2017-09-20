@@ -44,6 +44,7 @@
             
   <div class="section" id="manual-de-usuario">
 <h1>Manual de usuario<a class="headerlink" href="#manual-de-usuario" title="Enlazar permanentemente con este título">¶</a></h1>
+<p>Calidad-CAR es una herramienta para modelar matemáticamente la calidad del agua en los ríos. Esta herramienta asume que el usuario tiene los resultados del modelado del movimiento del agua con la herramienta Hec-Ras.</p>
 <p>Una vez instalado el plugin CalidadCAR, el usuario podrá ver la siguiente barra de herramientas:</p>
 <img alt="../_images/barra_herramientas.png" src="../_images/barra_herramientas.png" />
 <p>La cual contiene los siguientes procedimientos que podrá realizar el usuario:</p>
@@ -51,7 +52,6 @@
 <li><a class="reference internal" href="#cargar-fondos">Cargar fondos</a>.</li>
 <li><a class="reference internal" href="#unir-csv">Unir CSV</a>.</li>
 <li><a class="reference internal" href="#agregar-secciones">Agregar secciones</a>.</li>
-<li><a class="reference internal" href="#agregar-puntos-de-concentracion">Agregar puntos de concentración</a>.</li>
 <li><a class="reference internal" href="#calcular">Cálcular</a>.</li>
 <li><a class="reference internal" href="#limpiar">Limpiar</a>.</li>
 </ol>
@@ -97,23 +97,32 @@ Para poder realizar esta operación el usuario tendrá que hacer click en el ico
 <p class="last">Es importante que la sección que se va a agregar tenga un punto de intersección con el <em>eje</em> de la capa de ejes.</p>
 </div>
 </div>
-<div class="section" id="agregar-puntos-de-concentracion">
-<h2>Agregar puntos de concentración<a class="headerlink" href="#agregar-puntos-de-concentracion" title="Enlazar permanentemente con este título">¶</a></h2>
-<p>Haciendo click sobre el botón subrayado de la siguiente imagen el usuario podrá agregar los puntos de concentración.</p>
-<img alt="../_images/accion_agregar_concentracion.png" src="../_images/accion_agregar_concentracion.png" />
-<p>Al hacer esto, se abrirá la tabla de atributos de una nueva capa, la cual tiene las posibles uniones que el usuario haya realizado entre la capa de secciones con archivos CSV, y las secciones que el usuario agrego (en caso de haberlo hecho), con una nueva columna en la cual el usuario podrá ingresar los valores de concentración para cada sección.</p>
-<p>En la siguiente imagen se puede ver un ejemplo de la tabla de atributos que se desplegará para que el usuario ingrese los puntos de concentración.</p>
-<img alt="../_images/puntos_concentracion.png" src="../_images/puntos_concentracion.png" />
-</div>
 <div class="section" id="calcular">
 <h2>Cálcular<a class="headerlink" href="#calcular" title="Enlazar permanentemente con este título">¶</a></h2>
-<p>Una vez que el usuario ha ingresado la información necesaria de forma correcta, este podrá hacer click en el icono resaltado en la siguiente imagen, para aplicar el modelo matemático a la información.</p>
+<p>Una vez que el usuario ha ingresado la información necesaria de forma correcta, este podrá hacer click en el icono resaltado en la siguiente imagen, para aplicar el modelo matemático sobre la información.</p>
 <img alt="../_images/accion_calcular.png" src="../_images/accion_calcular.png" />
+<p>Esta acción desplegará el siguiente diálogo que le pedirá al usuario la siguiente información:</p>
+<ul class="simple">
+<li>El nombre de la columna en la que se encuentran los valores de velocidad.</li>
+<li>El nombre de la columna en la que se encuentran los valores de los puntos de concentración.</li>
+<li>La gráfica de salida que el usuario desea ver.</li>
+</ul>
+<img alt="../_images/dialogo_parametros.png" src="../_images/dialogo_parametros.png" />
+<p>Este es un ejemplo de la gráfica de salida de Concentración con respecto a la distancia.</p>
+<img alt="../_images/salida.png" src="../_images/salida.png" />
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">Cuando el manual se refiere a el nombre de la columna de velocidad, o de puntos de concentración se asume que el usuario cargo esta información en un archivo CSV, realizando la operación de Unir CSV</p>
+</div>
 </div>
 <div class="section" id="limpiar">
 <h2>Limpiar<a class="headerlink" href="#limpiar" title="Enlazar permanentemente con este título">¶</a></h2>
 <p>Al hacer click en el botón resaltado en la siguiente imagen el usuario limpiara el espacio de trabajo, cerrando las capas cargadas, en caso que deseé realizar el mismo proceso con capas diferentes.</p>
 <img alt="../_images/accion_recargar.png" src="../_images/accion_recargar.png" />
+<div class="admonition note">
+<p class="first admonition-title">Nota</p>
+<p class="last">El usuario puede descargar archivos de prueba del siguiente <a class="reference external" href="https://drive.google.com/file/d/0B-rl9rYMVpHpaUh6X1FfLThxYkU/view?usp=sharing">enlace</a>. para probar el plugin. En este <a class="reference external" href="https://www.youtube.com/watch?v=5JpgidErg-E">vídeo</a>. se puede ver el funcionamiento del plugin con esta información de prueba.</p>
+</div>
 </div>
 </div>
 
@@ -139,7 +148,6 @@ Para poder realizar esta operación el usuario tendrá que hacer click en el ico
 <li class="toctree-l2"><a class="reference internal" href="#cargar-fondos">Cargar fondos</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#unir-csv">Unir CSV</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#agregar-secciones">Agregar secciones</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#agregar-puntos-de-concentracion">Agregar puntos de concentración</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#calcular">Cálcular</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#limpiar">Limpiar</a></li>
 </ul>

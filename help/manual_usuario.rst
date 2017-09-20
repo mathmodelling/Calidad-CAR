@@ -1,6 +1,8 @@
 Manual de usuario
 ==================
 
+Calidad-CAR es una herramienta para modelar matemáticamente la calidad del agua en los ríos. Esta herramienta asume que el usuario tiene los resultados del modelado del movimiento del agua con la herramienta Hec-Ras.
+
 Una vez instalado el plugin CalidadCAR, el usuario podrá ver la siguiente barra de herramientas:
 
 .. image:: images/barra_herramientas.png
@@ -10,9 +12,8 @@ La cual contiene los siguientes procedimientos que podrá realizar el usuario:
 1. `Cargar fondos`_.
 2. `Unir CSV`_.
 3. `Agregar secciones`_.
-4. `Agregar puntos de concentración`_.
-5. `Cálcular`_.
-6. `Limpiar`_.
+4. `Cálcular`_.
+5. `Limpiar`_.
 
 *****************
 Cargar fondos
@@ -79,27 +80,27 @@ En la imagen de arriba se puede ver la sección que se acabó de agregar (La sec
 
 .. note:: Es importante que la sección que se va a agregar tenga un punto de intersección con el *eje* de la capa de ejes.
 
-*********************************
-Agregar puntos de concentración
-*********************************
-
-Haciendo click sobre el botón subrayado de la siguiente imagen el usuario podrá agregar los puntos de concentración.
-
-.. image:: images/accion_agregar_concentracion.png
-
-Al hacer esto, se abrirá la tabla de atributos de una nueva capa, la cual tiene las posibles uniones que el usuario haya realizado entre la capa de secciones con archivos CSV, y las secciones que el usuario agrego (en caso de haberlo hecho), con una nueva columna en la cual el usuario podrá ingresar los valores de concentración para cada sección.
-
-En la siguiente imagen se puede ver un ejemplo de la tabla de atributos que se desplegará para que el usuario ingrese los puntos de concentración.
-
-.. image:: images/puntos_concentracion.png
-
 **************
 Cálcular
 **************
 
-Una vez que el usuario ha ingresado la información necesaria de forma correcta, este podrá hacer click en el icono resaltado en la siguiente imagen, para aplicar el modelo matemático a la información.
+Una vez que el usuario ha ingresado la información necesaria de forma correcta, este podrá hacer click en el icono resaltado en la siguiente imagen, para aplicar el modelo matemático sobre la información.
 
 .. image:: images/accion_calcular.png
+
+Esta acción desplegará el siguiente diálogo que le pedirá al usuario la siguiente información:
+
+- El nombre de la columna en la que se encuentran los valores de velocidad.
+- El nombre de la columna en la que se encuentran los valores de los puntos de concentración.
+- La gráfica de salida que el usuario desea ver.
+
+.. image:: images/dialogo_parametros.png
+
+Este es un ejemplo de la gráfica de salida de Concentración con respecto a la distancia.
+
+.. image:: images/salida.png
+
+.. note:: Cuando el manual se refiere a el nombre de la columna de velocidad, o de puntos de concentración se asume que el usuario cargo esta información en un archivo CSV, realizando la operación de Unir CSV
 
 **************
 Limpiar
@@ -108,3 +109,8 @@ Limpiar
 Al hacer click en el botón resaltado en la siguiente imagen el usuario limpiara el espacio de trabajo, cerrando las capas cargadas, en caso que deseé realizar el mismo proceso con capas diferentes.
 
 .. image:: images/accion_recargar.png
+
+.. note:: El usuario puede descargar archivos de prueba del siguiente enlace_. para probar el plugin. En este vídeo_. se puede ver el funcionamiento del plugin con esta información de prueba.
+
+.. _enlace: https://drive.google.com/file/d/0B-rl9rYMVpHpaUh6X1FfLThxYkU/view?usp=sharing
+.. _vídeo: https://www.youtube.com/watch?v=5JpgidErg-E
