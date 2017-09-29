@@ -358,9 +358,14 @@ class ModellingAction(BaseAction):
 
         for feature in self.work_layer.getFeatures():
             #Esto podría lanzar una exepción
+            cnt = feature.attributes()[concen_idx].replace(',', '.')
+            velo = feature.attributes()[vel_idx].replace(',', '.')
+
             #Precisión de 4 digitos, para evitar problemas con matplotlib
-            cnt = format(feature.attributes()[concen_idx], '.4f')
-            velo = format(feature.attributes()[vel_idx], '.4f')
+            cnt = format(float(cnt), '.4f')
+            velo = format(float(velo), '.4f')
+
+
             self.concentration_values.append(float(cnt))
             self.vel_values.append(float(velo))
 
