@@ -214,7 +214,7 @@ class CalidadCAR:
             callback=self.intersection,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icons/refresh-icon.png'
+        icon_path = ':/plugins/CalidadCAR/icons/erase-icon.png'
         self.intersctionAction = self.add_action(
             icon_path,
             text=self.tr(u'Limpiar'),
