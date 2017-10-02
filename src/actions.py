@@ -340,6 +340,19 @@ class ModellingAction(BaseAction):
 
         return self.field_names
 
+    def get_float_column(self, layer, name) :
+        answ = []
+        idx = layer.fieldNameIndex(name)
+        for feature in layer.getFeatures():
+            #Convertir el valor de la celda de forma segura a flotante
+            # sin importar el formato del número.
+            val = str(feature.attributes()[idx])
+            val = val.replace(',', '.')
+            val = format(float(val), '.4f')
+            answ.append(float(val))
+        print answ
+        return answ
+
     def pos(self, vel_name, conc_name, flag = 0):
         """Aplica el modelo matemático sobre la información.
 
@@ -352,22 +365,11 @@ class ModellingAction(BaseAction):
         :param flag: Bandera que indica que gráfica se va a desplegar.
         :type falg: bool
         """
-        np.set_printoptions(precision=2)
-        concen_idx = self.work_layer.fieldNameIndex(conc_name)
-        vel_idx = self.work_layer.fieldNameIndex(vel_name)
 
-        for feature in self.work_layer.getFeatures():
-            #Esto podría lanzar una exepción
-            cnt = feature.attributes()[concen_idx].replace(',', '.')
-            velo = feature.attributes()[vel_idx].replace(',', '.')
-
-            #Precisión de 4 digitos, para evitar problemas con matplotlib
-            cnt = format(float(cnt), '.4f')
-            velo = format(float(velo), '.4f')
-
-
-            self.concentration_values.append(float(cnt))
-            self.vel_values.append(float(velo))
+        #Obtener los valores de concentración de la columna de concentración
+        self.concentration_values = self.get_float_column(self.work_layer, conc_name)
+        #Obtener los valores de concentración de la columna de velocidad
+        self.vel_values = self.get_float_column(self.work_layer, vel_name)
 
         points = geometry.intersectionPoints(self.eje, self.work_layer)
         distances = []
