@@ -9,5 +9,7 @@
         <file>icons/execute.png</file>
         <file>icons/erase-icon.png</file>
         <file>icons/concentration-icon.png</file>
+        <file>icons/logo.png</file>
+        <file>icons/info.png</file>
     </qresource>
 </RCC>

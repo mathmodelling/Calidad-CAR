@@ -46,6 +46,7 @@ from dialogo_csv import CSVDialog
 from src.modelling import calidad_car
 from src import layer_manager as manager
 from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
+from informacion import InformationDialog
 
 class CalidadCAR:
     """Implementación del plugin."""
@@ -221,8 +222,19 @@ class CalidadCAR:
             callback=self.clean,
             parent=self.iface.mainWindow())
 
+        icon_path = ':/plugins/CalidadCAR/icons/info.png'
+        self.intersctionAction = self.add_action(
+            icon_path,
+            text=self.tr(u'Acerca de'),
+            callback=self.info,
+            parent=self.iface.mainWindow())
+
         # self.intersctionAction.setEnabled(False)
         # self.addCsvAction.setEnabled(False)
+
+    def info(self):
+        dialog = InformationDialog()
+        dialog.exec_()
 
     def clean(self):
         """Recarga el plugin, limpiando todas las capas cargadas, excepto, las
