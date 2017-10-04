@@ -350,7 +350,7 @@ class ModellingAction(BaseAction):
             val = val.replace(',', '.')
             val = format(float(val), '.4f')
             answ.append(float(val))
-        print answ
+        # print answ
         return answ
 
     def pos(self, vel_name, conc_name, flag = 0):
