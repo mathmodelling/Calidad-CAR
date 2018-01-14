@@ -41,12 +41,13 @@ import resources
 import numpy as np
 import datetime as dtm
 
-from dialogo_parametros import SettingsDialog
+from dialogo_variables import VarsDialog
 from dialogo_csv import CSVDialog
 from src.modelling import calidad_car
 from src import layer_manager as manager
-from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
 from informacion import InformationDialog
+from dialogo_parametros import SettingsDialog
+from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
 
 class CalidadCAR:
     """Implementación del plugin."""
@@ -220,6 +221,13 @@ class CalidadCAR:
             icon_path,
             text=self.tr(u'Limpiar'),
             callback=self.clean,
+            parent=self.iface.mainWindow())        
+
+        icon_path = ':/plugins/CalidadCAR/icons/icon.png'
+        self.intersctionAction = self.add_action(
+            icon_path,
+            text=self.tr(u'Configurar Variables'),
+            callback=self.conf_vars,
             parent=self.iface.mainWindow())
 
         icon_path = ':/plugins/CalidadCAR/icons/info.png'
@@ -235,6 +243,14 @@ class CalidadCAR:
     def info(self):
         dialog = InformationDialog()
         dialog.exec_()
+
+    def conf_vars(self):
+        dialog = VarsDialog()
+        r = dialog.exec_()
+        if not r: return
+
+        contaminantes = dialog.getContaminantes()
+        dialog.guargarContaminantes(contaminantes)
 
     def clean(self):
         """Recarga el plugin, limpiando todas las capas cargadas, excepto, las
