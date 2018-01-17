@@ -14,7 +14,7 @@ siglas = ['D', 'Da', 'ko2', 'cs', 'knh3', 'ksnh3', 'alfa_nh3',
     'kDQO', 'kTDS', 'A', 'alfa_1', 'miu', 'F', 'kTC', 'teta_TC',
     'kEC', 'teta_EC', 'Jdbw', 'qtex', 'kN', 'kH', 'H', 'kOH', 'OH',
     'fdw', 'kf', 'kb', 'kv', 'Cg', 'Henry', 'R', 'T', 'alfa_2', 'resp',
-    'kPorg', 'kPsed', 'sigma2', 'Ws', 'Rs', 'Rp']
+    'kPorg', 'kPsed', 'sigma2', 'Ws', 'Rs', 'Rp', 'k', 'den', 'Cp']
 
 class VarsDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent = None):
@@ -34,7 +34,7 @@ class VarsDialog(QtGui.QDialog, FORM_CLASS):
             'kb': self.kb, 'kv': self.kv, 'Cg': self.Cg, 'Henry': self.Henry, 
             'R': self.R, 'T': self.T, 'alfa_2': self.alfa_2, 'resp': self.resp,
             'kPorg': self.kPorg, 'kPsed': self.kPsed, 'sigma2': self.sigma2, 'Ws': self.Ws, 
-            'Rs': self.Rs, 'Rp': self.Rp}
+            'Rs': self.Rs, 'Rp': self.Rp, 'k': self.k, 'den': self.den, 'Cp': self.Cp}
         
         # Agregar validador
         validator = QtGui.QDoubleValidator()
@@ -42,7 +42,7 @@ class VarsDialog(QtGui.QDialog, FORM_CLASS):
             e.setValidator(validator)
 
         # Agregar valores iniciales
-        valores_iniciales = self.leerContaminantes()
+        valores_iniciales = self.leerVariables()
         for k, v in valores_iniciales.iteritems():
             self.dic[k].setText(v)
 
@@ -56,7 +56,8 @@ class VarsDialog(QtGui.QDialog, FORM_CLASS):
             cont[k] = float(v.text())
         return cont
 
-    def leerContaminantes(self):
+    @staticmethod
+    def leerVariables():
         '''
             Lee los contaminantes del archivo en el que
             se almacenan.
@@ -77,7 +78,7 @@ class VarsDialog(QtGui.QDialog, FORM_CLASS):
             contaminante, se actualiza el archivo.
         '''
         cond = False
-        saved = self.leerContaminantes()
+        saved = self.leerVariables()
 
         for k, v in saved.iteritems():
             if v != str(cont[k]):
