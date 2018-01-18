@@ -8,7 +8,25 @@ import matplotlib
 import matplotlib.pyplot as plt
 from openpyxl import load_workbook
 
+import xlrd
+
 from util import join
+
+def read_sheet(workbook, name):
+    # Reading water depth sheet
+    sheet = workbook.sheet_by_name(name)
+    # Number of written Rows in sheet
+    r = sheet.nrows
+    # Number of written Columns in sheet
+    c = sheet.ncols
+    answ = np.zeros([r - 1, c])
+    # Reading each cell in excel sheet 'BC'
+    for i in xrange(1, r):
+        for j in xrange(c):
+            answ[i - 1, j] = float(sheet.cell_value(i, j))
+
+    return answ
+
 
 def read_config_file(config_file, sheet_name_wd='WD', sheet_name_sl='SL', sheet_name_wv='WV', sheet_name_bc='BC',
                      sheet_name_ic='IC', sheet_name_ST='ST', sheet_name_SOD='SOD', sheet_name_SDBO='SDBO', sheet_name_SNH3='SNH3',
@@ -31,201 +49,65 @@ def read_config_file(config_file, sheet_name_wd='WD', sheet_name_sl='SL', sheet_
     wb = load_workbook(config_file)
 
     # Reading water depth sheet
-    sheet = wb.get_sheet_by_name(sheet_name_wd)
-    # Number of written Rows in sheet
-    r = sheet.max_row
-    # Number of written Columns in sheet
-    c = sheet.max_column
-    wd = np.zeros([r - 1, c])
-    # Reading each cell in excel sheet 'BC'
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            wd[i - 2, j - 1] = float(sheet.cell(row=i, column=j).value)
+    wd = read_sheet(wb, sheet_name_wd)
 
     # Reading water bed slope
-    sheet = wb.get_sheet_by_name(sheet_name_sl)
-    # Number of written Rows in sheet
-    r = sheet.max_row
-    # Number of written Columns in sheet
-    c = sheet.max_column
-    sl = np.zeros([r - 1, c])
-    # Reading each cell in excel sheet 'BC'
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            sl[i - 2, j - 1] = sheet.cell(row=i, column=j).value
+    sl = read_sheet(wb, sheet_name_sl)
 
     # Reading water velocities sheet
-    sheet = wb.get_sheet_by_name(sheet_name_wv)
-    # Number of written Rows in sheet
-    r = sheet.max_row
-    # Number of written Columns in sheet
-    c = sheet.max_column
-    wv = np.zeros([r - 1, c])
-    # Reading each cell in excel sheet 'BC'
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            wv[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
+    wv = read_sheet(wb, sheet_name_wv)
+  
     # Reading boundary conditions sheet
-    sheet = wb.get_sheet_by_name(sheet_name_bc)
-    # Number of written Rows in sheet
-    r = sheet.max_row
-    # Number of written Columns in sheet
-    c = sheet.max_column
-    bc = np.zeros([r - 1, c])
-    # Reading each cell in excel sheet 'BC'
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            bc[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
+    bc = read_sheet(wb, sheet_name_bc)
+    
     # Reading initial conditions sheet
-    sheet = wb.get_sheet_by_name(sheet_name_ic)
-    # Number of written Rows in sheet
-    r = sheet.max_row
-    # Number of written Columns in sheet
-    c = sheet.max_column
-    ic = np.zeros([r - 1, c])
-    # Reading each cell in excel sheet 'IC'
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            ic[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
+    ic = read_sheet(wb, sheet_name_ic)
+    
     # Reading sinks and sources sheet
-    sheet = wb.get_sheet_by_name(sheet_name_ST)
-    # Number of written Rows in sheet
-    r = sheet.max_row
-    # Number of written Columns in sheet
-    c = sheet.max_column
-    ST = np.zeros([r - 1, c])
-    # Reading each cell in excel sheet 'BC'
-    for i in xrange(2, r + 1):
-       for j in xrange(1, c + 1):
-          ST[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
+    ST = read_sheet(wb, sheet_name_ST)
+    
     # Reading sinks and sources sheet
-    sheet = wb.get_sheet_by_name(sheet_name_SOD)
-    # Number of written Rows in sheet
-    r = sheet.max_row
-    # Number of written Columns in sheet
-    c = sheet.max_column
-    SOD = np.zeros([r - 1, c])
-    # Reading each cell in excel sheet 'BC'
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            SOD[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
+    SOD = read_sheet(wb, sheet_name_SOD)
+    
     # Reading sinks and sources sheet
-    sheet = wb.get_sheet_by_name(sheet_name_SDBO)
-    # Number of written Rows in sheet
-    r = sheet.max_row
-    # Number of written Columns in sheet
-    c = sheet.max_column
-    SDBO = np.zeros([r - 1, c])
-    # Reading each cell in excel sheet 'BC'
-    for i in xrange(2, r + 1):
-       for j in xrange(1, c + 1):
-         SDBO[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
-    sheet = wb.get_sheet_by_name(sheet_name_SNO2)
-    r = sheet.max_row
-    c = sheet.max_column
-    SNO2 = np.zeros([r - 1, c])
-    for i in xrange(2, r + 1):
-      for j in xrange(1, c + 1):
-         SNO2[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
-    sheet = wb.get_sheet_by_name(sheet_name_SNO3)
-    r = sheet.max_row
-    c = sheet.max_column
-    SNO3 = np.zeros([r - 1, c])
-    for i in xrange(2, r + 1):
-      for j in xrange(1, c + 1):
-          SNO3[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
+    SDBO = read_sheet(wb, sheet_name_SDBO)
+    
     # Reading sinks and sources sheet
-    sheet = wb.get_sheet_by_name(sheet_name_SNH3)
-    # Number of written Rows in sheet
-    r = sheet.max_row
-    # Number of written Columns in sheet
-    c = sheet.max_column
-    SNH3 = np.zeros([r - 1, c])
-    # Reading each cell in excel sheet 'BC'
-    for i in xrange(2, r + 1):
-      for j in xrange(1, c + 1):
-         SNH3[i - 2, j - 1] = sheet.cell(row=i, column=j).value
+    SNO2 = read_sheet(wb, sheet_name_SNO2)
+    
+    # Reading sinks and sources sheet
+    SNO3 = read_sheet(wb, sheet_name_SNO3)
+    
+    # Reading sinks and sources sheet
+    SNH3 = read_sheet(wb, sheet_name_SNH3)
+    
+    # Reading sinks and sources sheet
+    STDS = read_sheet(wb, sheet_name_STDS)
+    
+    # Reading sinks and sources sheet
+    SGyA = read_sheet(wb, sheet_name_SGyA)
+    
+    # Reading sinks and sources sheet    
+    SDQO = read_sheet(wb, sheet_name_SDQO)    
+    
+    # Reading sinks and sources sheet    
+    SPorg = read_sheet(wb, sheet_name_SPorg)  
 
-    sheet = wb.get_sheet_by_name(sheet_name_STDS)
-    r = sheet.max_row
-    c = sheet.max_column
-    STDS = np.zeros([r - 1, c])
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            STDS[i - 2, j - 1] = sheet.cell(row=i, column=j).value
+    # Reading sinks and sources sheet    
+    SPdis = read_sheet(wb, sheet_name_SPdis)    
 
-    sheet = wb.get_sheet_by_name(sheet_name_SGyA)
-    r = sheet.max_row
-    c = sheet.max_column
-    SGyA = np.zeros([r - 1, c])
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            SGyA[i - 2, j - 1] = sheet.cell(row=i, column=j).value
+    # Reading sinks and sources sheet    
+    SEC = read_sheet(wb, sheet_name_SEC)
+    
+    # Reading sinks and sources sheet    
+    STC = read_sheet(wb, sheet_name_STC)    
+    
+    # Reading sinks and sources sheet    
+    STSS = read_sheet(wb, sheet_name_STSS)
 
-    sheet = wb.get_sheet_by_name(sheet_name_SDQO)
-    r = sheet.max_row
-    c = sheet.max_column
-    SDQO = np.zeros([r - 1, c])
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            SDQO[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
-    sheet = wb.get_sheet_by_name(sheet_name_SPorg)
-    r = sheet.max_row
-    c = sheet.max_column
-    SPorg = np.zeros([r - 1, c])
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            SPorg[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
-    sheet = wb.get_sheet_by_name(sheet_name_SPdis)
-    r = sheet.max_row
-    c = sheet.max_column
-    SPdis = np.zeros([r - 1, c])
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            SPdis[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
-    sheet = wb.get_sheet_by_name(sheet_name_SEC)
-    r = sheet.max_row
-    c = sheet.max_column
-    SEC = np.zeros([r - 1, c])
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            SEC[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
-    sheet = wb.get_sheet_by_name(sheet_name_STC)
-    r = sheet.max_row
-    c = sheet.max_column
-    STC = np.zeros([r - 1, c])
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            STC[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
-    sheet = wb.get_sheet_by_name(sheet_name_STSS)
-    r = sheet.max_row
-    c = sheet.max_column
-    STSS = np.zeros([r - 1, c])
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            STSS[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
-    sheet = wb.get_sheet_by_name(sheet_name_SSS)
-    r = sheet.max_row
-    c = sheet.max_column
-    SSS = np.zeros([r - 1, c])
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            SSS[i - 2, j - 1] = sheet.cell(row=i, column=j).value
-
+    # Reading sinks and sources sheet    
+    SSS = read_sheet(wb, sheet_name_SSS)
+    
     return wd, sl, wv, bc, ic, ST, SOD, SDBO, SNH3, SNO2, SNO3, STDS, SGyA, SDQO, SPdis, SPorg, SEC, STC, STSS, SSS
 
 
@@ -933,3 +815,22 @@ def run(arhivo_entrada, directorio_salida, variables):
     plt.show()
     plt.clf()
 
+
+if __name__ == '__main__':
+    book = xlrd.open_workbook("sample3.xls")
+    print read_sheet(book, 'WD')
+    
+    wb = load_workbook("sample3.xls")
+    sheet = wb.get_sheet_by_name('WD')
+    # Number of written Rows in sheet
+    r = sheet.max_row
+    # Number of written Columns in sheet
+    c = sheet.max_column
+    wd = np.zeros([r - 1, c])
+    # Reading each cell in excel sheet 'BC'
+    for i in xrange(2, r + 1):
+        for j in xrange(1, c + 1):
+            wd[i - 2, j - 1] = float(sheet.cell(row=i, column=j).value)
+
+    print "******************"
+    print wd
