@@ -74,6 +74,12 @@ class LoadInputFileDialog(QtGui.QDialog, FORM_CLASS_LOAD_FILE):
         self.pushButtonFind.clicked.connect(self.handler)
         self.pushButtonOutput.clicked.connect(self.output)
 
+    def getShowPlots(self):
+        return self.checkBoxShow.isChecked()
+
+    def getSavePlots(self):
+        return self.checkBoxSave.isChecked()
+
     def getOutputPath(self):
         return self.lineEditOutput.text()
         

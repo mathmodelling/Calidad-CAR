@@ -380,6 +380,13 @@ class CalidadCAR:
                 u'Por favor selecciona la carpeta de salida.')
             return
 
+        if not dialog.getShowPlots() and not dialog.getSavePlots():
+            util.errorDialog(
+                self, 
+                u'No se selecciono ninguna opción de salida.', 
+                u'Es necesario seleccionar al menos una opción.')
+            return
+
         variables = VarsDialog.leerVariables()
         for k, v in variables.iteritems():
             variables[k] = float(v)
@@ -390,13 +397,12 @@ class CalidadCAR:
         except Error as e:
             util.errorDialog(
                 self,
-                u'Se encontro un valor que no es númerico',
+                u'Se encontró un valor que no es númerico',
                 u'Hoja: %s\nCelda: [%d, %d]' % (e.name, e.r, e.c))
             return
 
-        print "Se inicio el proceso"
-        action.pro(output_path, variables)
-
+        print "Se inicio el proceso..."
+        action.pro(output_path, variables, dialog.getShowPlots(), dialog.getSavePlots())
 
     def intersection(self):
         """Se encarga de aplicar el modelo matemático a la información para determinar la calidad del agua.

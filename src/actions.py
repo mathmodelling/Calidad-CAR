@@ -483,8 +483,8 @@ class Modelling(BaseAction):
         book = load_book(path)
         self.t = verify_book(book)
 
-    def pro(self, directorio_salida, variables):
-        calidad_carV2.run(self.path, self.t, directorio_salida, variables)
+    def pro(self, directorio_salida, variables, show, save):
+        calidad_carV2.run(self.path, self.t, directorio_salida, variables, show, save)
 
     def pos(self):
         pass
