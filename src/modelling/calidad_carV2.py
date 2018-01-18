@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
-from openpyxl import load_workbook
 
 import xlrd
 
@@ -27,6 +26,17 @@ def read_sheet(workbook, name):
 
     return answ
 
+def plot(ax, name, data):
+    ax.plot(data[0], data[1])
+    ax.set_title(name, fontsize=8)
+
+def save_plot(plt, title, xlabel, ylabel, data, path):
+    plt.plot(data[0], data[1])
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.savefig("%s.png" % join(path, title), dpi=300)
+    plt.clf()
 
 def read_config_file(config_file, sheet_name_wd='WD', sheet_name_sl='SL', sheet_name_wv='WV', sheet_name_bc='BC',
                      sheet_name_ic='IC', sheet_name_ST='ST', sheet_name_SOD='SOD', sheet_name_SDBO='SDBO', sheet_name_SNH3='SNH3',
@@ -391,7 +401,7 @@ def calidad_explicito(dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO, c
 
     return c_T, c_OD, c_DBO, c_NH3, c_NO2, c_NO3, c_DQO, c_TDS, c_EC, c_TC, c_GyA, c_Porg, c_Pdis, c_TSS, c_SS, dt
 
-def run(arhivo_entrada, tiempo, directorio_salida, variables):
+def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     # Numero de pasos en el tiempo a ejecutar
     nt = tiempo
     ct = (np.arange(1, nt))
@@ -591,6 +601,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables):
 
     mconConduct = kcondt * mconTDS
 
+    print "Guardando datos de salida..."
+
     xls_save_file = join(directorio_salida, "Resultados.xlsx")
     xls_writer = pd.ExcelWriter(xls_save_file)
     df_save = pd.DataFrame(mconT[0::3600, :])
@@ -627,194 +639,118 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables):
     df_save.to_excel(xls_writer, sheet_name="SS")
     xls_writer.save()
 
-    #Graficas en el tiempo
-    plt.plot(ct[1::3600], mconT[1::3600, -1])
-    plt.title('Evalucion T en punto final')
-    plt.xlabel('Tiempo(s)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida, 'Evalucion T en tiempo.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(ct[1::3600], mconOD[1::3600, -1])
-    plt.title('Evalucion OD en punto final')
-    plt.xlabel('Tiempo(s)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida, 'Evalucion OD en tiempo.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(ct[1::3600], mconDBO[1::3600, -1])
-    plt.title('Evalucion DBO en punto final')
-    plt.xlabel('Tiempo(s)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion DBO en tiempo.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(ct[1::3600], mconNH3[1::3600, -1])
-    plt.title('Evalucion NH3 en punto final')
-    plt.xlabel('Tiempo(s)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion NH3 en tiempo.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(ct[1::3600], mconNO2[1::3600, -1])
-    plt.title('Evalucion NO2 en punto final')
-    plt.xlabel('Tiempo(s)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion NO2 en tiempo.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(ct[1::3600], mconNO3[1::3600, -1])
-    plt.title('Evalucion NO3 en punto final')
-    plt.xlabel('Tiempo(s)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion NO3 en tiempo.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(ct[1::3600], mconDQO[1::3600, -1])
-    plt.title('Evalucion DQO en punto final')
-    plt.xlabel('Tiempo(s)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion DQO en tiempo.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(ct[1::3600], mconTDS[1::3600, -1])
-    plt.title('Evalucion TDS en punto final')
-    plt.xlabel('Tiempo(s)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion TDS en tiempo.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(ct[1::3600], mconEC[1::3600, -1])
-    plt.title('Evalucion EC en punto final')
-    plt.xlabel('Tiempo(s)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion EC en tiempo.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(ct[1::3600], mconTC[1::3600, -1])
-    plt.title('Evalucion TC en punto final')
-    plt.xlabel('Tiempo(s)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion TC en tiempo.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(ct[1::3600], mconGyA[1::3600, -1])
-    plt.title('Evalucion Grasas y Aceites en punto final')
-    plt.xlabel('Tiempo(s)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion GyA en tiempo.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(ct[1::3600], mconPorg[1::3600, -1])
-    plt.title('Evalucion P org en punto final')
-    plt.xlabel('Tiempo(s)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion P org en tiempo.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(ct[1::3600], mconPdis[1::3600, -1])
-    plt.title('Evalucion P disuelto en punto final')
-    plt.xlabel('Tiempo(s)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion P dis.png'), dpi=300)
-    plt.show()
-    plt.clf()
+    if show:
 
-    #Graficas en el espacio
-    c_x = hmed[:, 0]
-    plt.plot(c_x, T)
-    plt.title('Evalucion T en el espacio')
-    plt.xlabel('Distancia(m)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion T en espacio.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    c_x = hmed[:, 0]
-    plt.plot(c_x, OD)
-    plt.title('Evalucion OD en el espacio')
-    plt.xlabel('Distancia(m)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion OD en espacio.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(c_x, DBO)
-    plt.title('Evalucion DBO en el espacio')
-    plt.xlabel('Distancia(m)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion DBO en espacio.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(c_x, NH3)
-    plt.title('Evalucion NH3 en el espacio')
-    plt.xlabel('Distancia(m)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion NH3 en espacio.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(c_x, NO2)
-    plt.title('Evalucion NO2 en el espacio')
-    plt.xlabel('Distancia(m)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion NO2 en espacio.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(c_x, NO3)
-    plt.title('Evalucion NO3 en el espacio')
-    plt.xlabel('Distancia(m)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion NO3 en espacio.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(c_x, DQO)
-    plt.title('Evalucion DQO en el espacio')
-    plt.xlabel('Distancia(m)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion DQO en espacio.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(c_x, TDS)
-    plt.title('Evalucion TDS en el espacio')
-    plt.xlabel('Distancia(m)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion TDS en espacio.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(c_x, EC)
-    plt.title('Evalucion EC en el espacio')
-    plt.xlabel('Distancia(m)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion EC en espacio.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(c_x, TC)
-    plt.title('Evalucion TC en el espacio')
-    plt.xlabel('Distancia(m)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion TC en espacio.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(c_x, GyA)
-    plt.title('Evalucion Grasas y Aceites en el espacio')
-    plt.xlabel('Distancia(m)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion GyA en espacio.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(c_x, Porg)
-    plt.title('Evalucion P organico en el espacio')
-    plt.xlabel('Distancia(m)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion P org en espacio.png'), dpi=300)
-    plt.show()
-    plt.clf()
-    plt.plot(c_x, Pdis)
-    plt.title('Evalucion P disuelto en el espacio')
-    plt.xlabel('Distancia(m)')
-    plt.ylabel('Concentracion (mg/L)')
-    plt.savefig(join(directorio_salida,'Evalucion P disuelto en espacio.png'), dpi=300)
-    plt.show()
-    plt.clf()
+        print u"Creando Gráficas"
 
+        #Graficas en el tiempo
+        xlabel = 'Tiempo(s)'
+        ylabel = 'Concentracion (mg/L)'
+        x_data = ct[1::3600]
+
+        fig, ax = plt.subplots(5, 3, sharex=True)
+        fig.add_subplot("111", frameon=False)
+        fig.canvas.set_window_title('Graficas de Tiempo.')
+
+        plot(ax[0,0], 'Evalucion T en punto final', [x_data, mconT[1::3600, -1]])
+        plot(ax[0,1], 'Evalucion OD en punto final', [x_data, mconOD[1::3600, -1]])
+        plot(ax[0,2], 'Evalucion DBO en punto final', [x_data, mconDBO[1::3600, -1]])
+        plot(ax[1,0], 'Evalucion NH3 en punto final', [x_data, mconNH3[1::3600, -1]])
+        plot(ax[1,1], 'Evalucion NO2 en punto final', [x_data, mconNO2[1::3600, -1]])
+        plot(ax[1,2], 'Evalucion NO3 en punto final', [x_data, mconNO3[1::3600, -1]])
+        plot(ax[2,0], 'Evalucion DQO en punto final', [x_data, mconDQO[1::3600, -1]])
+        plot(ax[2,1], 'Evalucion TDS en punto final', [x_data, mconTDS[1::3600, -1]])
+        plot(ax[2,2], 'Evalucion EC en punto final', [x_data, mconEC[1::3600, -1]])
+        plot(ax[3,0], 'Evalucion TC en punto final', [x_data, mconTC[1::3600, -1]])
+        plot(ax[3,1], 'Evalucion Grasas y Aceites en punto final', [x_data, mconGyA[1::3600, -1]])
+        plot(ax[3,2], 'Evalucion P org en punto final', [x_data, mconPorg[1::3600, -1]])
+        plot(ax[4,0], 'Evalucion P disuelto en punto final', [x_data, mconPdis[1::3600, -1]])
+
+        figManager = plt.get_current_fig_manager()
+        figManager.window.showMaximized()
+        plt.subplots_adjust(hspace=0.5)
+        plt.grid(False)
+        plt.tick_params(labelcolor='none', top='off', bottom='off', left='off', right='off')
+        plt.xlabel(xlabel, fontsize=15)
+        plt.ylabel(ylabel, fontsize=15)
+        fig.show()
+
+        #Graficas en el espacio
+        xlabel = 'Distancia(m)'
+        ylabel = 'Concentracion (mg/L)'
+        c_x = hmed[:, 0]
+        
+        fig2, ax2 = plt.subplots(5, 3, sharex=True)
+        fig2.add_subplot(111, frameon=False)
+        fig2.canvas.set_window_title('Graficas de espacio.')
+
+        plot(ax2[0,0], 'Evalucion T en el espacio', [c_x, T])
+        plot(ax2[0,1], 'Evalucion OD en el espacio', [c_x, OD])
+        plot(ax2[0,2], 'Evalucion DBO en el espacio', [c_x, DBO])
+        plot(ax2[1,0], 'Evalucion NH3 en el espacio', [c_x, NH3])
+        plot(ax2[1,1], 'Evalucion NO2 en el espacio', [c_x, NO2])
+        plot(ax2[1,2], 'Evalucion NO3 en el espacio', [c_x, NO3])
+        plot(ax2[2,0], 'Evalucion DQO en el espacio', [c_x, DQO])
+        plot(ax2[2,1], 'Evalucion TDS en el espacio', [c_x, TDS])
+        plot(ax2[2,2], 'Evalucion EC en el espacio', [c_x, EC])
+        plot(ax2[3,0], 'Evalucion TC en el espacio', [c_x, TC])
+        plot(ax2[3,1], 'Evalucion Grasas y Aceites en el espacio', [c_x, GyA])
+        plot(ax2[3,2], 'Evalucion P organico en el espacio', [c_x, Porg])
+        plot(ax2[4,0], 'Evalucion P disuelto en el espacio', [c_x, Pdis])
+
+        figManager = plt.get_current_fig_manager()
+        figManager.window.showMaximized()
+        plt.subplots_adjust(hspace=0.5)
+        plt.grid(False)
+        plt.tick_params(labelcolor='none', top='off', bottom='off', left='off', right='off')
+        plt.xlabel(xlabel, fontsize=15)
+        plt.ylabel(ylabel, fontsize=15)
+        fig2.show()
+
+    if export:
+
+        print u"Guardando Gráficas..."
+
+        xlabel = 'Tiempo(s)'
+        ylabel = 'Concentracion (mg/L)'
+        x_data = ct[1::3600]
+
+        plt.figure('tmp')
+        # Gráficas de tiempo
+        save_plot(plt, 'Evalucion T en punto final en tiempo', xlabel, ylabel, [x_data, mconT[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion OD en punto final en tiempo', xlabel, ylabel, [x_data, mconOD[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion DBO en punto final en tiempo', xlabel, ylabel, [x_data, mconDBO[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion NH3 en punto final en tiempo', xlabel, ylabel, [x_data, mconNH3[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion NO2 en punto final en tiempo', xlabel, ylabel, [x_data, mconNO2[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion NO3 en punto final en tiempo', xlabel, ylabel, [x_data, mconNO3[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion DQO en punto final en tiempo', xlabel, ylabel, [x_data, mconDQO[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion TDS en punto final en tiempo', xlabel, ylabel, [x_data, mconTDS[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion EC en punto final en tiempo', xlabel, ylabel, [x_data, mconEC[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion TC en punto final en tiempo', xlabel, ylabel, [x_data, mconTC[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion Grasas y Aceites en punto final en tiempo', xlabel, ylabel, [x_data, mconGyA[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion P org en punto final en tiempo', xlabel, ylabel, [x_data, mconPorg[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion P disuelto en punto final en tiempo', xlabel, ylabel, [x_data, mconPdis[1::3600, -1]], directorio_salida)
+
+        # Gráficas de espacio
+        xlabel = 'Distancia(m)'
+        ylabel = 'Concentracion (mg/L)'
+        c_x = hmed[:, 0]
+        
+        save_plot(plt, 'Evalucion T en el espacio',xlabel, ylabel, [c_x, T], directorio_salida)
+        save_plot(plt, 'Evalucion OD en el espacio',xlabel, ylabel, [c_x, OD], directorio_salida)
+        save_plot(plt, 'Evalucion DBO en el espacio',xlabel, ylabel, [c_x, DBO], directorio_salida)
+        save_plot(plt, 'Evalucion NH3 en el espacio',xlabel, ylabel, [c_x, NH3], directorio_salida)
+        save_plot(plt, 'Evalucion NO2 en el espacio',xlabel, ylabel, [c_x, NO2], directorio_salida)
+        save_plot(plt, 'Evalucion NO3 en el espacio',xlabel, ylabel, [c_x, NO3], directorio_salida)
+        save_plot(plt, 'Evalucion DQO en el espacio',xlabel, ylabel, [c_x, DQO], directorio_salida)
+        save_plot(plt, 'Evalucion TDS en el espacio',xlabel, ylabel, [c_x, TDS], directorio_salida)
+        save_plot(plt, 'Evalucion EC en el espacio',xlabel, ylabel, [c_x, EC], directorio_salida)
+        save_plot(plt, 'Evalucion TC en el espacio',xlabel, ylabel, [c_x, TC], directorio_salida)
+        save_plot(plt, 'Evalucion Grasas y Aceites en el espacio',xlabel, ylabel, [c_x, GyA], directorio_salida)
+        save_plot(plt, 'Evalucion P organico en el espacio',xlabel, ylabel, [c_x, Porg], directorio_salida)
+        save_plot(plt, 'Evalucion P disuelto en el espacio',xlabel, ylabel, [c_x, Pdis], directorio_salida)
+
+    print "El proceso ha finalizado."
 
 if __name__ == '__main__':
     book = xlrd.open_workbook("sample3.xls")
