@@ -6,7 +6,8 @@ import geometry
 import numpy as np
 import datetime as dtm
 import layer_manager as manager
-from modelling import calidad_car
+from modelling import calidad_car, calidad_carV2
+from spreadsheets import create_book, verify_book, load_book
 from abc import ABCMeta, abstractmethod
 from PyQt4.QtCore import (QFileInfo, QVariant)
 
@@ -310,6 +311,59 @@ class ConcentrationPointsAction(BaseAction):
         # QgsMapLayerRegistry.instance().addMapLayers([layer])
         return polygon.contains(point)
 
+class CreateInputFileAction(BaseAction):
+    """Esta acción se encarga de la lógica necesaria para poder crear el archivo de entrada."""
+    def __init__(self):
+        self.eje = None
+        self.secciones = None
+
+    def pre(self):
+        """Verifica que las capas necesarias para realizar esta acción estan cargadas.
+
+        :returns: Un booleano que indica si se cumple o no la condición.
+        :rtype: bool
+        """
+        self.eje = manager.get_layer('ejes')
+        self.secciones = manager.get_layer('secciones')
+
+        return self.eje is not None and self.secciones is not None
+
+    def pro(self):
+        """Cálcula las distancias entre los puntos de intersección de la capa de ejes, y la capa de secciones."""
+        points = geometry.intersectionPoints(self.eje, self.secciones)
+        distances = []
+        for i in xrange(len(points)):
+            #Precisión de 4 digitos, para evitar problemas con matplotlib
+            dist = geometry.distance(points[0], points[i])
+            distances.append(float(format(dist, '.4f')))
+        return distances
+
+    def pos(self, path, dis, time, wd, sl):
+        """
+            Recibe la información del diálogo, y crea el archivo de entrada.
+            
+            :param path: Ruta del archivo que se va a crear.
+            :type path: str
+
+            :param dis: Lista con las distancias de los puntos de intersección.
+            :type dis: list
+
+            :param time: Tiempo del cálculo.
+            :type time: int
+
+            :param wd: Promedio de la profundidad del agua.
+            :type ws: Decimal
+
+            :param sl: Pendiente
+            type sl: Decimal
+
+            :returns: Booleano que indica si el proceso culmino con exito.
+            :rtype: bool
+
+        """
+        create_book(path, dis, time, wd, sl)
+        return True
+
 class ModellingAction(BaseAction):
     """Esta acción se encarga de aplicar el modelo matemático sobre la información cargada por el usuario."""
     def __init__(self):
@@ -418,3 +472,19 @@ class ModellingAction(BaseAction):
         paso_x = 10
 
         print calidad_car.grafica(mcon, t_step, paso_x, srow=11, scol=80, flag=flag)
+
+class Modelling(BaseAction):
+    def __init__(self):
+        self.path = None
+
+    def pre(self, path):
+        '''Verífica que no exista una celda vacía en el documento'''
+        self.path = path
+        book = load_book(path)
+        self.t = verify_book(book)
+
+    def pro(self, directorio_salida, variables):
+        calidad_carV2.run(self.path, self.t, directorio_salida, variables)
+
+    def pos(self):
+        pass

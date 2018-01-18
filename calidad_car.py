@@ -26,11 +26,13 @@ from PyQt4.QtGui import ( QIcon,
                           QMessageBox)
 
 
-from src.actions import ( CSVAction,
+from src.actions import ( Modelling,
+                          CSVAction,
                           LayerAction,
                           AddSectionAction,
                           ConcentrationPointsAction,
-                          ModellingAction)
+                          ModellingAction,
+                          CreateInputFileAction)
 
 import time
 import util
@@ -41,13 +43,15 @@ import resources
 import numpy as np
 import datetime as dtm
 
-from dialogo_variables import VarsDialog
 from dialogo_csv import CSVDialog
+from src.spreadsheets import Error
 from src.modelling import calidad_car
 from src import layer_manager as manager
+from dialogo_variables import VarsDialog
 from informacion import InformationDialog
 from dialogo_parametros import SettingsDialog
 from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
+from dialogo_arhivo_entrada import InputFileDialog, LoadInputFileDialog
 
 class CalidadCAR:
     """Implementación del plugin."""
@@ -84,6 +88,7 @@ class CalidadCAR:
         self.toolbar = self.iface.addToolBar(u'CalidadCAR')
         self.toolbar.setObjectName(u'CalidadCAR')
 
+        self.inputFile = None
         self.layers = []
         self.dlg = CalidadCARDialog()
         # self.csvDialog = CSVDialog()
@@ -190,16 +195,16 @@ class CalidadCAR:
         icon_path = ':/plugins/CalidadCAR/icons/csv-join.png'
         self.addCsvAction = self.add_action(
             icon_path,
-            text=self.tr(u'Unir CSV'),
-            callback=self.addCsv,
+            text=self.tr(u'Crear archivo de entrada'),
+            callback=self.createInputFile,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icons/add-section.png'
-        self.addSectionAction = self.add_action(
-            icon_path,
-            text=self.tr(u'Agregar sección'),
-            callback=self.addSection,
-            parent=self.iface.mainWindow())
+        # icon_path = ':/plugins/CalidadCAR/icons/add-section.png'
+        # self.addSectionAction = self.add_action(
+        #     icon_path,
+        #     text=self.tr(u'Agregar sección'),
+        #     callback=self.addSection,
+        #     parent=self.iface.mainWindow())
 
         # icon_path = ':/plugins/CalidadCAR/icons/concentration-icon.png'
         # self.intersctionAction = self.add_action(
@@ -213,7 +218,7 @@ class CalidadCAR:
         self.intersctionAction = self.add_action(
             icon_path,
             text=self.tr(u'Calcular'),
-            callback=self.intersection,
+            callback=self.modeling,
             parent=self.iface.mainWindow())
 
         icon_path = ':/plugins/CalidadCAR/icons/erase-icon.png'
@@ -239,6 +244,47 @@ class CalidadCAR:
 
         # self.intersctionAction.setEnabled(False)
         # self.addCsvAction.setEnabled(False)
+
+    def createInputFile(self):
+        action = CreateInputFileAction()
+        if not action.pre():
+            util.errorDialog(
+                self, 
+                u'No se encontraron algunas de las capas necesarias para realizar esta operación.', 
+                u'Asegurate de agregar la capa del eje, y la capa de secciones en el diálogo de Cargar Fondos.')
+            return
+
+        dialog = InputFileDialog()
+        r = dialog.exec_()
+        if not r: return
+
+        time = dialog.getT()
+        if time == "":
+            util.errorDialog(
+                self, 
+                u'No se ingreso el tiempo.', 
+                u'El proceso solo se puede realizar si se ingresa un valor para el tiempo.')
+            return
+
+        if int(time) <= 0:
+            util.errorDialog(
+                self, 
+                u'El tiempo tiene que ser un valor entero', 
+                u'Y su valor tienen que ser mayor a cero.')
+            return            
+
+        dis = action.pro()
+        path = dialog.getFilePath()
+        wd = dialog.getWD()
+        sl = dialog.getSL()
+
+        if action.pos(path, dis, int(time), wd, sl):
+            self.inputFile = path
+            util.infoDialog(
+                self,
+                u'CalidadCAR',
+                u'El archivo de entrada se ha creado con exito.',
+                u'Ya puedes abrirlo para ingresar la información necesaria.')
 
     def info(self):
         dialog = InformationDialog()
@@ -311,6 +357,46 @@ class CalidadCAR:
 
         action.pro()
         action.pos(self.iface)
+
+    def modeling(self):
+        dialog = LoadInputFileDialog()
+        r = dialog.exec_()
+
+        if not r: return
+
+        path = dialog.getFilePath()
+        if path == "":
+            util.errorDialog(
+                self, 
+                u'No se selecciono ningún archivo.', 
+                u'El proceso solo se puede realizar cuando se cargué el archivo de entrada.')
+            return
+
+        output_path = dialog.getOutputPath()
+        if output_path == "":
+            util.errorDialog(
+                self, 
+                u'No se selecciono la carpeta de salida.', 
+                u'Por favor selecciona la carpeta de salida.')
+            return
+
+        variables = VarsDialog.leerVariables()
+        for k, v in variables.iteritems():
+            variables[k] = float(v)
+
+        action = Modelling()
+        try:
+            action.pre(path)
+        except Error as e:
+            util.errorDialog(
+                self,
+                u'Se encontro un valor que no es númerico',
+                u'Hoja: %s\nCelda: [%d, %d]' % (e.name, e.r, e.c))
+            return
+
+        print "Se inicio el proceso"
+        action.pro(output_path, variables)
+
 
     def intersection(self):
         """Se encarga de aplicar el modelo matemático a la información para determinar la calidad del agua.
