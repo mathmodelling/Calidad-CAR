@@ -243,19 +243,32 @@ def verify_book(workbook):
 	for contaminante in CONTAMINANTS:
 		verify_sheet(workbook.sheet_by_name("S" + contaminante))
 
+	# Obtener el tiempo
+	sheet = workbook.sheet_by_name('WD')
+	cols = sheet.ncols
+	val = None
+	try:
+		val = int(sheet.cell_value(0, cols - 1))
+	except:
+		raise Error(sheet.name, 1, j + 1)
+
+	return val
+
+
 def load_book(path):
 	# return openpyxl.load_workbook(path)
 	return xlrd.open_workbook(path)
 
 
 if __name__ == '__main__':
+	d = [x for x in range(5)]
 	# d = [0.00, 4.82, 9.63, 14.45, 19.26, 24.08,	28.89, 33.71, 38.52,
 	# 	43.34, 48.15, 52.97, 57.78,	62.60, 67.41, 72.23, 77.04, 81.86,
 	# 	86.67, 91.49, 96.30, 101.12, 105.93, 110.75, 115.56, 120.38, 
 	# 	125.19, 130.01,	134.82,	139.64,	144.45,	149.27,	154.08,	158.90]
-	# book = create_book("sample3.xls", d, 24, 1.0, 0.35)
-	book = load_book("sample2.xlsx")
-	verify_book(book)
+	# book = create_book("sample3.xls", d, 4, 1.0, 0.35)
+	book = load_book("sample3.xlsx")
+	print verify_book(book)
 	
 
 
