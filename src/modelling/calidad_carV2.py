@@ -46,7 +46,7 @@ def read_config_file(config_file, sheet_name_wd='WD', sheet_name_sl='SL', sheet_
     :return:
     """
     # Following if is to set a mutable parameter as default parameter
-    wb = load_workbook(config_file)
+    wb = xlrd.open_workbook(config_file)
 
     # Reading water depth sheet
     wd = read_sheet(wb, sheet_name_wd)
@@ -391,9 +391,9 @@ def calidad_explicito(dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO, c
 
     return c_T, c_OD, c_DBO, c_NH3, c_NO2, c_NO3, c_DQO, c_TDS, c_EC, c_TC, c_GyA, c_Porg, c_Pdis, c_TSS, c_SS, dt
 
-def run(arhivo_entrada, directorio_salida, variables):
+def run(arhivo_entrada, tiempo, directorio_salida, variables):
     # Numero de pasos en el tiempo a ejecutar
-    nt = 3600*24
+    nt = tiempo
     ct = (np.arange(1, nt))
 
     # Reading input data fron Excel file
