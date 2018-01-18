@@ -36,6 +36,21 @@ def errorDialog(self, text, detail):
     msg.setWindowTitle("Error")
     msg.exec_()
 
+def infoDialog(self, title, text, detail):
+    """Dialogo de información.
+
+    :param text: Identificador principal del mensaje.
+    :type text: str
+
+    :param name: Información detallada del mensaje.
+    :type name: str
+    """
+    msg = QMessageBox()
+    msg.setText(text)
+    msg.setInformativeText(detail)
+    msg.setWindowTitle(title)
+    msg.exec_()
+
 def comboBoxDialog(self, title, text, values):
     """Este diálogo le pide al usuario que seleccione una opción de un combobox y la retorna.
 
