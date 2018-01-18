@@ -8,6 +8,9 @@ from PyQt4.QtCore import QFileInfo
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'ui', 'dialogo_crear_archivo_entrada.ui'))
 
+FORM_CLASS_LOAD_FILE, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'ui', 'dialogo_cargar_archivo_base.ui'))
+
 class InputFileDialog(QtGui.QDialog, FORM_CLASS):
     """Recibir información necesaria para crear el archivo de entrada"""
 
@@ -18,8 +21,15 @@ class InputFileDialog(QtGui.QDialog, FORM_CLASS):
         self.pushButtonFind.clicked.connect(self.handler)
 
         validator = QtGui.QDoubleValidator()
+        validatorInt = QtGui.QIntValidator()
+        
         self.lineEditWD.setValidator(validator)
         self.lineEditSL.setValidator(validator)
+        self.lineEditT.setValidator(validatorInt)
+
+    def getT(self):
+        """Retorna el valor T."""
+        return self.lineEditT.text()
 
     def getWD(self):
         """Retorna el valor WD.
@@ -53,5 +63,29 @@ class InputFileDialog(QtGui.QDialog, FORM_CLASS):
             layerPath += ".xlsx"
         elif layerInfo.fileName()[-5: ] != ".xlsx":
             layerPath += ".xlsx"
+
+        self.lineEditPath.setText(layerPath)
+
+class LoadInputFileDialog(QtGui.QDialog, FORM_CLASS_LOAD_FILE):
+    def __init__(self, parent=None):
+        """Constructor."""
+        super(LoadInputFileDialog, self).__init__(parent)
+        self.setupUi(self)
+        self.pushButtonFind.clicked.connect(self.handler)
+        self.pushButtonOutput.clicked.connect(self.output)
+
+    def getOutputPath(self):
+        return self.lineEditOutput.text()
+        
+    def getFilePath(self):
+        return self.lineEditPath.text()
+
+    def output(self):
+        path = QFileDialog.getExistingDirectory (self, 'Selecciona la carpeta de salida', '.', QFileDialog.ShowDirsOnly)
+        self.lineEditOutput.setText(path)
+
+    def handler(self):
+        layerPath = QFileDialog.getOpenFileName(self, u'Abir archivo xlsx', '.', 'Archivo Excel (*.xlsx)')
+        layerInfo = QFileInfo(layerPath)
 
         self.lineEditPath.setText(layerPath)
