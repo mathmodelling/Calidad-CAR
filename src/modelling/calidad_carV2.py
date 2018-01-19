@@ -58,7 +58,8 @@ def read_config_file(config_file, sheet_name_wd='WD', sheet_name_sl='SL', sheet_
                      sheet_name_ic='IC', sheet_name_ST='ST', sheet_name_SOD='SOD', sheet_name_SDBO='SDBO', sheet_name_SNH3='SNH3',
                      sheet_name_SNO2='SNO2', sheet_name_SNO3='SNO3', sheet_name_STDS='STDS', sheet_name_SGyA='SGyA',
                      sheet_name_SDQO='SDQO', sheet_name_SPdis='SPdis', sheet_name_SPorg='SPorg', sheet_name_SEC='SEC',
-                     sheet_name_STC='STC', sheet_name_STSS='STSS', sheet_name_SSS='SSS'):
+                     sheet_name_STC='STC', sheet_name_STSS='STSS', sheet_name_SSS='SSS', sheet_name_SpH='SpH',
+                     sheet_name_SALK='SALK'):
     """
     Reads an Excel configuration file with initial and boundary conditions and also time series for sinks and sources
     :param config_file: The path to
@@ -133,13 +134,19 @@ def read_config_file(config_file, sheet_name_wd='WD', sheet_name_sl='SL', sheet_
 
     # Reading sinks and sources sheet    
     SSS = read_sheet(wb, sheet_name_SSS)
+
+    # Reading sinks and sources sheet
+    SpH = read_sheet(wb, sheet_name_SpH)
+
+    # Reading sinks and sources sheet
+    SALK = read_sheet(wb, sheet_name_SALK)
     
-    return wd, sl, wv, bc, ic, ST, SOD, SDBO, SNH3, SNO2, SNO3, STDS, SGyA, SDQO, SPdis, SPorg, SEC, STC, STSS, SSS
+    return wd, sl, wv, bc, ic, ST, SOD, SDBO, SNH3, SNO2, SNO3, STDS, SGyA, SDQO, SPdis, SPorg, SEC, STC, STSS, SSS, SpH, SALK
 
 
 def calidad_explicito(dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO, ci_TDS, ci_EC, ci_TC, ci_GyA, ci_Porg, ci_Pdis, ci_TSS,
-                      ci_SS, v, d, S_T, S_OD, S_DBO, S_NH3, S_NO2, S_NO3, S_DQO, S_TDS, S_EC, S_TC, S_GyA, S_Porg, S_Pdis, S_TSS, S_SS,
-                      variables):
+                      ci_SS, ci_pH, ci_ALK, v, d, S_T, S_OD, S_DBO, S_NH3, S_NO2, S_NO3, S_DQO, S_TDS, S_EC, S_TC, S_GyA, S_Porg, S_Pdis, S_TSS, S_SS,
+                      S_pH, S_ALK, variables):
     """
     Esta función modela la transición de la concentración del momento t al momento t + dt para todos los
     nodos espaciales de la corriente superficial
@@ -169,6 +176,8 @@ def calidad_explicito(dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO, c
     c_Pdis = ci_Pdis
     c_TSS = ci_TSS
     c_SS = ci_SS
+    c_pH = ci_pH
+    c_ALK = ci_ALK
 
     maxv = abs(np.max(v))
     maxd = abs(np.max(d))
@@ -206,6 +215,16 @@ def calidad_explicito(dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO, c
     Cp = variables['Cp']
 
     Dt = k/(den*Cp)
+
+    Kw = variables['Kw']
+    K1 = variables['K1']
+    K2 = variables['K2']
+    Vv = variables['Vv']
+    As = variables['As']
+    CO2S = variables['CO2S']
+    Wrp = variables['Wrp']
+    FrH = variables['FrH']
+    Diff = variables['Diff']
 
     Da = variables['Da']
     ko2 = variables['ko2']
@@ -251,9 +270,18 @@ def calidad_explicito(dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO, c
     kPorg = variables['kPorg']
     kPsed = variables['kPsed']
     sigma2 = variables['sigma2']
+
     Ws = variables['Ws']
     Rs = variables['Rs']
     Rp = variables['Rp']
+
+    teta_DBO = variables['teta_DBO']
+    teta_NH3 = variables['teta_NH3']
+    teta_NO2 = variables['teta_NO2']
+    teta_DQO = variables['teta_DQO']
+    teta_NT = variables['teta_NT']
+    teta_NO3 = variables['teta_NO3']
+    # 8 nuevas
 
     #Creando variable de salida
     cout_T = np.zeros(len(c_T))
@@ -271,6 +299,8 @@ def calidad_explicito(dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO, c
     cout_Pdis = np.zeros(len(c_OD))
     cout_TSS = np.zeros(len(c_OD))
     cout_SS = np.zeros(len(c_OD))
+    cout_pH = np.zeros(len(c_OD))
+    cout_ALK = np.zeros(len(c_OD))
 
     cout_T = c_T
     cout_OD = c_OD
@@ -287,6 +317,8 @@ def calidad_explicito(dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO, c
     cout_Pdis = c_Pdis
     cout_TSS = c_TSS
     cout_SS = c_SS
+    cout_pH = c_pH
+    cout_ALK = c_ALK
 
     # range(int(dtini / dt)) determina el número de nodos temporales necesarios para llegar t + dt de forma estable
     for i in range(int(dtini / dt)):
@@ -384,6 +416,20 @@ def calidad_explicito(dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO, c
         reac_SS = (-Ws*c_SS[0:-2]/D + Rs/D + Rp/D) * dt
         cout_SS[1:-1] = c_SS[1:-1] + adv_SS + dif_SS + reac_SS + S_SS[1:-1]*dt
 
+        adv_ALK = -((ki[2:] * v[2:] * c_ALK[2:] - ki[1:-1] * v[1:-1] * c_ALK[1:-1]) * (dt / dx) + (
+        kr[1:-1] * v[1:-1] * c_ALK[1:-1] - kr[0:-2] * v[0:-2] * c_ALK[0:-2]) * (dt / dx))
+        dif_ALK = 0.5 * (d[2:] * c_ALK[2:] - 2 * d[1:-1] * c_ALK[1:-1] + d[0:-2] * c_ALK[0:-2]) * (dt / dx ** 2)
+        reac_ALK = Wrp + Vv * As * (
+        CO2S - ((c_pH[0:-2]) * (c_pH[0:-2]) / (((c_pH[0:-2]) * (c_pH[0:-2])) + K1 * (c_pH[0:-2]) + K1 * K2)) * c_ALK[
+                                                                                                               0:-2])
+        cout_ALK[1:-1] = c_ALK[1:-1] + adv_ALK + dif_ALK + reac_ALK + S_ALK[1:-1] * dt
+
+        adv_pH = -((ki[2:] * v[2:] * c_pH[2:] - ki[1:-1] * v[1:-1] * c_pH[1:-1]) * (dt / dx) +
+                   (kr[1:-1] * v[1:-1] * c_pH[1:-1] - kr[0:-2] * v[0:-2] * c_pH[0:-2]) * (dt / dx))
+        dif_pH = 0.5 * (d[2:] * c_pH[2:] - 2 * d[1:-1] * c_pH[1:-1] + d[0:-2] * c_pH[0:-2]) * (dt / dx ** 2)
+        reac_pH = ((Kw / (FrH * (c_ALK[0:-2])) ** 0.5))
+        cout_pH[1:-1] = c_pH[1:-1] + adv_pH + dif_pH + reac_pH + S_pH[1:-1]*dt
+
         c_T = cout_T
         c_OD = cout_OD
         c_DBO = cout_DBO
@@ -398,6 +444,8 @@ def calidad_explicito(dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO, c
         c_Porg = cout_Porg
         c_Pdis = cout_Pdis
         c_SS = cout_SS
+        c_pH = cout_pH
+        c_ALK = cout_ALK
 
         cout_T[-1] = cout_T[-2]
         cout_OD[-1] = cout_OD[-2]
@@ -414,8 +462,10 @@ def calidad_explicito(dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO, c
         cout_Porg[-1] = cout_Porg[-2]
         cout_Pdis[-1] = cout_Pdis[-2]
         cout_SS[-1] = cout_SS[-2]
+        cout_pH[-1] = cout_pH[-2]
+        cout_ALK[-1] = cout_ALK[-2]
 
-    return c_T, c_OD, c_DBO, c_NH3, c_NO2, c_NO3, c_DQO, c_TDS, c_EC, c_TC, c_GyA, c_Porg, c_Pdis, c_TSS, c_SS, dt
+    return c_T, c_OD, c_DBO, c_NH3, c_NO2, c_NO3, c_DQO, c_TDS, c_EC, c_TC, c_GyA, c_Porg, c_Pdis, c_TSS, c_SS, c_pH, c_ALK, dt
 
 def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     # Numero de pasos en el tiempo a ejecutar
@@ -424,7 +474,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
 
     # Reading input data fron Excel file
     # xls_config = "Rio_Los_Ranchos_prueba_00.xlsx"
-    hmed, slope, vel, b_c, i_c, ST, SOD, SDBO, SNH3, SNO2, SNO3, STDS, SGyA, SDQO, SPorg, SPdis, SEC, STC, STSS, SSS = read_config_file(arhivo_entrada)
+    hmed, slope, vel, b_c, i_c, ST, SOD, SDBO, SNH3, SNO2, SNO3, STDS, SGyA, SDQO, SPorg, SPdis, SEC, STC, STSS, SSS, SpH, SALK = read_config_file(arhivo_entrada)
 
     #Discretizacion en el espacio
     dx = hmed[1, 0] - hmed[0, 0]
@@ -465,6 +515,11 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     b_c_TSS = b_c[:, 16]
     # Solidos sedimentables
     b_c_SS = b_c[:, 17]
+    # pH
+    b_c_pH = b_c[:, 18]
+    b_c_pH = 10 ** (-1 * (b_c_pH))
+    # Alkalinidad
+    b_c_ALK = b_c[:, 19]
 
     # Condiciones Iniciales
     # TEMPERATURA
@@ -497,6 +552,11 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     i_c_TSS = i_c[:, 16]
     # Solidos sedimentables
     i_c_SS = i_c[:, 17]
+    # pH
+    i_c_pH = i_c[:, 18]
+    i_c_pH = 10 ** (-1 * (i_c_pH))
+    # Alkalinidad
+    i_c_ALK = i_c[:, 19]
 
     mconT = np.empty((nt, np.size(i_c_T, axis=0)))
     mconT[0, :] = i_c_T
@@ -528,6 +588,11 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     mconTSS[0, :] = i_c_TSS
     mconSS = np.empty((nt, np.size(i_c_SS, axis=0)))
     mconSS[0, :] = i_c_SS
+    mconpH = np.empty((nt, np.size(i_c_pH, axis=0)))
+    mconpH[0, :] = i_c_pH
+    mconALK = np.empty((nt, np.size(i_c_ALK, axis=0)))
+    mconALK[0, :] = i_c_ALK
+    
     ST = ST[:, 1:]
     SOD = SOD[:, 1:]
     SDBO = SDBO[:, 1:]
@@ -543,6 +608,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     STC = STC[:, 1:]
     STSS = STSS[:, 1:]
     SSS = SSS[:, 1:]
+    SpH = SpH[:, 1:]
+    SALK = SALK[:, 1:]
 
     for i in range(1, nt):
         muestra = int(i / 3600)
@@ -561,6 +628,9 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         i_c_Pdis[0] = b_c_Pdis[muestra]
         i_c_TSS[0] = b_c_TSS[muestra]
         i_c_SS[0] = b_c_SS[muestra]
+        i_c_pH[0] = b_c_pH[muestra]
+        i_c_ALK[0] = b_c_ALK[muestra]
+        
         S_T = ST[:, muestra]
         S_OD = SOD[:, muestra]
         S_DBO = SDBO[:, muestra]
@@ -576,9 +646,11 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         S_TC = STC[:, muestra]
         S_TSS = STSS[:, muestra]
         S_SS = SSS[:, muestra]
+        S_pH = SpH[:, muestra]
+        S_ALK = SALK[:, muestra]
 
         #  Evolución de la concentración para t + dt
-        T, OD, DBO, NH3, NO2, NO3, DQO, TDS, EC, TC, GyA, Porg, Pdis, TSS, SS, paso_t = calidad_explicito(dx, i_c_T, i_c_OD, i_c_DBO, i_c_NH3, i_c_NO2, i_c_NO3, i_c_DQO, i_c_TDS, i_c_EC, i_c_TC, i_c_GyA, i_c_Porg, i_c_Pdis, i_c_TSS, i_c_SS, va, cd, S_T, S_OD, S_DBO, S_NH3, S_NO2, S_NO3, S_TDS, S_GyA, S_DQO, S_Porg, S_Pdis, S_EC, S_TC, S_TSS, S_SS, variables)
+        T, OD, DBO, NH3, NO2, NO3, DQO, TDS, EC, TC, GyA, Porg, Pdis, TSS, SS, pH, ALK, paso_t = calidad_explicito(dx, i_c_T, i_c_OD, i_c_DBO, i_c_NH3, i_c_NO2, i_c_NO3, i_c_DQO, i_c_TDS, i_c_EC, i_c_TC, i_c_GyA, i_c_Porg, i_c_Pdis, i_c_TSS, i_c_SS, i_c_pH, i_c_ALK, va, cd, S_T, S_OD, S_DBO, S_NH3, S_NO2, S_NO3, S_TDS, S_GyA, S_DQO, S_Porg, S_Pdis, S_EC, S_TC, S_TSS, S_SS, S_pH, S_ALK, variables)
 
         # Se guardan las concentraciones del momento t+dt
         mconT[i, :] = T
@@ -596,6 +668,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         mconPdis[i, :] = Pdis
         mconTSS[i, :] = TSS
         mconSS[i, :] = SS
+        mconpH[i, :] = pH
+        mconALK[i, :] = ALK
 
         # Actualizar condición inicial
         i_c_T = T
@@ -613,6 +687,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         i_c_Pdis = Pdis
         i_c_TSS = TSS
         i_c_SS = SS
+        i_c_pH = pH
+        i_c_ALK = ALK
         paso_de_tiempo = paso_t
 
     mconConduct = kcondt * mconTDS
@@ -636,6 +712,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     save_sheet(book, 'Pdis', mconPdis[0::3600, :])
     save_sheet(book, 'TSS', mconTSS[0::3600, :])
     save_sheet(book, 'SS', mconSS[0::3600, :])
+    save_sheet(book, 'pH', mconSS[0::3600, :])
+    save_sheet(book, 'ALK', mconSS[0::3600, :])
 
     book.save(join(directorio_salida, "Resultados.xls"))
 
@@ -665,6 +743,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         plot(ax[3,1], 'Evalucion Grasas y Aceites en punto final', [x_data, mconGyA[1::3600, -1]])
         plot(ax[3,2], 'Evalucion P org en punto final', [x_data, mconPorg[1::3600, -1]])
         plot(ax[4,0], 'Evalucion P disuelto en punto final', [x_data, mconPdis[1::3600, -1]])
+        plot(ax[4,1], 'Evalucion [H+] en punto final', [x_data, mconpH[1::3600, -1]])
+        plot(ax[4,2], 'Evalucion Alcanilidad en punto final', [x_data, mconALK[1::3600, -1]])
 
         figManager = plt.get_current_fig_manager()
         figManager.window.showMaximized()
@@ -697,6 +777,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         plot(ax2[3,1], 'Evalucion Grasas y Aceites en el espacio', [c_x, GyA])
         plot(ax2[3,2], 'Evalucion P organico en el espacio', [c_x, Porg])
         plot(ax2[4,0], 'Evalucion P disuelto en el espacio', [c_x, Pdis])
+        plot(ax2[4,1], 'Evalucion pH en espacio', [c_x, pH])
+        plot(ax2[4,2], 'Evalucion Alcanilidad en espacio', [c_x, ALK])
 
         figManager = plt.get_current_fig_manager()
         figManager.window.showMaximized()
@@ -730,6 +812,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         save_plot(plt, 'Evalucion Grasas y Aceites en punto final en tiempo', xlabel, ylabel, [x_data, mconGyA[1::3600, -1]], directorio_salida)
         save_plot(plt, 'Evalucion P org en punto final en tiempo', xlabel, ylabel, [x_data, mconPorg[1::3600, -1]], directorio_salida)
         save_plot(plt, 'Evalucion P disuelto en punto final en tiempo', xlabel, ylabel, [x_data, mconPdis[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion [H+] en punto final', xlabel, 'Moles/L de H+', [x_data, mconpH[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion Alcanilidad en punto final', xlabel, 'CaCO3/L', [x_data, mconALK[1::3600, -1]], directorio_salida)
 
         # Gráficas de espacio
         xlabel = 'Distancia(m)'
@@ -749,6 +833,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         save_plot(plt, 'Evalucion Grasas y Aceites en el espacio',xlabel, ylabel, [c_x, GyA], directorio_salida)
         save_plot(plt, 'Evalucion P organico en el espacio',xlabel, ylabel, [c_x, Porg], directorio_salida)
         save_plot(plt, 'Evalucion P disuelto en el espacio',xlabel, ylabel, [c_x, Pdis], directorio_salida)
+        save_plot(plt, 'Evalucion pH en espacio',xlabel, 'Moles/L de H+', [c_x, pH], directorio_salida)
+        save_plot(plt, 'Evalucion Alcanilidad en espacio',xlabel, 'CaCO3', [c_x, ALK], directorio_salida)
 
     print "El proceso ha finalizado."
 
