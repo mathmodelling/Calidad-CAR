@@ -3,13 +3,15 @@
 # Reacciones acopladas
 
 import numpy as np
-import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 
-import xlrd
+import xlrd, xlwt
 
 from util import join
+
+BOLD_FONT_XLWT = xlwt.Style.easyxf('font: bold on;')
+
 
 def read_sheet(workbook, name):
     # Reading water depth sheet
@@ -37,6 +39,20 @@ def save_plot(plt, title, xlabel, ylabel, data, path):
     plt.ylabel(ylabel)
     plt.savefig("%s.png" % join(path, title), dpi=300)
     plt.clf()
+
+def save_sheet(book, name, data):
+    sheet = book.add_sheet(name)
+
+    for i in xrange(1, len(data) + 1):
+        sheet.write(i, 0, i - 1, BOLD_FONT_XLWT)
+    for i in xrange(1, len(data[0]) + 1):
+        sheet.write(0, i, i - 1, BOLD_FONT_XLWT)
+
+    for i in xrange(1, len(data) + 1):
+        for j in xrange(1, len(data[0]) + 1):
+            sheet.write(i, j, data[i -1 , j - 1])
+
+
 
 def read_config_file(config_file, sheet_name_wd='WD', sheet_name_sl='SL', sheet_name_wv='WV', sheet_name_bc='BC',
                      sheet_name_ic='IC', sheet_name_ST='ST', sheet_name_SOD='SOD', sheet_name_SDBO='SDBO', sheet_name_SNH3='SNH3',
@@ -603,41 +619,25 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
 
     print "Guardando datos de salida..."
 
-    xls_save_file = join(directorio_salida, "Resultados.xlsx")
-    xls_writer = pd.ExcelWriter(xls_save_file)
-    df_save = pd.DataFrame(mconT[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="T")
-    df_save = pd.DataFrame(mconOD[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="OD")
-    df_save = pd.DataFrame(mconDBO[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="DBO")
-    df_save = pd.DataFrame(mconNH3[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="NH3")
-    df_save = pd.DataFrame(mconNO2[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="NO2")
-    df_save = pd.DataFrame(mconNO3[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="NO3")
-    df_save = pd.DataFrame(mconDQO[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="DQO")
-    df_save = pd.DataFrame(mconTDS[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="TDS")
-    df_save = pd.DataFrame(mconEC[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="EC")
-    df_save = pd.DataFrame(mconTC[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="TC")
-    df_save = pd.DataFrame(mconGyA[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="GyA")
-    df_save = pd.DataFrame(mconConduct[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="Conduct")
-    df_save = pd.DataFrame(mconPorg[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="Porg")
-    df_save = pd.DataFrame(mconPdis[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="Pdis")
-    df_save = pd.DataFrame(mconTSS[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="TSS")
-    df_save = pd.DataFrame(mconSS[0::3600, :])
-    df_save.to_excel(xls_writer, sheet_name="SS")
-    xls_writer.save()
+    book = xlwt.Workbook()
+    save_sheet(book, 'T', mconT[0::3600, :])
+    save_sheet(book, 'OD', mconOD[0::3600, :])
+    save_sheet(book, 'DBO', mconDBO[0::3600, :])
+    save_sheet(book, 'NH3', mconNH3[0::3600, :])
+    save_sheet(book, 'NO2', mconNO2[0::3600, :])
+    save_sheet(book, 'NO3', mconNO3[0::3600, :])
+    save_sheet(book, 'DQO', mconDQO[0::3600, :])
+    save_sheet(book, 'TDS', mconTDS[0::3600, :])
+    save_sheet(book, 'EC', mconEC[0::3600, :])
+    save_sheet(book, 'TC', mconTC[0::3600, :])
+    save_sheet(book, 'GyA', mconGyA[0::3600, :])
+    save_sheet(book, 'Conduct', mconConduct[0::3600, :])
+    save_sheet(book, 'Porg', mconPorg[0::3600, :])
+    save_sheet(book, 'Pdis', mconPdis[0::3600, :])
+    save_sheet(book, 'TSS', mconTSS[0::3600, :])
+    save_sheet(book, 'SS', mconSS[0::3600, :])
+
+    book.save(join(directorio_salida, "Resultados.xls"))
 
     if show:
 
@@ -753,20 +753,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     print "El proceso ha finalizado."
 
 if __name__ == '__main__':
-    book = xlrd.open_workbook("sample3.xls")
-    print read_sheet(book, 'WD')
+    pass
+    # book = xlrd.open_workbook("sample3.xlsx")
+    # print read_sheet(book, 'WD')
     
-    wb = load_workbook("sample3.xls")
-    sheet = wb.get_sheet_by_name('WD')
-    # Number of written Rows in sheet
-    r = sheet.max_row
-    # Number of written Columns in sheet
-    c = sheet.max_column
-    wd = np.zeros([r - 1, c])
-    # Reading each cell in excel sheet 'BC'
-    for i in xrange(2, r + 1):
-        for j in xrange(1, c + 1):
-            wd[i - 2, j - 1] = float(sheet.cell(row=i, column=j).value)
-
-    print "******************"
-    print wd
