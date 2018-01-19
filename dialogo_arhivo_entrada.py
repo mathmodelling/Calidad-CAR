@@ -52,7 +52,7 @@ class InputFileDialog(QtGui.QDialog, FORM_CLASS):
     def handler(self, title):
         """Maneja el evento de click sobre cualquiera de los botones de cargar archivo, con el fin de abrir un diálogo que le permita al usuario seleccionar el archivo de su sistema de archivos."""
 
-        layerPath = QFileDialog.getSaveFileName(self, u'Crear archivo xlsx', '.', 'Archivo Excel (*.xlsx)')
+        layerPath = QFileDialog.getSaveFileName(self, u'Crear archivo xls', '.', 'Archivo Excel (*.xls)')
         layerInfo = QFileInfo(layerPath)
 
         if layerPath == "" : return
@@ -60,9 +60,9 @@ class InputFileDialog(QtGui.QDialog, FORM_CLASS):
         print layerInfo.fileName()
 
         if len(layerInfo.fileName()) < 6:
-            layerPath += ".xlsx"
-        elif layerInfo.fileName()[-5: ] != ".xlsx":
-            layerPath += ".xlsx"
+            layerPath += ".xls"
+        elif layerInfo.fileName()[-5: ] != ".xls":
+            layerPath += ".xls"
 
         self.lineEditPath.setText(layerPath)
 
@@ -91,7 +91,7 @@ class LoadInputFileDialog(QtGui.QDialog, FORM_CLASS_LOAD_FILE):
         self.lineEditOutput.setText(path)
 
     def handler(self):
-        layerPath = QFileDialog.getOpenFileName(self, u'Abir archivo xlsx', '.', 'Archivo Excel (*.xlsx)')
+        layerPath = QFileDialog.getOpenFileName(self, u'Abir archivo xls', '.', 'Archivo Excel (*.xls)')
         layerInfo = QFileInfo(layerPath)
 
         self.lineEditPath.setText(layerPath)
