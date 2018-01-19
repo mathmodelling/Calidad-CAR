@@ -9,7 +9,7 @@ import xlwt
 
 BOLD_FONT_XLWT = xlwt.Style.easyxf('font: bold on;')
 CONTAMINANTS = ['OD', 'DBO', 'NH4', 'NO2', 'NO3', 'TDS', 'GyA', 'Condt',
-	'DQO', 'Porg', 'Pdis', 'EC', 'TC', 'T', 'PH', 'TSS', 'SS']
+	'DQO', 'Porg', 'Pdis', 'EC', 'TC', 'T', 'TSS', 'SS', 'pH', 'ALK']
 
 def create_sheet_dt(workbook, name, distances, hours, initial_value=None):
 	'''
@@ -241,6 +241,7 @@ def verify_book(workbook):
 
 	# Verificar hojas de Sinks and Sources
 	for contaminante in CONTAMINANTS:
+		# print 'S' + contaminante
 		verify_sheet(workbook.sheet_by_name("S" + contaminante))
 
 	# Obtener el tiempo
