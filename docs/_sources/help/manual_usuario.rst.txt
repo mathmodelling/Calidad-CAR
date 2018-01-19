@@ -7,13 +7,14 @@ Una vez instalado el plugin CalidadCAR, el usuario podrá ver la siguiente barra
 
 .. image:: images/barra_herramientas.png
 
-La cual contiene los siguientes procedimientos que podrá realizar el usuario:
+La cual contiene los siguientes procedimientos que el usuario podrá realizar:
 
 1. `Cargar fondos`_.
-2. `Unir CSV`_.
-3. `Agregar secciones`_.
-4. `Cálcular`_.
-5. `Limpiar`_.
+2. `Crear el archivo de entrada`_.
+3. `Cálcular`_.
+4. `Limpiar`_.
+5. `Configurar Variables`_.
+
 
 *****************
 Cargar fondos
@@ -28,7 +29,7 @@ La cual desplegará el siguiente dialogo en el que el usuario podrá buscar los 
 
 .. image:: images/cargar_fondos_dialogo.png
 
-Una vez seleccionadas todas las capas que el usuario desea cargar, se desplegarán los diálogos correspondientes para solicitar el sistema de coordenadas de cada capa que se va a cargar.
+Una vez seleccionadas todas las capas que el usuario deseé cargar, se desplegarán los diálogos correspondientes para solicitar el sistema de coordenadas de cada una de las capas que se van a cargar.
 
 .. image:: images/cargar_fondo_crs.png
 
@@ -40,67 +41,42 @@ En la siguiente imagen se puede ver el canvas de QGIS una vez el usuario ha real
 
 .. image:: images/capa_zoom.png
 
-**************
-Unir CSV
-**************
+*****************************
+Crear el archivo de entrada
+*****************************
 
-Este procedimiento consiste en cargar un archivo CSV, el cual se unirá con la tabla de atributos de la capa de secciones, la cual tendrá que estar cargada, para que el usuario pueda realizar esta operación.
+Este procedimiento consiste en crear un archivo de Excel (.xls) con una plantilla determinada, en el cuál el usuario podrá ingresar la información necesaria para poder realizar el modelado matemático de la información.
 
 El usuario podrá realizar este procedimiento haciendo click en el icono resaltado en la siguiente imagen:
 
 .. image:: images/accion_agregar_csv.png
 
-En la siguiente imagen se puede ver el dialogo que le pedirá al usuario la información necesaria para cargar el archivo CSV, y para poder unirlo con la capa de secciones.
+En la siguiente imagen se puede ver el dialogo que le pedirá al usuario la información necesaria para generar el archivo de Excel.
 
-.. image:: images/dialogo_unir_csv.png
+.. image:: images/dialogo_cargar_imagen.png
 
-Si el usuario desea realizar la unión de otro archivo CSV con la para de secciones, tendrá que repetir el procedimiento que se acabo de describir.
+.. note:: El dato del tiempo, y la ruta del archivo que se va a crear son los únicos datos requeridos en el diálogo de Crear el archivo de entrada.
 
-***********************
-Agregar secciones
-***********************
+.. note:: Este proceso se puede realizar únicamente si se ha cargado la capa de ejes y la capa de secciones.
 
-Haciendo click sobre el botón subrayado en la siguiente imagen el usuario podrá agregar secciones transversales.
-
-.. image:: images/accion_agregar_seccion.png
-
-Al hacer click sobre el botón de agregar sección se creara una capa de QGIS temporal en la que el usuario podrá dibujar las secciones que deseé, esto le habilitará al usuario el botón de *Añadir cadena circular*, el cual se ve resaltado en la siguiente imagen.
-
-.. image:: images/agregar_seccion_opcion.png
-
-Después de hacer click sobre el click sobre el botón de *Añadir cadena circular* el usuario podrá ubicar los puntos de la cadena, o la sección para dibujarla, como se ve en la siguiente imagen.
-
-.. image:: images/dibujar_seccion.png
-
-En la imagen de arriba se puede ver la sección que se acabó de agregar (La sección con puntos rojos), Apretando el click derecho del mouse se finalizará la operación de agregarle puntos a la sección, y se le desplegará al usuario un diálogo en el cual el podrá ingresar la información relacionada con la sección, como se puede ver en la siguiente imagen.
-
-.. image:: images/informacion_seccion.png
-
-.. note:: Para poder agregar una sección es necesario que el usuario haya cargado previamente la capa de ejes, y la capa de secciones.
-
-.. note:: Es importante que la sección que se va a agregar tenga un punto de intersección con el *eje* de la capa de ejes.
 
 **************
 Cálcular
 **************
 
-Una vez que el usuario ha ingresado la información necesaria de forma correcta, este podrá hacer click en el icono resaltado en la siguiente imagen, para aplicar el modelo matemático sobre la información.
+Una vez el usuario tiene el archivo de Excel con el formato correcto, y con la información, el usuario podrá realizar este proceso haciendo click en el icono resaltado en la siguiente imagen:
 
 .. image:: images/accion_calcular.png
 
-Esta acción desplegará el siguiente diálogo que le pedirá al usuario la siguiente información:
+En este diálogo el usuario tiene que buscar el archivo de Excel que contiene la información, seleccionar la carpeta en la que quiere que se guarden los archivos de salida, y por lo menos una de las dos opciones de salida.
 
-- El nombre de la columna en la que se encuentran los valores de velocidad.
-- El nombre de la columna en la que se encuentran los valores de los puntos de concentración.
-- La gráfica de salida que el usuario desea ver.
+.. image:: images/dialogo_cargar_archivo.png
 
-.. image:: images/dialogo_parametros.png
+Si el usuario quiere obtener información del proceso, podrá abrir el interprete de python haciendo click en el icono que se ve a continuación.
 
-Este es un ejemplo de la gráfica de salida de Concentración con respecto a la distancia.
+.. image:: images/accion_python.png
 
-.. image:: images/salida.png
-
-.. note:: Cuando el manual se refiere a el nombre de la columna de velocidad, o de puntos de concentración se asume que el usuario cargo esta información en un archivo CSV, realizando la operación de Unir CSV
+Una vez terminado el proceso, la salida será de acuerdo a lo que selecciono el usuario. Si selecciono la opción de **Abrir diálogo con las gráficas de salida**, se abrirán dos ventanas con las gráficas correspondientes. Y si selecciono **Exportar gráficas de salida**, estas se guardarán en la carpeta de salida que selecciono el usuario.
 
 **************
 Limpiar
@@ -108,9 +84,22 @@ Limpiar
 
 Al hacer click en el botón resaltado en la siguiente imagen el usuario limpiara el espacio de trabajo, cerrando las capas cargadas, en caso que deseé realizar el mismo proceso con capas diferentes.
 
-.. image:: images/accion_recargar.png
+.. image:: images/accion_limpiar.png
 
-.. note:: El usuario puede descargar archivos de prueba del siguiente enlace_. para probar el plugin. En este vídeo_. se puede ver el funcionamiento del plugin con esta información de prueba.
+***********************
+Configurar Variables
+***********************
+
+Haciendo click en el icono que se ve en la siguiente imagén el usuario podrá cambiar el valor de algunas de las variables necesarias para aplicar el modélo matemático.
+
+.. image:: images/accion_vars.png
+
+Valores iniciales de todas las variables:
+
+.. image:: images/dialogo_conf_vars.png
+
+
+.. note:: El plugin CalidadCAR viene con valores por defecto para todas las variables, y una vez el usuario cambie alguno de estos valores quedará guardado para futuros usos.
 
 .. _enlace: https://drive.google.com/file/d/0B-rl9rYMVpHpaUh6X1FfLThxYkU/view?usp=sharing
 .. _vídeo: https://www.youtube.com/watch?v=5JpgidErg-E

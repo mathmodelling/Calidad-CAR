@@ -398,6 +398,63 @@ de la interfaz de QGIS.</p>
 </dd></dl>
 
 <dl class="class">
+<dt id="src.actions.CreateInputFileAction">
+<em class="property">class </em><code class="descclassname">src.actions.</code><code class="descname">CreateInputFileAction</code><a class="reference internal" href="../_modules/src/actions.html#CreateInputFileAction"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.CreateInputFileAction" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Esta acción se encarga de la lógica necesaria para poder crear el archivo de entrada.</p>
+<dl class="method">
+<dt id="src.actions.CreateInputFileAction.pos">
+<code class="descname">pos</code><span class="sig-paren">(</span><em>path</em>, <em>dis</em>, <em>time</em>, <em>wd</em>, <em>sl</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#CreateInputFileAction.pos"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.CreateInputFileAction.pos" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Recibe la información del diálogo, y crea el archivo de entrada.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> (<em>str</em>) – Ruta del archivo que se va a crear.</li>
+<li><strong>dis</strong> (<em>list</em>) – Lista con las distancias de los puntos de intersección.</li>
+<li><strong>time</strong> (<em>int</em>) – Tiempo del cálculo.</li>
+<li><strong>wd</strong> – Promedio de la profundidad del agua.</li>
+<li><strong>sl</strong> (<em>Decimal</em>) – Pendiente</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Devuelve:</th><td class="field-body"><p class="first">Booleano que indica si el proceso culmino con exito.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
+<tr class="field-odd field"><td>&#160;</td><td class="field-body"><p class="first last">bool</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.CreateInputFileAction.pre">
+<code class="descname">pre</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#CreateInputFileAction.pre"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.CreateInputFileAction.pre" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Verifica que las capas necesarias para realizar esta acción estan cargadas.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Devuelve:</th><td class="field-body">Un booleano que indica si se cumple o no la condición.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Tipo del valor devuelto:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.actions.CreateInputFileAction.pro">
+<code class="descname">pro</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/actions.html#CreateInputFileAction.pro"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.CreateInputFileAction.pro" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Cálcula las distancias entre los puntos de intersección de la capa de ejes, y la capa de secciones.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="src.actions.LayerAction">
 <em class="property">class </em><code class="descclassname">src.actions.</code><code class="descname">LayerAction</code><a class="reference internal" href="../_modules/src/actions.html#LayerAction"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#src.actions.LayerAction" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Esta clase representa la acción encargada de cargar las capas necesarias.</p>
@@ -812,6 +869,24 @@ describir.</td>
 </dd></dl>
 
 <dl class="function">
+<dt id="util.infoDialog">
+<code class="descclassname">util.</code><code class="descname">infoDialog</code><span class="sig-paren">(</span><em>self</em>, <em>title</em>, <em>text</em>, <em>detail</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/util.html#infoDialog"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#util.infoDialog" title="Enlazar permanentemente con esta definición">¶</a></dt>
+<dd><p>Dialogo de información.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parámetros:</th><td class="field-body"><ul class="first last simple">
+<li><strong>text</strong> (<em>str</em>) – Identificador principal del mensaje.</li>
+<li><strong>name</strong> (<em>str</em>) – Información detallada del mensaje.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="util.questionDialog">
 <code class="descclassname">util.</code><code class="descname">questionDialog</code><span class="sig-paren">(</span><em>self</em>, <em>title</em>, <em>detail</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/util.html#questionDialog"><span class="viewcode-link">[fuente]</span></a><a class="headerlink" href="#util.questionDialog" title="Enlazar permanentemente con esta definición">¶</a></dt>
 <dd><p>Este díalogo le hace una pregunta de Si/No al usuario.</p>
@@ -1150,7 +1225,7 @@ CSV.</p>
       &copy;2017, David Castelblanco.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.6</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
