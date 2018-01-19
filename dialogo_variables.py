@@ -14,7 +14,9 @@ siglas = ['D', 'Da', 'ko2', 'cs', 'knh3', 'ksnh3', 'alfa_nh3',
     'kDQO', 'kTDS', 'A', 'alfa_1', 'miu', 'F', 'kTC', 'teta_TC',
     'kEC', 'teta_EC', 'Jdbw', 'qtex', 'kN', 'kH', 'H', 'kOH', 'OH',
     'fdw', 'kf', 'kb', 'kv', 'Cg', 'Henry', 'R', 'T', 'alfa_2', 'resp',
-    'kPorg', 'kPsed', 'sigma2', 'Ws', 'Rs', 'Rp', 'k', 'den', 'Cp']
+    'kPorg', 'kPsed', 'sigma2', 'Ws', 'Rs', 'Rp', 'k', 'den', 'Cp', 
+    'teta_DBO', 'teta_NH3', 'teta_NO2', 'teta_DQO', 'teta_NT', 'teta_NO3', 'Kw', 'K1', 'K2',
+    'Vv', 'As', 'CO2S', 'Wrp', 'FrH', 'Diff']
 
 class VarsDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent = None):
@@ -34,7 +36,11 @@ class VarsDialog(QtGui.QDialog, FORM_CLASS):
             'kb': self.kb, 'kv': self.kv, 'Cg': self.Cg, 'Henry': self.Henry, 
             'R': self.R, 'T': self.T, 'alfa_2': self.alfa_2, 'resp': self.resp,
             'kPorg': self.kPorg, 'kPsed': self.kPsed, 'sigma2': self.sigma2, 'Ws': self.Ws, 
-            'Rs': self.Rs, 'Rp': self.Rp, 'k': self.k, 'den': self.den, 'Cp': self.Cp}
+            'Rs': self.Rs, 'Rp': self.Rp, 'k': self.k, 'den': self.den, 'Cp': self.Cp,
+            'teta_DBO': self.teta_DBO, 'teta_NH3': self.teta_NH3, 'teta_NO2': self.teta_NO2, 
+            'teta_DQO': self.teta_DQO, 'teta_NT': self.teta_NT, 'teta_NO3': self.teta_NO3, 
+            'Kw': self.Kw, 'K1': self.K1, 'K2': self.K2, 'Vv': self.Vv, 'As': self.As, 
+            'CO2S': self.CO2S, 'Wrp': self.Wrp, 'FrH': self.FrH, 'Diff': self.Diff}
         
         # Agregar validador
         validator = QtGui.QDoubleValidator()
