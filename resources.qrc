@@ -11,5 +11,6 @@
         <file>icons/concentration-icon.png</file>
         <file>icons/logo.png</file>
         <file>icons/info.png</file>
+        <file>icons/vars-icon.png</file>
     </qresource>
 </RCC>

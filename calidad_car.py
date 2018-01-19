@@ -228,7 +228,7 @@ class CalidadCAR:
             callback=self.clean,
             parent=self.iface.mainWindow())        
 
-        icon_path = ':/plugins/CalidadCAR/icons/icon.png'
+        icon_path = ':/plugins/CalidadCAR/icons/vars-icon.png'
         self.intersctionAction = self.add_action(
             icon_path,
             text=self.tr(u'Configurar Variables'),
