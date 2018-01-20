@@ -29,6 +29,8 @@ def read_sheet(workbook, name):
     return answ
 
 def plot(ax, name, data):
+    ax.tick_params(labelsize=6)
+    ax.yaxis.get_offset_text().set_fontsize(6)
     ax.plot(data[0], data[1])
     ax.set_title(name, fontsize=8)
 
@@ -719,7 +721,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
 
     if show:
 
-        print u"Creando Gráficas"
+        print u"Creando Graficas"
 
         #Graficas en el tiempo
         xlabel = 'Tiempo(s)'
@@ -785,13 +787,14 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         plt.subplots_adjust(hspace=0.5)
         plt.grid(False)
         plt.tick_params(labelcolor='none', top='off', bottom='off', left='off', right='off')
+        plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0), useOffset=True)
         plt.xlabel(xlabel, fontsize=15)
         plt.ylabel(ylabel, fontsize=15)
         fig2.show()
 
     if export:
 
-        print u"Guardando Gráficas..."
+        print u"Guardando Graficas..."
 
         xlabel = 'Tiempo(s)'
         ylabel = 'Concentracion (mg/L)'
