@@ -312,7 +312,10 @@ class ConcentrationPointsAction(BaseAction):
         return polygon.contains(point)
 
 class CreateInputFileAction(BaseAction):
-    """Esta acción se encarga de la lógica necesaria para poder crear el archivo de entrada."""
+    """
+    Esta acción se encarga de la lógica necesaria para poder crear el archivo de entrada.
+
+    """
     def __init__(self):
         self.eje = None
         self.secciones = None
@@ -355,7 +358,7 @@ class CreateInputFileAction(BaseAction):
             :type ws: Decimal
 
             :param sl: Pendiente
-            type sl: Decimal
+            :type sl: Decimal
 
             :returns: Booleano que indica si el proceso culmino con exito.
             :rtype: bool
