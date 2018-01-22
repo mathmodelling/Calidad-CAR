@@ -59,9 +59,9 @@ class InputFileDialog(QtGui.QDialog, FORM_CLASS):
         
         print layerInfo.fileName()
 
-        if len(layerInfo.fileName()) < 6:
+        if len(layerInfo.fileName()) < 5:
             layerPath += ".xls"
-        elif layerInfo.fileName()[-5: ] != ".xls":
+        elif layerInfo.fileName()[-4: ] != ".xls":
             layerPath += ".xls"
 
         self.lineEditPath.setText(layerPath)
