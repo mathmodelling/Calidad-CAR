@@ -10,9 +10,9 @@
 name=Calidad-CAR
 qgisMinimumVersion=2.0
 description=Calidad-CAR is a tool for mathematical modelling of water quality in rivers.
-version=0.10
-author=Efrain Domínguez, David Castelblanco
-email=edoc@mathmodelling.org, cbdavides@gmail.com
+version=0.11
+author=Efrain Domínguez, David Castelblanco, Willy Marimón Bolivar
+email=edoc@mathmodelling.org, cbdavides@gmail.com, willy_ingeniero@hotmail.com
 
 about=Calidad-CAR is a tool for mathematical modelling of water quality in rivers. This tool assumes user all ready has the results of water movement modelling with the Hec-Ras modelling system. Calidad-CAR does not require additional modules other than python modules already installed within QGIS.
 
