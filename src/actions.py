@@ -334,11 +334,12 @@ class CreateInputFileAction(BaseAction):
     def pro(self):
         """Cálcula las distancias entre los puntos de intersección de la capa de ejes, y la capa de secciones."""
         points = geometry.intersectionPoints(self.eje, self.secciones)
-        distances = []
-        for i in xrange(len(points)):
+        distances = [0]
+        for i in xrange(1, len(points)):
             #Precisión de 4 digitos, para evitar problemas con matplotlib
-            dist = geometry.distance(points[0], points[i])
+            dist = geometry.distance(points[i], points[i - 1]) + distances[i - 1]
             distances.append(float(format(dist, '.4f')))
+
         return distances
 
     def pos(self, path, dis, time, wd, sl):
