@@ -71,7 +71,7 @@ def create_sheet_td(workbook, name, distances, hours, initial_value=None):
 
 	'''
 	sheet = workbook.add_sheet(name)
-	sheet.write(0, 0, 'L', BOLD_FONT_XLWT)
+	sheet.write(0, 0, 'T', BOLD_FONT_XLWT)
 
 	# Crear fila de distancias
 	for i in xrange(len(distances)):
@@ -143,7 +143,7 @@ def create_sheet_tc(workbook, name, hours, initial_value=None):
 
 	'''
 	sheet = workbook.add_sheet(name)
-	sheet.write(0, 0, 'L', BOLD_FONT_XLWT)
+	sheet.write(0, 0, 'T', BOLD_FONT_XLWT)
 
 	# Crear la fila del tiempo
 	for i in xrange(0,  hours + 1):
@@ -214,10 +214,9 @@ class Error(Exception):
 
 def verify_sheet(sheet):
 	"""Verifica que una hoja de cálculo no tenga celdas vacias."""
-	rows = sheet.nrows
-	cols = sheet.ncols
+	rows, cols = sheet.nrows, sheet.ncols
 
-	for i in xrange(1, rows ):
+	for i in xrange(1, rows):
 		for j in xrange(1, cols):
 
 			try:
