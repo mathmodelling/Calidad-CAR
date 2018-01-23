@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 import xlrd, xlwt
 
-from util import join
+from util import join, used_vars
 
 BOLD_FONT_XLWT = xlwt.Style.easyxf('font: bold on;')
 
@@ -717,6 +717,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     save_sheet(book, 'pH', mconSS[0::3600, :])
     save_sheet(book, 'ALK', mconSS[0::3600, :])
 
+    used_vars(book, variables)
     book.save(join(directorio_salida, "Resultados.xls"))
 
     if show:
