@@ -11,6 +11,53 @@ BOLD_FONT_XLWT = xlwt.Style.easyxf('font: bold on;')
 CONTAMINANTS = ['OD', 'DBO', 'NH4', 'NO2', 'NO3', 'TDS', 'GyA', 'Condt',
 	'DQO', 'Porg', 'Pdis', 'EC', 'TC', 'T', 'TSS', 'SS', 'pH', 'ALK']
 
+CONTAMINANTS_UNITS = [' ', ' ', ' ',' ', ' ', ' ', ' ' ,' ' ,' ',
+	' ', ' ', ' ',' ', ' ', ' ', ' ' ,' ' ,' ']
+
+def create_description_sheet(workbook):
+	'''
+		Crear hoja de descripción:
+	'''
+
+	sheet = workbook.add_sheet(u'Descripción')
+
+	sheet.col(0).width = 256*20
+	sheet.col(1).width = 256*20
+	sheet.col(2).width = 256*100
+
+	sheet.write(0, 0, 'Nombre de la hoja', BOLD_FONT_XLWT)
+	sheet.write(0, 1, 'Unidad de los datos', BOLD_FONT_XLWT)
+	sheet.write(0, 2, u'Descripción de la hoja', BOLD_FONT_XLWT)
+
+	# Hoja WD
+	sheet.write(1, 0, 'WD')
+	sheet.write(1, 1, 'metros (m)')
+	sheet.write(1, 2, 'Valor de profundidad del agua (Water Depth)')	
+	# Hoja SL
+	sheet.write(2, 0, 'SL')
+	sheet.write(2, 1, '  ')
+	sheet.write(2, 2, 'Valor de la pendiente (Slope)')	
+	# Hoja WV
+	sheet.write(3, 0, 'WV')
+	sheet.write(3, 1, '  ')
+	sheet.write(3, 2, 'Valor de la velocidad del agua (Water Velocity)')	
+	# Hoja BC
+	sheet.write(4, 0, 'BC')
+	sheet.write(4, 1, '  ')
+	sheet.write(4, 2, 'Valores de la Condicion de Frontera (Boundary Conditions)')	
+	# Hoja IC
+	sheet.write(5, 0, 'IC')
+	sheet.write(5, 1, '  ')
+	sheet.write(5, 2, 'Valores de la Condicion Inicial (Initial Conditions)')	
+
+	cont = 6
+	# Hojas de Sinks and Sources
+	for i in range(len(CONTAMINANTS)):
+		sheet.write(cont, 0, 'S'+CONTAMINANTS[i])
+		sheet.write(cont, 1, CONTAMINANTS_UNITS[i])
+		sheet.write(cont, 2, 'Valores de fuentes y sumideros ' + CONTAMINANTS[i])
+		cont += 1
+
 def create_sheet_dt(workbook, name, distances, hours, initial_value=None):
 	'''
 		Crea una hoja en el libro de excel distancia / tiempo.
@@ -198,7 +245,9 @@ def create_book(path, distances, hours, wd=None, sl=None):
 	for contaminante in CONTAMINANTS:
 		create_sheet_dt(book, 'S'+contaminante, distances, hours, 0.0)
 
+	create_description_sheet(book)
 	book.save(path)
+
 	return book
 
 class Error(Exception):
