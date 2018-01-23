@@ -380,13 +380,6 @@ class CalidadCAR:
                 u'Por favor selecciona la carpeta de salida.')
             return
 
-        if not dialog.getShowPlots() and not dialog.getSavePlots():
-            util.errorDialog(
-                self, 
-                u'No se selecciono ninguna opción de salida.', 
-                u'Es necesario seleccionar al menos una opción.')
-            return
-
         variables = VarsDialog.leerVariables()
         for k, v in variables.iteritems():
             variables[k] = float(v)
