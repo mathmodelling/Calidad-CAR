@@ -6,8 +6,11 @@ from PyQt4 import QtGui, uic
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'ui', 'dialogo_variables_base.ui'))
 
-RUTA_ARCHIVO_CONTAMINANTES = os.path.join(
-    os.path.dirname(__file__), 'contaminantes.txt')
+RUTA_ARCHIVO_VARIABLES = os.path.join(
+    os.path.dirname(__file__), 'data', 'variables.txt')
+
+RUTA_ARCHIVO_VARIABLES_LOCK = os.path.join(
+    os.path.dirname(__file__), 'data', 'variables.lock.txt')
 
 siglas = ['D', 'Da', 'ko2', 'cs', 'knh3', 'ksnh3', 'alfa_nh3',
 	'kdbo', 'ks', 'alfa_no2', 'ksod', 'knt', 'NT', 'kno2', 'kno3',
@@ -15,8 +18,8 @@ siglas = ['D', 'Da', 'ko2', 'cs', 'knh3', 'ksnh3', 'alfa_nh3',
     'kEC', 'teta_EC', 'Jdbw', 'qtex', 'kN', 'kH', 'H', 'kOH', 'OH',
     'fdw', 'kf', 'kb', 'kv', 'Cg', 'Henry', 'R', 'T', 'alfa_2', 'resp',
     'kPorg', 'kPsed', 'sigma2', 'Ws', 'Rs', 'Rp', 'k', 'den', 'Cp', 
-    'teta_DBO', 'teta_NH3', 'teta_NO2', 'teta_DQO', 'teta_NT', 'teta_NO3', 'Kw', 'K1', 'K2',
-    'Vv', 'As', 'CO2S', 'Wrp', 'FrH', 'Diff']
+    'teta_DBO', 'teta_NH3', 'teta_NO2', 'teta_DQO', 'teta_NT', 'teta_NO3', 
+    'Kw', 'K1', 'K2', 'Vv', 'As', 'CO2S', 'Wrp', 'FrH', 'Diff']
 
 class VarsDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent = None):
@@ -52,6 +55,20 @@ class VarsDialog(QtGui.QDialog, FORM_CLASS):
         for k, v in valores_iniciales.iteritems():
             self.dic[k].setText(v)
 
+        self.pushButtonRestablecer.clicked.connect(self.reset)
+
+    def reset(self):
+        values = {}
+        with open(RUTA_ARCHIVO_VARIABLES_LOCK, 'r') as file:
+            for line in file:
+                k, v = line.split()
+                values[k] = v
+
+        with open(RUTA_ARCHIVO_VARIABLES, 'w') as file:
+            for k, v in values.iteritems():
+                file.write("%s %s\n" % (k, str(v)))
+                self.dic[k].setText(v)
+
     def getContaminantes(self):
         '''
             Retorna el diccionario con todos los
@@ -72,7 +89,7 @@ class VarsDialog(QtGui.QDialog, FORM_CLASS):
             y el valor, en formato string.
         '''
         values = {}
-        with open(RUTA_ARCHIVO_CONTAMINANTES, 'r') as file:
+        with open(RUTA_ARCHIVO_VARIABLES, 'r') as file:
             for line in file:
                 k, v = line.split()
                 values[k] = v
@@ -93,6 +110,6 @@ class VarsDialog(QtGui.QDialog, FORM_CLASS):
 
         if not cond: return 
 
-        with open(RUTA_ARCHIVO_CONTAMINANTES, 'w') as file:
+        with open(RUTA_ARCHIVO_VARIABLES, 'w') as file:
             for k, v in cont.iteritems():
                 file.write("%s %s\n" % (k, str(v)))

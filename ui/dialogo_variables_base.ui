@@ -16,9 +16,9 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>1070</x>
+     <x>1170</x>
      <y>580</y>
-     <width>238</width>
+     <width>151</width>
      <height>28</height>
     </rect>
    </property>
@@ -2697,6 +2697,19 @@
     </rect>
    </property>
   </widget>
+  <widget class="QPushButton" name="pushButtonRestablecer">
+   <property name="geometry">
+    <rect>
+     <x>1080</x>
+     <y>580</y>
+     <width>81</width>
+     <height>28</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Restablecer</string>
+   </property>
+  </widget>
   <zorder>label</zorder>
   <zorder>D</zorder>
   <zorder>label_2</zorder>
@@ -2915,6 +2928,7 @@
   <zorder>label_146</zorder>
   <zorder>label_147</zorder>
   <zorder>teta_NO3</zorder>
+  <zorder>pushButtonRestablecer</zorder>
  </widget>
  <resources/>
  <connections>
