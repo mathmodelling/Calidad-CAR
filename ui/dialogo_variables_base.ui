@@ -29,7 +29,7 @@
      <widget class="QWidget" name="scrollAreaWidgetContents">
       <property name="geometry">
        <rect>
-        <x>-1133</x>
+        <x>0</x>
         <y>0</y>
         <width>1732</width>
         <height>628</height>
@@ -291,7 +291,7 @@
               </size>
              </property>
              <property name="text">
-              <string>-</string>
+              <string/>
              </property>
             </widget>
            </item>
