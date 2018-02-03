@@ -44,7 +44,7 @@ import numpy as np
 import datetime as dtm
 
 from dialogo_csv import CSVDialog
-from src.spreadsheets import Error
+from src.spreadsheets import Error, ErrorRow
 from src.modelling import calidad_car
 from src import layer_manager as manager
 from dialogo_variables import VarsDialog
@@ -393,6 +393,13 @@ class CalidadCAR:
                 u'Se encontró un valor que no es númerico',
                 u'Hoja: %s\nCelda: [%d, %d]' % (e.name, e.r, e.c))
             return
+        except ErrorRow as e:
+            util.errorDialog(
+                self,
+                u'La hoja %s no puede contener el valor %d en la fila %d' % (e.name, e.v, e.r),
+                u'')
+            return
+
 
         print "Se inicio el proceso..."
         action.pro(output_path, variables, dialog.getShowPlots(), dialog.getSavePlots())
