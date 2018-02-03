@@ -6,2716 +6,1720 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1339</width>
-    <height>625</height>
+    <width>603</width>
+    <height>703</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Configurar Variables</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
-   <property name="geometry">
-    <rect>
-     <x>1170</x>
-     <y>580</y>
-     <width>151</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>90</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Da:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="Da">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>90</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>90</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_9">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>210</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>knh3:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="knh3">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>210</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_10">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>210</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_11">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>250</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>ksnh3:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="ksnh3">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>250</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_12">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>250</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="alfa_no2">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>410</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="alfa_nh3">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>290</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_13">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>490</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>knt:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_14">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>330</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kdbo:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="ksod">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>450</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="knt">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>490</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_15">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>330</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_16">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>370</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>ks:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_17">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>370</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_18">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>450</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_19">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>290</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>alfa_nh3:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_20">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>450</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>ksod:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_21">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>410</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_22">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>490</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="ks">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>370</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_23">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>290</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kdbo">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>330</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_24">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>410</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>alfa_no2:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_25">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>130</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_26">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>130</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>ko2:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="ko2">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>130</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_27">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>170</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_28">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>170</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>cs:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="cs">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>170</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="NT">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>530</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_32">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>570</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_33">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>530</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_34">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>530</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>NT:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_35">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>570</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kno2</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kno2">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>570</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_36">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>330</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kDQO">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>90</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kEC">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>410</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_37">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>530</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_38">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>210</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="teta_EC">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>450</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="teta_TC">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>370</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="qtex">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>530</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="F">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>290</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_39">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>290</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>F:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="Jdbw">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>490</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_40">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>130</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kTDS:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_41">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>170</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>A:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_42">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>130</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kN">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>570</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_43">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>570</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="miu">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>250</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>50</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kno3:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_44">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>410</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_45">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>370</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kno3">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>50</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>90</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kDQO:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_49">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>250</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_50">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>530</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>qtex:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_51">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>490</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="A">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>170</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_7">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>90</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_8">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>50</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_52">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>450</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>teta_EC:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_53">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>450</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_54">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>250</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>miu:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_55">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>330</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kTC:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kTDS">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>130</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_56">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>410</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kEC:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="alfa_1">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>210</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_57">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>170</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_58">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>290</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kTC">
-   <property name="geometry">
-    <rect>
-     <x>350</x>
-     <y>330</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_59">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>570</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kN:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_60">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>490</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Jdbw:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_61">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>370</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>teta_TC:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_62">
-   <property name="geometry">
-    <rect>
-     <x>280</x>
-     <y>210</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>alfa_1:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_63">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>330</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="H">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>90</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="Henry">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>410</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_64">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>530</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_65">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>210</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="R">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>450</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="Cg">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>370</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="alfa_2">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>530</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kb">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>290</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_66">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>290</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kb:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="T">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>490</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_67">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>130</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kOH:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_68">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>170</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>OH:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_69">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>130</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="resp">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>570</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_70">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>570</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kf">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>250</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_71">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>50</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kH:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_72">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>410</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_73">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>370</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kH">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>50</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_74">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>90</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>H;</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_75">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>250</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_76">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>530</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>alfa_2:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_80">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>490</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="OH">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>170</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_81">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>90</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_82">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>50</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_83">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>450</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>R:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_84">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>450</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_85">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>250</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kf:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_86">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>330</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kv:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kOH">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>130</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_87">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>410</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Henry</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="fdw">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>210</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_88">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>170</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_89">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>290</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kv">
-   <property name="geometry">
-    <rect>
-     <x>610</x>
-     <y>330</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_90">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>570</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>resp:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_91">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>490</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>T:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_92">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>370</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Cg:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_93">
-   <property name="geometry">
-    <rect>
-     <x>540</x>
-     <y>210</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>fdw:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_94">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>170</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Ws:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_95">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>170</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="sigma2">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>130</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kPsed">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>90</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="Rp">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>250</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="kPorg">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>50</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_96">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>90</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kPsed;</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_97">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>130</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>sigma2:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_98">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>50</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="Rs">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>210</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_99">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>210</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Rs:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_100">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>250</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Rp:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_101">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>50</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>kPorg:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_102">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>210</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="Ws">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>170</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_103">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>90</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_104">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>250</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_105">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>130</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="Line" name="line">
-   <property name="geometry">
-    <rect>
-     <x>250</x>
-     <y>40</y>
-     <width>20</width>
-     <height>561</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Vertical</enum>
-   </property>
-  </widget>
-  <widget class="Line" name="line_2">
-   <property name="geometry">
-    <rect>
-     <x>510</x>
-     <y>40</y>
-     <width>20</width>
-     <height>561</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Vertical</enum>
-   </property>
-  </widget>
-  <widget class="Line" name="line_3">
-   <property name="geometry">
-    <rect>
-     <x>770</x>
-     <y>40</y>
-     <width>20</width>
-     <height>561</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Vertical</enum>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>50</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>D:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="D">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>50</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_2">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>50</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_30">
-   <property name="geometry">
-    <rect>
-     <x>21</x>
-     <y>20</y>
-     <width>55</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>Variable</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_29">
-   <property name="geometry">
-    <rect>
-     <x>96</x>
-     <y>20</y>
-     <width>52</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>    Valor</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_31">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>20</y>
-     <width>60</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>Intervalo</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_46">
-   <property name="geometry">
-    <rect>
-     <x>281</x>
-     <y>20</y>
-     <width>55</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>Variable</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_47">
-   <property name="geometry">
-    <rect>
-     <x>370</x>
-     <y>20</y>
-     <width>52</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>Valor</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_48">
-   <property name="geometry">
-    <rect>
-     <x>440</x>
-     <y>20</y>
-     <width>60</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>Intervalo</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_77">
-   <property name="geometry">
-    <rect>
-     <x>547</x>
-     <y>20</y>
-     <width>55</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>Variable</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_78">
-   <property name="geometry">
-    <rect>
-     <x>620</x>
-     <y>20</y>
-     <width>52</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>    Valor</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_79">
-   <property name="geometry">
-    <rect>
-     <x>700</x>
-     <y>20</y>
-     <width>60</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>Intervalo</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_108">
-   <property name="geometry">
-    <rect>
-     <x>805</x>
-     <y>20</y>
-     <width>55</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>Variable</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_110">
-   <property name="geometry">
-    <rect>
-     <x>955</x>
-     <y>20</y>
-     <width>60</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>Intervalo</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_109">
-   <property name="geometry">
-    <rect>
-     <x>880</x>
-     <y>20</y>
-     <width>52</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>Valor</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_106">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>290</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="k">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>290</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_107">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>290</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>k:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_111">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>330</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="den">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>330</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_112">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>330</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>den:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_113">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>370</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="Cp">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>370</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_114">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>370</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Cp:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_115">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>410</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Kw:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_116">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>410</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="Kw">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>410</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_117">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>450</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>K1:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="K1">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>450</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_118">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>450</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="K2">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>490</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_119">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>490</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>K2:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_120">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>490</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_121">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>530</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_122">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>530</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Vv:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="Vv">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>530</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="Line" name="line_4">
-   <property name="geometry">
-    <rect>
-     <x>1050</x>
-     <y>40</y>
-     <width>20</width>
-     <height>561</height>
-    </rect>
-   </property>
-   <property name="orientation">
-    <enum>Qt::Vertical</enum>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_123">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>570</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="As">
-   <property name="geometry">
-    <rect>
-     <x>870</x>
-     <y>570</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_124">
-   <property name="geometry">
-    <rect>
-     <x>800</x>
-     <y>570</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>As:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_125">
-   <property name="geometry">
-    <rect>
-     <x>1165</x>
-     <y>20</y>
-     <width>52</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>Valor</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_126">
-   <property name="geometry">
-    <rect>
-     <x>1240</x>
-     <y>20</y>
-     <width>60</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>Intervalo</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_127">
-   <property name="geometry">
-    <rect>
-     <x>1090</x>
-     <y>20</y>
-     <width>55</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">font: bold;</string>
-   </property>
-   <property name="text">
-    <string>Variable</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_128">
-   <property name="geometry">
-    <rect>
-     <x>1240</x>
-     <y>50</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="CO2S">
-   <property name="geometry">
-    <rect>
-     <x>1160</x>
-     <y>50</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_129">
-   <property name="geometry">
-    <rect>
-     <x>1080</x>
-     <y>50</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>CO2S:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="Wrp">
-   <property name="geometry">
-    <rect>
-     <x>1160</x>
-     <y>90</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_130">
-   <property name="geometry">
-    <rect>
-     <x>1080</x>
-     <y>90</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Wrp:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_131">
-   <property name="geometry">
-    <rect>
-     <x>1240</x>
-     <y>90</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="FrH">
-   <property name="geometry">
-    <rect>
-     <x>1160</x>
-     <y>130</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_132">
-   <property name="geometry">
-    <rect>
-     <x>1080</x>
-     <y>130</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>FrH:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_133">
-   <property name="geometry">
-    <rect>
-     <x>1240</x>
-     <y>130</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_134">
-   <property name="geometry">
-    <rect>
-     <x>1080</x>
-     <y>170</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Diff:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="Diff">
-   <property name="geometry">
-    <rect>
-     <x>1160</x>
-     <y>170</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_135">
-   <property name="geometry">
-    <rect>
-     <x>1240</x>
-     <y>170</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_136">
-   <property name="geometry">
-    <rect>
-     <x>1080</x>
-     <y>210</y>
-     <width>71</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>teta_DBO:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_137">
-   <property name="geometry">
-    <rect>
-     <x>1240</x>
-     <y>210</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="teta_DBO">
-   <property name="geometry">
-    <rect>
-     <x>1160</x>
-     <y>210</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_138">
-   <property name="geometry">
-    <rect>
-     <x>1080</x>
-     <y>250</y>
-     <width>71</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>teta_NH3:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_139">
-   <property name="geometry">
-    <rect>
-     <x>1240</x>
-     <y>250</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="teta_NO2">
-   <property name="geometry">
-    <rect>
-     <x>1160</x>
-     <y>290</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="teta_NH3">
-   <property name="geometry">
-    <rect>
-     <x>1160</x>
-     <y>250</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_140">
-   <property name="geometry">
-    <rect>
-     <x>1080</x>
-     <y>290</y>
-     <width>71</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>teta_NO2:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_141">
-   <property name="geometry">
-    <rect>
-     <x>1240</x>
-     <y>290</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="fu">
-   <property name="geometry">
-    <rect>
-     <x>1080</x>
-     <y>330</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>teta_DQO:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_143">
-   <property name="geometry">
-    <rect>
-     <x>1240</x>
-     <y>330</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="teta_NT">
-   <property name="geometry">
-    <rect>
-     <x>1160</x>
-     <y>370</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="teta_DQO">
-   <property name="geometry">
-    <rect>
-     <x>1160</x>
-     <y>330</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_144">
-   <property name="geometry">
-    <rect>
-     <x>1080</x>
-     <y>370</y>
-     <width>71</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>teta_NT:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_145">
-   <property name="geometry">
-    <rect>
-     <x>1240</x>
-     <y>370</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_146">
-   <property name="geometry">
-    <rect>
-     <x>1240</x>
-     <y>410</y>
-     <width>62</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string/>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_147">
-   <property name="geometry">
-    <rect>
-     <x>1080</x>
-     <y>410</y>
-     <width>71</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>teta_NO3:</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="teta_NO3">
-   <property name="geometry">
-    <rect>
-     <x>1160</x>
-     <y>410</y>
-     <width>81</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButtonRestablecer">
-   <property name="geometry">
-    <rect>
-     <x>1080</x>
-     <y>580</y>
-     <width>81</width>
-     <height>28</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Restablecer</string>
-   </property>
-  </widget>
-  <zorder>label</zorder>
-  <zorder>D</zorder>
-  <zorder>label_2</zorder>
-  <zorder>label_30</zorder>
-  <zorder>label_29</zorder>
-  <zorder>label_31</zorder>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="Line" name="line">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>-1133</x>
+        <y>0</y>
+        <width>1732</width>
+        <height>628</height>
+       </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>false</bool>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="spacing">
+          <number>10</number>
+         </property>
+         <item>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="6" column="2">
+            <widget class="QLabel" name="label_12">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_28">
+             <property name="text">
+              <string>cs:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QLabel" name="label_25">
+             <property name="text">
+              <string>1/s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLineEdit" name="ks"/>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_11">
+             <property name="text">
+              <string>ksnh3:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="Da"/>
+           </item>
+           <item row="12" column="2">
+            <widget class="QLabel" name="label_22">
+             <property name="text">
+              <string>1/día</string>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="1">
+            <widget class="QLineEdit" name="kno2"/>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_14">
+             <property name="text">
+              <string>kdbo:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="knh3"/>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="label_24">
+             <property name="text">
+              <string>alfa_no2:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Da:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_26">
+             <property name="text">
+              <string>ko2:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="label_20">
+             <property name="text">
+              <string>ksod:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string>knh3:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="cs"/>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="ksnh3"/>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="As1">
+             <property name="minimumSize">
+              <size>
+               <width>89</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_19">
+             <property name="text">
+              <string>alfa_nh3:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>As1:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="2">
+            <widget class="QLabel" name="label_18">
+             <property name="text">
+              <string>mg·m/(L·s)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="label_31">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Unidad</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="1">
+            <widget class="QLineEdit" name="ksod"/>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLineEdit" name="alfa_nh3"/>
+           </item>
+           <item row="14" column="0">
+            <widget class="QLabel" name="label_35">
+             <property name="text">
+              <string>kno2</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="ko2"/>
+           </item>
+           <item row="5" column="2">
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>1/s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="0">
+            <widget class="QLabel" name="label_13">
+             <property name="text">
+              <string>knt:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="2">
+            <widget class="QLabel" name="label_15">
+             <property name="text">
+              <string>1/día</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="0">
+            <widget class="QLabel" name="label_34">
+             <property name="text">
+              <string>NT:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="2">
+            <widget class="QLabel" name="label_21">
+             <property name="text">
+              <string>mgO2/mgN</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLineEdit" name="kdbo"/>
+           </item>
+           <item row="13" column="1">
+            <widget class="QLineEdit" name="NT"/>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="label_16">
+             <property name="text">
+              <string>ks:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="2">
+            <widget class="QLabel" name="label_23">
+             <property name="text">
+              <string>mgO2/mgN</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="label_29">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Valor</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="2">
+            <widget class="QLabel" name="label_33">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="label_2">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>mg/ L·s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QLabel" name="label_27">
+             <property name="text">
+              <string>mg/L</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QLineEdit" name="alfa_no2"/>
+           </item>
+           <item row="14" column="2">
+            <widget class="QLabel" name="label_32">
+             <property name="text">
+              <string>1/s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="1">
+            <widget class="QLineEdit" name="knt"/>
+           </item>
+           <item row="9" column="2">
+            <widget class="QLabel" name="label_17">
+             <property name="text">
+              <string>mg/L</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_30">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Variable</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="Line" name="line_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_2">
+           <item row="3" column="2">
+            <widget class="QLabel" name="label_42">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_41">
+             <property name="text">
+              <string>A:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>kDQO:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="label_48">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Unidad</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_40">
+             <property name="text">
+              <string>kTDS:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="kno3">
+             <property name="minimumSize">
+              <size>
+               <width>89</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="label_8">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>1/s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="label_56">
+             <property name="text">
+              <string>kEC:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QLineEdit" name="kEC"/>
+           </item>
+           <item row="10" column="2">
+            <widget class="QLabel" name="label_44">
+             <property name="text">
+              <string>1/s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="label_52">
+             <property name="text">
+              <string>teta_EC:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_7">
+             <property name="text">
+              <string>1/s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="A"/>
+           </item>
+           <item row="4" column="2">
+            <widget class="QLabel" name="label_57">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="kTDS"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_5">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>kno3:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="label_47">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Valor</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="kDQO"/>
+           </item>
+           <item row="13" column="1">
+            <widget class="QLineEdit" name="qtex"/>
+           </item>
+           <item row="13" column="2">
+            <widget class="QLabel" name="label_37">
+             <property name="text">
+              <string>mg·m/(L·s)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="0">
+            <widget class="QLabel" name="label_59">
+             <property name="text">
+              <string>kN:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="1">
+            <widget class="QLineEdit" name="kN"/>
+           </item>
+           <item row="14" column="2">
+            <widget class="QLabel" name="label_43">
+             <property name="text">
+              <string>1/s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="alfa_1"/>
+           </item>
+           <item row="5" column="2">
+            <widget class="QLabel" name="label_38">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLineEdit" name="teta_TC"/>
+           </item>
+           <item row="9" column="2">
+            <widget class="QLabel" name="label_45">
+             <property name="text">
+              <string>-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="0">
+            <widget class="QLabel" name="label_50">
+             <property name="text">
+              <string>qtex:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLineEdit" name="kTC"/>
+           </item>
+           <item row="11" column="1">
+            <widget class="QLineEdit" name="teta_EC"/>
+           </item>
+           <item row="11" column="2">
+            <widget class="QLabel" name="label_53">
+             <property name="text">
+              <string>-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="0">
+            <widget class="QLabel" name="label_60">
+             <property name="text">
+              <string>Jdbw:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="1">
+            <widget class="QLineEdit" name="Jdbw"/>
+           </item>
+           <item row="12" column="2">
+            <widget class="QLabel" name="label_51">
+             <property name="text">
+              <string>mg·m/(L·s)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_54">
+             <property name="text">
+              <string>miu:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="miu"/>
+           </item>
+           <item row="6" column="2">
+            <widget class="QLabel" name="label_49">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_39">
+             <property name="text">
+              <string>F:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLineEdit" name="F"/>
+           </item>
+           <item row="7" column="2">
+            <widget class="QLabel" name="label_58">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_55">
+             <property name="text">
+              <string>kTC:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="2">
+            <widget class="QLabel" name="label_36">
+             <property name="text">
+              <string>1/s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="label_61">
+             <property name="text">
+              <string>teta_TC:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_62">
+             <property name="text">
+              <string>alfa_1:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_46">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Variable</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="Line" name="line_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_3">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_77">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Variable</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="label_78">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Valor</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="label_79">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Unidad</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_71">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>kH:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="kH">
+             <property name="minimumSize">
+              <size>
+               <width>89</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="label_82">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>L/mol·s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_74">
+             <property name="text">
+              <string>Jsn:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="Jsn"/>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_81">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_67">
+             <property name="text">
+              <string>kOH:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="kOH"/>
+           </item>
+           <item row="3" column="2">
+            <widget class="QLabel" name="label_69">
+             <property name="text">
+              <string>L/mol·s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_68">
+             <property name="text">
+              <string>sbc:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="sbc"/>
+           </item>
+           <item row="4" column="2">
+            <widget class="QLabel" name="label_88">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_93">
+             <property name="text">
+              <string>fdw:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="fdw"/>
+           </item>
+           <item row="5" column="2">
+            <widget class="QLabel" name="label_65">
+             <property name="text">
+              <string>-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_85">
+             <property name="text">
+              <string>kf:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="kf"/>
+           </item>
+           <item row="6" column="2">
+            <widget class="QLabel" name="label_75">
+             <property name="text">
+              <string>1/día</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_66">
+             <property name="text">
+              <string>kb:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLineEdit" name="kb"/>
+           </item>
+           <item row="7" column="2">
+            <widget class="QLabel" name="label_89">
+             <property name="text">
+              <string>1/ día</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_86">
+             <property name="text">
+              <string>kv:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLineEdit" name="kv"/>
+           </item>
+           <item row="8" column="2">
+            <widget class="QLabel" name="label_63">
+             <property name="text">
+              <string>1/ día</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="label_92">
+             <property name="text">
+              <string>Cg:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLineEdit" name="Cg"/>
+           </item>
+           <item row="9" column="2">
+            <widget class="QLabel" name="label_73">
+             <property name="text">
+              <string>mg/L</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="label_87">
+             <property name="text">
+              <string>Henry</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QLineEdit" name="Henry"/>
+           </item>
+           <item row="10" column="2">
+            <widget class="QLabel" name="label_72">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="label_83">
+             <property name="text">
+              <string>R:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="1">
+            <widget class="QLineEdit" name="R"/>
+           </item>
+           <item row="11" column="2">
+            <widget class="QLabel" name="label_84">
+             <property name="text">
+              <string>atm·m3/mol·K</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="0">
+            <widget class="QLabel" name="label_91">
+             <property name="text">
+              <string>T:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="1">
+            <widget class="QLineEdit" name="T"/>
+           </item>
+           <item row="12" column="2">
+            <widget class="QLabel" name="label_80">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="0">
+            <widget class="QLabel" name="label_76">
+             <property name="text">
+              <string>alfa_2:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="1">
+            <widget class="QLineEdit" name="alfa_2"/>
+           </item>
+           <item row="13" column="2">
+            <widget class="QLabel" name="label_64">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="0">
+            <widget class="QLabel" name="label_90">
+             <property name="text">
+              <string>resp:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="1">
+            <widget class="QLineEdit" name="resp"/>
+           </item>
+           <item row="14" column="2">
+            <widget class="QLabel" name="label_70">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="Line" name="line_6">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_4">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_108">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Variable</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="label_109">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Valor</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="label_110">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Unidad</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_101">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>kPorg:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="kPorg">
+             <property name="minimumSize">
+              <size>
+               <width>89</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="label_98">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>1/s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_96">
+             <property name="text">
+              <string>kPsed;</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="kPsed"/>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_103">
+             <property name="text">
+              <string>1/s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_97">
+             <property name="text">
+              <string>sigma2:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="sigma2"/>
+           </item>
+           <item row="3" column="2">
+            <widget class="QLabel" name="label_105">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_94">
+             <property name="text">
+              <string>Ws:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="Ws"/>
+           </item>
+           <item row="4" column="2">
+            <widget class="QLabel" name="label_95">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_99">
+             <property name="text">
+              <string>Rs:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="Rs"/>
+           </item>
+           <item row="5" column="2">
+            <widget class="QLabel" name="label_102">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_100">
+             <property name="text">
+              <string>Rp:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="Rp"/>
+           </item>
+           <item row="6" column="2">
+            <widget class="QLabel" name="label_104">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_107">
+             <property name="text">
+              <string>k:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLineEdit" name="k"/>
+           </item>
+           <item row="7" column="2">
+            <widget class="QLabel" name="label_106">
+             <property name="text">
+              <string>J/(s·m·K)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="label_112">
+             <property name="text">
+              <string>den:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLineEdit" name="den"/>
+           </item>
+           <item row="8" column="2">
+            <widget class="QLabel" name="label_111">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="label_114">
+             <property name="text">
+              <string>Cp:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLineEdit" name="Cp"/>
+           </item>
+           <item row="9" column="2">
+            <widget class="QLabel" name="label_113">
+             <property name="text">
+              <string>J/(s·m·K)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="label_115">
+             <property name="text">
+              <string>Kw:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QLineEdit" name="Kw"/>
+           </item>
+           <item row="10" column="2">
+            <widget class="QLabel" name="label_116">
+             <property name="text">
+              <string>-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="label_117">
+             <property name="text">
+              <string>K1:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="1">
+            <widget class="QLineEdit" name="K1"/>
+           </item>
+           <item row="11" column="2">
+            <widget class="QLabel" name="label_118">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="0">
+            <widget class="QLabel" name="label_119">
+             <property name="text">
+              <string>K2:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="1">
+            <widget class="QLineEdit" name="K2"/>
+           </item>
+           <item row="12" column="2">
+            <widget class="QLabel" name="label_120">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="0">
+            <widget class="QLabel" name="label_122">
+             <property name="text">
+              <string>Vv:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="1">
+            <widget class="QLineEdit" name="Vv"/>
+           </item>
+           <item row="13" column="2">
+            <widget class="QLabel" name="label_121">
+             <property name="text">
+              <string>m/s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="0">
+            <widget class="QLabel" name="label_124">
+             <property name="text">
+              <string>As:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="1">
+            <widget class="QLineEdit" name="As"/>
+           </item>
+           <item row="14" column="2">
+            <widget class="QLabel" name="label_123">
+             <property name="text">
+              <string>m2/m3</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="Line" name="line_5">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_5">
+           <item row="13" column="2">
+            <widget class="QLabel" name="label_152">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="label_126">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Unidad</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_130">
+             <property name="text">
+              <string>Wrp:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_131">
+             <property name="text">
+              <string>mol/s</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="CO2S">
+             <property name="minimumSize">
+              <size>
+               <width>89</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="label_125">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Valor</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QLabel" name="label_133">
+             <property name="text">
+              <string>-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_129">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>CO2S:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_132">
+             <property name="text">
+              <string>FrH:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="2">
+            <widget class="QLabel" name="label_137">
+             <property name="text">
+              <string>-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="label_138">
+             <property name="text">
+              <string>teta_NH3:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="label_128">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>mol/L</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="Diff"/>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="FrH"/>
+           </item>
+           <item row="4" column="0">
+            <widget class="QLabel" name="label_134">
+             <property name="text">
+              <string>Diff:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QLabel" name="label_135">
+             <property name="text">
+              <string>Coef Difusión</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="label_147">
+             <property name="text">
+              <string>teta_NO3:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0">
+            <widget class="QLabel" name="label_149">
+             <property name="text">
+              <string>Tair:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="2">
+            <widget class="QLabel" name="label_150">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="0">
+            <widget class="QLabel" name="label_153">
+             <property name="text">
+              <string>eair:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="13" column="1">
+            <widget class="QLineEdit" name="eair"/>
+           </item>
+           <item row="5" column="0">
+            <widget class="QLabel" name="label_136">
+             <property name="text">
+              <string>teta_DBO:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLineEdit" name="teta_DBO"/>
+           </item>
+           <item row="7" column="1">
+            <widget class="QLineEdit" name="teta_NO2"/>
+           </item>
+           <item row="7" column="2">
+            <widget class="QLabel" name="label_141">
+             <property name="text">
+              <string>-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label_127">
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Variable</string>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QLineEdit" name="teta_NO3"/>
+           </item>
+           <item row="10" column="2">
+            <widget class="QLabel" name="label_146">
+             <property name="text">
+              <string>-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QLineEdit" name="teta_NH3"/>
+           </item>
+           <item row="6" column="2">
+            <widget class="QLabel" name="label_139">
+             <property name="text">
+              <string>-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="0">
+            <widget class="QLabel" name="label_140">
+             <property name="text">
+              <string>teta_NO2:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="1">
+            <widget class="QLineEdit" name="teta_DQO"/>
+           </item>
+           <item row="8" column="0">
+            <widget class="QLabel" name="fu">
+             <property name="text">
+              <string>teta_DQO:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="8" column="2">
+            <widget class="QLabel" name="label_143">
+             <property name="text">
+              <string>-</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="label_144">
+             <property name="text">
+              <string>teta_NT:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QLineEdit" name="teta_NT"/>
+           </item>
+           <item row="9" column="2">
+            <widget class="QLabel" name="label_145">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="1">
+            <widget class="QLineEdit" name="Tair"/>
+           </item>
+           <item row="11" column="2">
+            <widget class="QLabel" name="label_148">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="0">
+            <widget class="QLabel" name="label_151">
+             <property name="text">
+              <string>Aair:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="12" column="1">
+            <widget class="QLineEdit" name="Aair"/>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="Wrp"/>
+           </item>
+           <item row="14" column="0">
+            <widget class="QLabel" name="label_154">
+             <property name="text">
+              <string>RL:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="14" column="1">
+            <widget class="QLineEdit" name="RL"/>
+           </item>
+           <item row="14" column="2">
+            <widget class="QLabel" name="label_155">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="Line" name="line_4">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout_6">
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="Uw">
+             <property name="minimumSize">
+              <size>
+               <width>89</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="es"/>
+           </item>
+           <item row="0" column="2" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="label_142">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>74</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Unidad</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_161">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Uw:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QLabel" name="label_158">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+            <widget class="QLabel" name="label_159">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>74</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Valor</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <spacer name="verticalSpacer">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_157">
+             <property name="text">
+              <string>es:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QLabel" name="label_165">
+             <property name="minimumSize">
+              <size>
+               <width>80</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0" alignment="Qt::AlignVCenter">
+            <widget class="QLabel" name="label_174">
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>74</height>
+              </size>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font: bold;</string>
+             </property>
+             <property name="text">
+              <string>Variable</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="pushButtonRestablecer">
+       <property name="text">
+        <string>Restablecer</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
   <zorder>label_46</zorder>
   <zorder>label_47</zorder>
   <zorder>label_48</zorder>
@@ -2726,45 +1730,6 @@
   <zorder>label_110</zorder>
   <zorder>label_109</zorder>
   <zorder>buttonBox</zorder>
-  <zorder>label_3</zorder>
-  <zorder>Da</zorder>
-  <zorder>label_4</zorder>
-  <zorder>label_9</zorder>
-  <zorder>knh3</zorder>
-  <zorder>label_10</zorder>
-  <zorder>label_11</zorder>
-  <zorder>ksnh3</zorder>
-  <zorder>label_12</zorder>
-  <zorder>alfa_no2</zorder>
-  <zorder>alfa_nh3</zorder>
-  <zorder>label_13</zorder>
-  <zorder>label_14</zorder>
-  <zorder>ksod</zorder>
-  <zorder>knt</zorder>
-  <zorder>label_15</zorder>
-  <zorder>label_16</zorder>
-  <zorder>label_17</zorder>
-  <zorder>label_18</zorder>
-  <zorder>label_19</zorder>
-  <zorder>label_20</zorder>
-  <zorder>label_21</zorder>
-  <zorder>label_22</zorder>
-  <zorder>ks</zorder>
-  <zorder>label_23</zorder>
-  <zorder>kdbo</zorder>
-  <zorder>label_24</zorder>
-  <zorder>label_25</zorder>
-  <zorder>label_26</zorder>
-  <zorder>ko2</zorder>
-  <zorder>label_27</zorder>
-  <zorder>label_28</zorder>
-  <zorder>cs</zorder>
-  <zorder>NT</zorder>
-  <zorder>label_32</zorder>
-  <zorder>label_33</zorder>
-  <zorder>label_34</zorder>
-  <zorder>label_35</zorder>
-  <zorder>kno2</zorder>
   <zorder>label_36</zorder>
   <zorder>kDQO</zorder>
   <zorder>kEC</zorder>
@@ -2808,7 +1773,7 @@
   <zorder>label_61</zorder>
   <zorder>label_62</zorder>
   <zorder>label_63</zorder>
-  <zorder>H</zorder>
+  <zorder>Jsn</zorder>
   <zorder>Henry</zorder>
   <zorder>label_64</zorder>
   <zorder>label_65</zorder>
@@ -2832,7 +1797,7 @@
   <zorder>label_75</zorder>
   <zorder>label_76</zorder>
   <zorder>label_80</zorder>
-  <zorder>OH</zorder>
+  <zorder>sbc</zorder>
   <zorder>label_81</zorder>
   <zorder>label_82</zorder>
   <zorder>label_83</zorder>
@@ -2868,8 +1833,6 @@
   <zorder>label_104</zorder>
   <zorder>label_105</zorder>
   <zorder>line</zorder>
-  <zorder>line_2</zorder>
-  <zorder>line_3</zorder>
   <zorder>label_106</zorder>
   <zorder>k</zorder>
   <zorder>label_107</zorder>
@@ -2891,7 +1854,6 @@
   <zorder>label_121</zorder>
   <zorder>label_122</zorder>
   <zorder>Vv</zorder>
-  <zorder>line_4</zorder>
   <zorder>label_123</zorder>
   <zorder>As</zorder>
   <zorder>label_124</zorder>
@@ -2929,7 +1891,135 @@
   <zorder>label_147</zorder>
   <zorder>teta_NO3</zorder>
   <zorder>pushButtonRestablecer</zorder>
+  <zorder>Tair</zorder>
+  <zorder>label_148</zorder>
+  <zorder>label_149</zorder>
+  <zorder>Aair</zorder>
+  <zorder>label_150</zorder>
+  <zorder>label_151</zorder>
+  <zorder>eair</zorder>
+  <zorder>label_152</zorder>
+  <zorder>label_153</zorder>
+  <zorder>label_22</zorder>
+  <zorder>label_2</zorder>
+  <zorder>label_31</zorder>
+  <zorder>label_9</zorder>
+  <zorder>label_19</zorder>
+  <zorder>label_33</zorder>
+  <zorder>label_12</zorder>
+  <zorder>label_28</zorder>
+  <zorder>label_21</zorder>
+  <zorder>Da</zorder>
+  <zorder>ksod</zorder>
+  <zorder>label_13</zorder>
+  <zorder>alfa_no2</zorder>
+  <zorder>label_15</zorder>
+  <zorder>label_25</zorder>
+  <zorder>label_10</zorder>
+  <zorder>label_18</zorder>
+  <zorder>cs</zorder>
+  <zorder>label_29</zorder>
+  <zorder>label_16</zorder>
+  <zorder>label_20</zorder>
+  <zorder>alfa_nh3</zorder>
+  <zorder>knt</zorder>
+  <zorder>label_34</zorder>
+  <zorder>label_35</zorder>
+  <zorder>label_30</zorder>
+  <zorder>NT</zorder>
+  <zorder>label_24</zorder>
+  <zorder>ko2</zorder>
+  <zorder>label_4</zorder>
+  <zorder>label_14</zorder>
+  <zorder>kdbo</zorder>
+  <zorder>label_26</zorder>
+  <zorder>ks</zorder>
+  <zorder>kno2</zorder>
+  <zorder>label_11</zorder>
+  <zorder>label_27</zorder>
+  <zorder>label</zorder>
+  <zorder>label_23</zorder>
+  <zorder>ksnh3</zorder>
+  <zorder>label_3</zorder>
+  <zorder>label_32</zorder>
+  <zorder>label_17</zorder>
+  <zorder>knh3</zorder>
+  <zorder>As1</zorder>
+  <zorder>scrollArea</zorder>
  </widget>
+ <tabstops>
+  <tabstop>As1</tabstop>
+  <tabstop>Da</tabstop>
+  <tabstop>ko2</tabstop>
+  <tabstop>cs</tabstop>
+  <tabstop>knh3</tabstop>
+  <tabstop>ksnh3</tabstop>
+  <tabstop>alfa_nh3</tabstop>
+  <tabstop>kdbo</tabstop>
+  <tabstop>ks</tabstop>
+  <tabstop>alfa_no2</tabstop>
+  <tabstop>ksod</tabstop>
+  <tabstop>knt</tabstop>
+  <tabstop>NT</tabstop>
+  <tabstop>kno2</tabstop>
+  <tabstop>kno3</tabstop>
+  <tabstop>kDQO</tabstop>
+  <tabstop>kTDS</tabstop>
+  <tabstop>A</tabstop>
+  <tabstop>alfa_1</tabstop>
+  <tabstop>miu</tabstop>
+  <tabstop>F</tabstop>
+  <tabstop>kTC</tabstop>
+  <tabstop>teta_TC</tabstop>
+  <tabstop>kEC</tabstop>
+  <tabstop>teta_EC</tabstop>
+  <tabstop>Jdbw</tabstop>
+  <tabstop>qtex</tabstop>
+  <tabstop>kN</tabstop>
+  <tabstop>kH</tabstop>
+  <tabstop>Jsn</tabstop>
+  <tabstop>kOH</tabstop>
+  <tabstop>sbc</tabstop>
+  <tabstop>fdw</tabstop>
+  <tabstop>kf</tabstop>
+  <tabstop>kb</tabstop>
+  <tabstop>kv</tabstop>
+  <tabstop>Cg</tabstop>
+  <tabstop>Henry</tabstop>
+  <tabstop>R</tabstop>
+  <tabstop>T</tabstop>
+  <tabstop>alfa_2</tabstop>
+  <tabstop>resp</tabstop>
+  <tabstop>kPorg</tabstop>
+  <tabstop>kPsed</tabstop>
+  <tabstop>sigma2</tabstop>
+  <tabstop>Ws</tabstop>
+  <tabstop>Rs</tabstop>
+  <tabstop>Rp</tabstop>
+  <tabstop>k</tabstop>
+  <tabstop>den</tabstop>
+  <tabstop>Cp</tabstop>
+  <tabstop>Kw</tabstop>
+  <tabstop>K1</tabstop>
+  <tabstop>K2</tabstop>
+  <tabstop>Vv</tabstop>
+  <tabstop>As</tabstop>
+  <tabstop>CO2S</tabstop>
+  <tabstop>Wrp</tabstop>
+  <tabstop>FrH</tabstop>
+  <tabstop>Diff</tabstop>
+  <tabstop>teta_DBO</tabstop>
+  <tabstop>teta_NH3</tabstop>
+  <tabstop>teta_NO2</tabstop>
+  <tabstop>teta_DQO</tabstop>
+  <tabstop>teta_NT</tabstop>
+  <tabstop>buttonBox</tabstop>
+  <tabstop>teta_NO3</tabstop>
+  <tabstop>pushButtonRestablecer</tabstop>
+  <tabstop>Tair</tabstop>
+  <tabstop>Aair</tabstop>
+  <tabstop>eair</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
