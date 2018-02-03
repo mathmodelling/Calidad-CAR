@@ -8,11 +8,11 @@ import xlrd
 import xlwt
 
 BOLD_FONT_XLWT = xlwt.Style.easyxf('font: bold on;')
-CONTAMINANTS = ['OD', 'DBO', 'NH4', 'NO2', 'NO3', 'TDS', 'GyA', 'Condt',
+CONTAMINANTS = ['OD', 'DBO', 'NH4', 'NO2', 'NO3', 'TDS', 'GyA',
 	'DQO', 'Porg', 'Pdis', 'EC', 'TC', 'T', 'TSS', 'SS', 'pH', 'ALK']
 
-CONTAMINANTS_UNITS = [' ', ' ', ' ',' ', ' ', ' ', ' ' ,' ' ,' ',
-	' ', ' ', ' ',' ', ' ', ' ', ' ' ,' ' ,' ']
+CONTAMINANTS_UNITS = ['mg/l', 'mg/l', 'mg/l','mg/l', 'mg/l', 'mg/l', 'mg/l' ,
+	'mg/l', 'mg/l', 'mg/l', 'NMP','NMP', u'c°', 'mg/l', 'mg/l' ,'unidades de pH' ,'mg/l']
 
 def create_description_sheet(workbook):
 	'''
@@ -31,26 +31,30 @@ def create_description_sheet(workbook):
 
 	# Hoja WD
 	sheet.write(1, 0, 'WD')
-	sheet.write(1, 1, 'metros (m)')
+	sheet.write(1, 1, 'm')
 	sheet.write(1, 2, 'Valor de profundidad del agua (Water Depth)')	
 	# Hoja SL
 	sheet.write(2, 0, 'SL')
-	sheet.write(2, 1, '  ')
+	sheet.write(2, 1, '-')
 	sheet.write(2, 2, 'Valor de la pendiente (Slope)')	
 	# Hoja WV
 	sheet.write(3, 0, 'WV')
-	sheet.write(3, 1, '  ')
+	sheet.write(3, 1, 'm/s')
 	sheet.write(3, 2, 'Valor de la velocidad del agua (Water Velocity)')	
 	# Hoja BC
 	sheet.write(4, 0, 'BC')
-	sheet.write(4, 1, '  ')
+	sheet.write(4, 1, '-')
 	sheet.write(4, 2, 'Valores de la Condicion de Frontera (Boundary Conditions)')	
 	# Hoja IC
 	sheet.write(5, 0, 'IC')
-	sheet.write(5, 1, '  ')
-	sheet.write(5, 2, 'Valores de la Condicion Inicial (Initial Conditions)')	
+	sheet.write(5, 1, '-')
+	sheet.write(5, 2, 'Valores de la Condicion Inicial (Initial Conditions)')
+	# Hoja Caudales
+	sheet.write(6, 0, 'Caudales')
+	sheet.write(6, 1, 'm3/s')
+	sheet.write(6, 2, 'Hoja de Caudales')	
 
-	cont = 6
+	cont = 7
 	# Hojas de Sinks and Sources
 	for i in range(len(CONTAMINANTS)):
 		sheet.write(cont, 0, 'S'+CONTAMINANTS[i])
@@ -241,6 +245,9 @@ def create_book(path, distances, hours, wd=None, sl=None):
 	# Crear hoja IC
 	create_sheet_dc(book, 'IC', distances)
 
+	# Crear hoja de Caudales
+	create_sheet_dt(book, 'Caudales', distances, hours, 0)
+
 	# Crear hojas de Sinks and Sources
 	for contaminante in CONTAMINANTS:
 		create_sheet_dt(book, 'S'+contaminante, distances, hours, 0.0)
@@ -261,6 +268,17 @@ class Error(Exception):
 			self.r,
 			self.c)
 
+class ErrorRow(Exception):
+	def __init__(self, name, r, v):
+		self.name = name
+		self.r = r
+		self.v = v
+	def __str__(self):
+		return "Error: La hoja %s no puede contener el valor %d en la fila %d" % (
+			self.name,
+			self.v,
+			self.r)
+
 def verify_sheet(sheet):
 	"""Verifica que una hoja de cálculo no tenga celdas vacias."""
 	rows, cols = sheet.nrows, sheet.ncols
@@ -273,6 +291,14 @@ def verify_sheet(sheet):
 				continue
 			except:
 				raise Error(sheet.name, i + 1, j + 1)
+
+def verify_sheet_row(sheet, row, value):
+	"""Verifica que la hoja de cálculo no tenga el valor indicado en la fila indicada."""
+	cols = sheet.ncols
+
+	for j in xrange(1, cols):
+		if int(sheet.cell_value(row, j)) == 0:
+			raise ErrorRow(sheet.name, row, value)
 
 def verify_book(workbook):
 	"""Verifica que no exitan celdas vacias en todas las hojas del libro de excel."""
@@ -291,6 +317,10 @@ def verify_book(workbook):
 	for contaminante in CONTAMINANTS:
 		# print 'S' + contaminante
 		verify_sheet(workbook.sheet_by_name("S" + contaminante))
+
+	verify_sheet(workbook.sheet_by_name(u'Caudales'))
+	# Verifica que la primera linea no contenga 0's
+	verify_sheet_row(workbook.sheet_by_name(u'Caudales'), 1, 0)
 
 	# Obtener el tiempo
 	sheet = workbook.sheet_by_name('WD')
