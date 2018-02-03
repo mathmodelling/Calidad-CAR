@@ -87,7 +87,7 @@
 <span class="kn">import</span> <span class="nn">datetime</span> <span class="k">as</span> <span class="nn">dtm</span>
 
 <span class="kn">from</span> <span class="nn">dialogo_csv</span> <span class="k">import</span> <span class="n">CSVDialog</span>
-<span class="kn">from</span> <span class="nn">src.spreadsheets</span> <span class="k">import</span> <span class="n">Error</span>
+<span class="kn">from</span> <span class="nn">src.spreadsheets</span> <span class="k">import</span> <span class="n">Error</span><span class="p">,</span> <span class="n">ErrorRow</span>
 <span class="kn">from</span> <span class="nn">src.modelling</span> <span class="k">import</span> <span class="n">calidad_car</span>
 <span class="kn">from</span> <span class="nn">src</span> <span class="k">import</span> <span class="n">layer_manager</span> <span class="k">as</span> <span class="n">manager</span>
 <span class="kn">from</span> <span class="nn">dialogo_variables</span> <span class="k">import</span> <span class="n">VarsDialog</span>
@@ -423,13 +423,6 @@
                 <span class="sa">u</span><span class="s1">&#39;Por favor selecciona la carpeta de salida.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">dialog</span><span class="o">.</span><span class="n">getShowPlots</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">dialog</span><span class="o">.</span><span class="n">getSavePlots</span><span class="p">():</span>
-            <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span>
-                <span class="bp">self</span><span class="p">,</span> 
-                <span class="sa">u</span><span class="s1">&#39;No se selecciono ninguna opción de salida.&#39;</span><span class="p">,</span> 
-                <span class="sa">u</span><span class="s1">&#39;Es necesario seleccionar al menos una opción.&#39;</span><span class="p">)</span>
-            <span class="k">return</span>
-
         <span class="n">variables</span> <span class="o">=</span> <span class="n">VarsDialog</span><span class="o">.</span><span class="n">leerVariables</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">variables</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
             <span class="n">variables</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
@@ -443,6 +436,13 @@
                 <span class="sa">u</span><span class="s1">&#39;Se encontró un valor que no es númerico&#39;</span><span class="p">,</span>
                 <span class="sa">u</span><span class="s1">&#39;Hoja: </span><span class="si">%s</span><span class="se">\n</span><span class="s1">Celda: [</span><span class="si">%d</span><span class="s1">, </span><span class="si">%d</span><span class="s1">]&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">c</span><span class="p">))</span>
             <span class="k">return</span>
+        <span class="k">except</span> <span class="n">ErrorRow</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">util</span><span class="o">.</span><span class="n">errorDialog</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="sa">u</span><span class="s1">&#39;La hoja </span><span class="si">%s</span><span class="s1"> no puede contener el valor </span><span class="si">%d</span><span class="s1"> en la fila </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">v</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">r</span><span class="p">),</span>
+                <span class="sa">u</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
 
         <span class="nb">print</span> <span class="s2">&quot;Se inicio el proceso...&quot;</span>
         <span class="n">action</span><span class="o">.</span><span class="n">pro</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">variables</span><span class="p">,</span> <span class="n">dialog</span><span class="o">.</span><span class="n">getShowPlots</span><span class="p">(),</span> <span class="n">dialog</span><span class="o">.</span><span class="n">getSavePlots</span><span class="p">())</span>

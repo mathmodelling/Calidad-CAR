@@ -104,8 +104,330 @@ Para poder realizar esta operación el usuario tendrá que hacer click en el ico
 <h2>Configurar Variables<a class="headerlink" href="#configurar-variables" title="Enlazar permanentemente con este título">¶</a></h2>
 <p>Haciendo click en el icono que se ve en la siguiente imagén el usuario podrá cambiar el valor de algunas de las variables necesarias para aplicar el modélo matemático.</p>
 <img alt="../_images/accion_vars.png" src="../_images/accion_vars.png" />
-<p>Valores iniciales de todas las variables:</p>
-<img alt="../_images/dialogo_conf_vars.png" src="../_images/dialogo_conf_vars.png" />
+<p>Tabla de Variables:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="7%" />
+<col width="68%" />
+<col width="11%" />
+<col width="14%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Símbolo</th>
+<th class="head">Descripción</th>
+<th class="head">Unidades</th>
+<th class="head">Rango</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>k</td>
+<td>Conductividad térmica del agua</td>
+<td>J / (s * m * K)</td>
+<td>0.580 - 0.615</td>
+</tr>
+<tr class="row-odd"><td>Cp</td>
+<td>Capacidad calorífica del agua</td>
+<td>J / (kg * K)</td>
+<td>4170 - 4190</td>
+</tr>
+<tr class="row-even"><td>p</td>
+<td>Densidad del agua</td>
+<td>kg / m3</td>
+<td>999.700 – 995.650</td>
+</tr>
+<tr class="row-odd"><td>Cs</td>
+<td>Concentración de saturación de oxígeno a la temperatura del sistema</td>
+<td>mg / L</td>
+<td>7 - 12</td>
+</tr>
+<tr class="row-even"><td>kDBO</td>
+<td>Constante de degradación de DBO</td>
+<td>1 / día</td>
+<td>0.02 – 0.5</td>
+</tr>
+<tr class="row-odd"><td>θDBO</td>
+<td>Coeficientes de Arrhenius para el ajuste de temperatura de la reacción de DBO</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>1.02 – 1.09</td>
+</tr>
+<tr class="row-even"><td>ks</td>
+<td>Constante de media saturación de oxígeno disuelto requerida para la oxidación de la demanda química de oxígeno</td>
+<td>mg / L</td>
+<td>0.1 - 1.5</td>
+</tr>
+<tr class="row-odd"><td>KNH3</td>
+<td>Constante de reacción la transformación de amonio a nitrito</td>
+<td>1/s</td>
+<td>1 x 10-6 – 1.2 x 10-5</td>
+</tr>
+<tr class="row-even"><td>KNO2</td>
+<td>Constante de reacción la transformación de nitrito a nitrato</td>
+<td>1/s</td>
+<td>2 x 10-6 – 2.4 x 10-5</td>
+</tr>
+<tr class="row-odd"><td>αNH3</td>
+<td>Consumos de oxígeno para la transformación de amonio a nitrito</td>
+<td>mg O2/mg N</td>
+<td>2.0 – 4.0</td>
+</tr>
+<tr class="row-even"><td>αNO2</td>
+<td>Consumo de oxígeno para la transformación de nitrito a nitrato</td>
+<td>mg O2/mg N</td>
+<td>1.0 - 1.14</td>
+</tr>
+<tr class="row-odd"><td>ΘNH3</td>
+<td>Coeficientes de Arrhenius para el ajuste de temperatura de la reacción de amonio</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>1.0 – 1.1</td>
+</tr>
+<tr class="row-even"><td>ΘNO2</td>
+<td>Coeficientes de Arrhenius para el ajuste de temperatura de la reacción de nitritos</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>1.0 – 1.1</td>
+</tr>
+<tr class="row-odd"><td>ΘNO3</td>
+<td>Coeficientes de Arrhenius para el ajuste de temperatura de la reacción de nitratos</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>1.0 – 1.1</td>
+</tr>
+<tr class="row-even"><td>kSOD</td>
+<td>Cantidad de oxígeno necesitada por los sedimentos inminentes en el área de la unidad del fondo del río</td>
+<td>mg * m / (L * s)</td>
+<td>8 x 10-7 - 5 x 10-5</td>
+</tr>
+<tr class="row-odd"><td>Da</td>
+<td>Variación neta de oxígeno disuelto debido a la actividad de las algas</td>
+<td>mg / L * s</td>
+<td>1 x 10-9 - 1 x 10-4</td>
+</tr>
+<tr class="row-even"><td>ko2</td>
+<td>Coeficiente de re-aireación</td>
+<td>1 / s</td>
+<td>4 x 10-6 - 2 x 10-5</td>
+</tr>
+<tr class="row-odd"><td>KDQO</td>
+<td>Constante de degradación de DQO</td>
+<td>1 / s</td>
+<td>1 x 10-6 - 3 x 10-6</td>
+</tr>
+<tr class="row-even"><td>ΘDQO</td>
+<td>Coeficientes de Arrhenius para el ajuste de temperatura de la reacción de DQO</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>1.0 – 1.5</td>
+</tr>
+<tr class="row-odd"><td>αA</td>
+<td>Fracción de biomasa de las algas expresada en forma de nitrógeno</td>
+<td>gN / gC</td>
+<td>0.175</td>
+</tr>
+<tr class="row-even"><td>γ</td>
+<td>Tasa de respiración de las algas</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>0.1 - 0.5</td>
+</tr>
+<tr class="row-odd"><td>kNT</td>
+<td>Transformación de nitrógeno orgánico a amonio</td>
+<td>1/día</td>
+<td>0.05 - 0.5</td>
+</tr>
+<tr class="row-even"><td>kSNT</td>
+<td>Tasa de sedimentación de nitrógeno orgánico</td>
+<td>1/día</td>
+<td>0.1 – 0.3</td>
+</tr>
+<tr class="row-odd"><td>Yresp</td>
+<td>&#160;</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>0.01 – 0.1</td>
+</tr>
+<tr class="row-even"><td>kNO3</td>
+<td>Constante de reacción la transformación de desnitrificación</td>
+<td>1/s</td>
+<td>1 x 10-7 - 2 x 10-6</td>
+</tr>
+<tr class="row-odd"><td>ϑ</td>
+<td>Fracción de fosforo en las algas</td>
+<td>gP / gC</td>
+<td>0.0167</td>
+</tr>
+<tr class="row-even"><td>kP-Org</td>
+<td>Transformación de fosforo orgánico</td>
+<td>1/s</td>
+<td>5 x 10-8 – 2.5 x 10-6</td>
+</tr>
+<tr class="row-odd"><td>kP-sed</td>
+<td>Tasa de sedimentación de Fosforo</td>
+<td>1/s</td>
+<td>1 x 10-7 – 2.5 x 10-6</td>
+</tr>
+<tr class="row-even"><td>ℵ</td>
+<td>Cantidad neta de fósforo disuelto debido a la actividad de algas y bentos</td>
+<td>gP/s</td>
+<td>1 x 10-7 – 2.5 x 10-6</td>
+</tr>
+<tr class="row-odd"><td>kE.coli</td>
+<td>Tasa de decaimiento e coli</td>
+<td>1/s</td>
+<td>1 x 10-7 – 1.2 x 10-6</td>
+</tr>
+<tr class="row-even"><td>ΘE.coli</td>
+<td>Factor de corrección de temperatura</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>0.9 – 1.1</td>
+</tr>
+<tr class="row-odd"><td>kTC</td>
+<td>Tasa de decaimiento Coliformes totales</td>
+<td>1 / s</td>
+<td>1 x 10-7 – 1.2 x 10-6</td>
+</tr>
+<tr class="row-even"><td>ΘTC</td>
+<td>Factor de corrección de temperatura</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>0.9 – 1.1</td>
+</tr>
+<tr class="row-odd"><td>fdw</td>
+<td>Fracción disuelta de grasas y aceites en la columna de agua</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>0 – 1</td>
+</tr>
+<tr class="row-even"><td>Jdbw</td>
+<td>Flujo de difusión vertical entre la columna de agua y la capa de sedimentos</td>
+<td>mg·m/(L·s)</td>
+<td>1 x 10-7 – 1 x 10-3</td>
+</tr>
+<tr class="row-odd"><td>qt,ex</td>
+<td>Tasa de intercambio total del contaminante debido a la erosión de sedimentos y deposición</td>
+<td>mg·m/(L·s)</td>
+<td>3 x 10-6 – 1 x 10-3</td>
+</tr>
+<tr class="row-even"><td>KN</td>
+<td>Constante de reacción de hidrolisis neutra</td>
+<td>1 / s</td>
+<td>(0.1 – 1000) x 10-6</td>
+</tr>
+<tr class="row-odd"><td>KH</td>
+<td>Constante de reacción de hidrolisis catalizada por ácidos</td>
+<td>L/mol·s</td>
+<td>(1 – 1000) x 10-4</td>
+</tr>
+<tr class="row-even"><td>KOH</td>
+<td>Constante de reacción de hidrolisis catalizada por base</td>
+<td>L/mol·s</td>
+<td>(1 – 100) x 10-3</td>
+</tr>
+<tr class="row-odd"><td>Kf</td>
+<td>Constante de fotolisis</td>
+<td>1 / día</td>
+<td>1 x 10-8 – 2 x 10-5</td>
+</tr>
+<tr class="row-even"><td>Kb</td>
+<td>Constante de biodegradación</td>
+<td>1 / día</td>
+<td>1 x 10-8 – 2 x 10-5</td>
+</tr>
+<tr class="row-odd"><td>Kv</td>
+<td>Constante de volatilización</td>
+<td>1 / día</td>
+<td>1 x 10-8 – 2 x 10-5</td>
+</tr>
+<tr class="row-even"><td>H</td>
+<td>Constante de Henry</td>
+<td>atm m3/mol</td>
+<td>0.0005 – 0.01</td>
+</tr>
+<tr class="row-odd"><td>R</td>
+<td>Constante de los gases</td>
+<td>atm·m3/mol·K</td>
+<td>8.205746 x 10-5</td>
+</tr>
+<tr class="row-even"><td>Cg</td>
+<td>Concentración en la fase gaseosa de las grasas y aceites</td>
+<td>mg /L</td>
+<td>(0.1 – 10) x 10-5</td>
+</tr>
+<tr class="row-odd"><td>Kbas</td>
+<td>Constante de reacción ácido carbónico</td>
+<td>&#160;</td>
+<td>2.1 x 10-4</td>
+</tr>
+<tr class="row-even"><td>Kw</td>
+<td>Constante de equilibrio del agua</td>
+<td>&#160;</td>
+<td>1 x 10-14</td>
+</tr>
+<tr class="row-odd"><td>PCO2</td>
+<td>Presión parcial de saturación del dióxido en la atmosfera</td>
+<td>atm</td>
+<td>0.00039</td>
+</tr>
+<tr class="row-even"><td>aco</td>
+<td>Factor de conversión estequiométrico| mol CO2/gO2</td>
+<td>&#160;</td>
+<td>0.03125</td>
+</tr>
+<tr class="row-odd"><td>vv</td>
+<td>Coeficiente de trasferencia por volatilización</td>
+<td>m / s</td>
+<td>1 x 10-6 - 1 x 10-4</td>
+</tr>
+<tr class="row-even"><td>As</td>
+<td>Área superficial volumétrica de interface aire-agua</td>
+<td>m2 / m3</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td>CO2S</td>
+<td>Concentración de saturación de dióxido de carbono en agua</td>
+<td>mol / L</td>
+<td>1 x 10-5 - 5 x 10-5</td>
+</tr>
+<tr class="row-even"><td>Wrp</td>
+<td>Carga neta de carbón debido a efectos de fotosíntesis y respiración</td>
+<td>mol / s</td>
+<td>1 x 10-10 - 2 x 10-9</td>
+</tr>
+<tr class="row-odd"><td>FrH</td>
+<td>Fracción de Hidrógenos respecto a alcalinidad</td>
+<td><ul class="first last simple">
+<li></li>
+</ul>
+</td>
+<td>0.005 – 0.1</td>
+</tr>
+</tbody>
+</table>
 <div class="admonition note">
 <p class="first admonition-title">Nota</p>
 <p class="last">El plugin CalidadCAR viene con valores por defecto para todas las variables, y una vez el usuario cambie alguno de estos valores quedará guardado para futuros usos.</p>
