@@ -57,8 +57,6 @@ class InputFileDialog(QtGui.QDialog, FORM_CLASS):
 
         if layerPath == "" : return
         
-        print layerInfo.fileName()
-
         if len(layerInfo.fileName()) < 5:
             layerPath += ".xls"
         elif layerInfo.fileName()[-4: ] != ".xls":
