@@ -1,6 +1,15 @@
 
 # -*- coding: utf-8 -*-
-# Reacciones acopladas
+
+__author__ = 'Efraín Domínguez Calle, PhD - Wilfredo Marimón Bolivar'
+__copyright__ = "Copyright 2017, Mathmodelling"
+__credits__ = ["Efraín Domínguez Calle"]
+__license__ = "Uso Libre"
+__version__ = "1.0"
+__maintainer__ = "Efraín Antonio Domínguez Calle"
+__email__ = 'edoc@marthmodelling.org, willy_ingeniero@hotmail.com'
+__status__ = "En desarrollo"
+
 
 import numpy as np
 import matplotlib
@@ -234,15 +243,15 @@ def calidad_explicito(D, dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO
     den = variables['den']
     Cp = variables['Cp']
     Dt = k/(den*Cp)
-    As1 = 1
-    Jsn = 145
-    sbc = 5.67e-8
-    Tair = 17
-    Aair = 0.6
-    eair = 14.3
-    RL = 0.03
-    Uw = 3
-    es = 11.5
+    As1 = variables['As1']
+    Jsn = variables['Jsn']
+    sbc = variables['sbc']
+    Tair = variables['Tair']
+    Aair = variables['Aair']
+    eair = variables['eair']
+    RL = variables['RL']
+    Uw = variables['Uw']
+    es = variables['es']
     Kw = variables['Kw']
     K1 = variables['K1']
     K2 = variables['K2']
@@ -723,6 +732,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     mconConduct = kcondt * mconTDS
     mconT = mconT - 273.15
     mconpH = (np.log10(mconpH))*(-1)
+    pH = (np.log10(pH))*(-1)
     print "Guardando datos de salida..."
 
     book = xlwt.Workbook()
@@ -774,7 +784,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         plot(ax[3,1], 'Evalucion Grasas y Aceites en punto final', [x_data, mconGyA[1::3600, -1]])
         plot(ax[3,2], 'Evalucion P org en punto final', [x_data, mconPorg[1::3600, -1]])
         plot(ax[4,0], 'Evalucion P disuelto en punto final', [x_data, mconPdis[1::3600, -1]])
-        plot(ax[4,1], 'Evalucion [H+] en punto final', [x_data, mconpH[1::3600, -1]])
+        plot(ax[4,1], 'Evalucion del pH en punto final', [x_data, mconpH[1::3600, -1]])
         plot(ax[4,2], 'Evalucion Alcanilidad en punto final', [x_data, mconALK[1::3600, -1]])
 
         figManager = plt.get_current_fig_manager()
@@ -844,7 +854,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         save_plot(plt, 'Evalucion Grasas y Aceites en punto final en tiempo', xlabel, ylabel, [x_data, mconGyA[1::3600, -1]], directorio_salida)
         save_plot(plt, 'Evalucion P org en punto final en tiempo', xlabel, ylabel, [x_data, mconPorg[1::3600, -1]], directorio_salida)
         save_plot(plt, 'Evalucion P disuelto en punto final en tiempo', xlabel, ylabel, [x_data, mconPdis[1::3600, -1]], directorio_salida)
-        save_plot(plt, 'Evalucion [H+] en punto final', xlabel, 'Moles/L de H+', [x_data, mconpH[1::3600, -1]], directorio_salida)
+        save_plot(plt, 'Evalucion del pH en punto final', xlabel, 'pH', [x_data, mconpH[1::3600, -1]], directorio_salida)
         save_plot(plt, 'Evalucion Alcanilidad en punto final', xlabel, 'CaCO3/L', [x_data, mconALK[1::3600, -1]], directorio_salida)
 
         # Gráficas de espacio
@@ -865,7 +875,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         save_plot(plt, 'Evalucion Grasas y Aceites en el espacio',xlabel, ylabel, [c_x, GyA], directorio_salida)
         save_plot(plt, 'Evalucion P organico en el espacio',xlabel, ylabel, [c_x, Porg], directorio_salida)
         save_plot(plt, 'Evalucion P disuelto en el espacio',xlabel, ylabel, [c_x, Pdis], directorio_salida)
-        save_plot(plt, 'Evalucion pH en espacio',xlabel, 'Moles/L de H+', [c_x, pH], directorio_salida)
+        save_plot(plt, 'Evalucion del pH en espacio',xlabel, 'pH', [c_x, pH], directorio_salida)
         save_plot(plt, 'Evalucion Alcanilidad en espacio',xlabel, 'CaCO3', [c_x, ALK], directorio_salida)
 
     print "El proceso ha finalizado."
