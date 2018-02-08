@@ -11,6 +11,9 @@ BOLD_FONT_XLWT = xlwt.Style.easyxf('font: bold on;')
 CONTAMINANTS = ['OD', 'DBO', 'NH4', 'NO2', 'NO3', 'TDS', 'GyA',
 	'DQO', 'Porg', 'Pdis', 'EC', 'TC', 'T', 'TSS', 'SS', 'pH', 'ALK']
 
+COLS_CONTAMINANTS = ['OD', 'DBO', 'NH4', 'NO2', 'NO3', 'TDS', 'GyA',
+	'Condt', 'DQO', 'Porg', 'Pdis', 'EC', 'TC', 'T', 'TSS', 'SS', 'pH', 'ALK']
+
 CONTAMINANTS_UNITS = ['mg/l', 'mg/l', 'mg/l','mg/l', 'mg/l', 'mg/l', 'mg/l' ,
 	'mg/l', 'mg/l', 'mg/l', 'NMP','NMP', u'c°', 'mg/l', 'mg/l' ,'unidades de pH' ,'mg/l']
 
@@ -165,12 +168,12 @@ def create_sheet_dc(workbook, name, distances, initial_value=None):
 		sheet.write(i + 1, 0, distances[i], BOLD_FONT_XLWT)
 
 	# Crear la columna de contaminantes
-	for i in xrange(len(CONTAMINANTS)):
-		sheet.write(0, i + 1, CONTAMINANTS[i], BOLD_FONT_XLWT)
+	for i in xrange(len(COLS_CONTAMINANTS)):
+		sheet.write(0, i + 1, COLS_CONTAMINANTS[i], BOLD_FONT_XLWT)
 	
 	if initial_value is not None:
 		rows = len(distances)
-		cols = len(CONTAMINANTS)
+		cols = len(COLS_CONTAMINANTS)
 
 		for i in xrange(1, rows + 1):
 			for j in xrange(1, cols + 1):
@@ -201,12 +204,12 @@ def create_sheet_tc(workbook, name, hours, initial_value=None):
 		sheet.write(i + 1, 0, 3600 * i, BOLD_FONT_XLWT)
 
 	# Crear la columna de contaminantes
-	for i in xrange(len(CONTAMINANTS)):
-		sheet.write(0, i + 1, CONTAMINANTS[i], BOLD_FONT_XLWT)
+	for i in xrange(len(COLS_CONTAMINANTS)):
+		sheet.write(0, i + 1, COLS_CONTAMINANTS[i], BOLD_FONT_XLWT)
 
 	if initial_value is not None:
 		rows = hours + 1
-		cols = len(CONTAMINANTS)
+		cols = len(COLS_CONTAMINANTS)
 
 		for i in xrange(1, rows + 1):
 			for j in xrange(1, cols + 1):
