@@ -1,13 +1,13 @@
 
 # -*- coding: utf-8 -*-
 
-__author__ = 'Efraín Domínguez Calle, PhD - Wilfredo Marimón Bolivar'
+__author__ = 'Efraín Domínguez Calle, PhD - Wilfredo Marimón Bolivar, PhD'
 __copyright__ = "Copyright 2017, Mathmodelling"
 __credits__ = ["Efraín Domínguez Calle"]
 __license__ = "Uso Libre"
 __version__ = "1.0"
 __maintainer__ = "Efraín Antonio Domínguez Calle"
-__email__ = 'edoc@marthmodelling.org, willy_ingeniero@hotmail.com'
+__email__ = 'edoc@marthmodelling.org, w.marimon@javeriana.edu.co'
 __status__ = "En desarrollo"
 
 
@@ -688,7 +688,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         S_ALK = SALK[:, muestra]
 
         #  Evolución de la concentración para t + dt
-        T, OD, DBO, NH3, NO2, NO3, DQO, TDS, EC, TC, GyA, Porg, Pdis, TSS, SS, pH, ALK, paso_t = calidad_explicito(D, dx, i_c_T, i_c_OD, i_c_DBO, i_c_NH3, i_c_NO2, i_c_NO3, i_c_DQO, i_c_TDS, i_c_EC, i_c_TC, i_c_GyA, i_c_Porg, i_c_Pdis, i_c_TSS, i_c_SS, i_c_pH, i_c_ALK, va, cd, S_T, S_OD, S_DBO, S_NH3, S_NO2, S_NO3, S_TDS, S_GyA, S_DQO, S_Porg, S_Pdis, S_EC, S_TC, S_TSS, S_SS, S_pH, S_ALK, Caudales, variables)
+        T, OD, DBO, NH3, NO2, NO3, DQO, TDS, EC, TC, GyA, Porg, Pdis, TSS, SS, pH, ALK, paso_t = calidad_explicito(D, dx, i_c_T, i_c_OD, i_c_DBO, i_c_NH3, i_c_NO2, i_c_NO3, i_c_DQO, i_c_TDS, i_c_EC, i_c_TC, i_c_GyA, i_c_Porg, i_c_Pdis, i_c_TSS, i_c_SS, i_c_pH, i_c_ALK, v, cd, S_T, S_OD, S_DBO, S_NH3, S_NO2, S_NO3, S_TDS, S_GyA, S_DQO, S_Porg, S_Pdis, S_EC, S_TC, S_TSS, S_SS, S_pH, S_ALK, Caudales, variables)
 
         # Se guardan las concentraciones del momento t+dt
         mconT[i, :] = T
@@ -752,8 +752,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     save_sheet(book, 'Pdis', mconPdis[0::3600, :])
     save_sheet(book, 'TSS', mconTSS[0::3600, :])
     save_sheet(book, 'SS', mconSS[0::3600, :])
-    save_sheet(book, 'pH', mconSS[0::3600, :])
-    save_sheet(book, 'ALK', mconSS[0::3600, :])
+    save_sheet(book, 'pH', mconpH[0::3600, :])
+    save_sheet(book, 'ALK', mconALK[0::3600, :])
 
     used_vars(book, variables)
     book.save(join(directorio_salida, "Resultados.xls"))
