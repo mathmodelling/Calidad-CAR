@@ -300,7 +300,7 @@ def verify_sheet_row(sheet, row, value):
 	cols = sheet.ncols
 
 	for j in xrange(1, cols):
-		if int(sheet.cell_value(row, j)) == 0:
+		if float(sheet.cell_value(row, j)) == value:
 			raise ErrorRow(sheet.name, row, value)
 
 def verify_book(workbook):
@@ -323,7 +323,7 @@ def verify_book(workbook):
 
 	verify_sheet(workbook.sheet_by_name(u'Caudales'))
 	# Verifica que la primera linea no contenga 0's
-	verify_sheet_row(workbook.sheet_by_name(u'Caudales'), 1, 0)
+	verify_sheet_row(workbook.sheet_by_name(u'Caudales'), 1, 0.0)
 
 	# Obtener el tiempo
 	sheet = workbook.sheet_by_name('WD')
