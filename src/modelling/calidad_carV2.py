@@ -168,7 +168,7 @@ def read_config_file(config_file, sheet_name_wd='WD', sheet_name_sl='SL', sheet_
     SPdis = SPdis[0:, 1:] * Caudales[0:, 1:] / (Caudales[0, 1:] + Caudales[0:, 1:])
     STSS = STSS[0:, 1:] * Caudales[0:, 1:] / (Caudales[0, 1:] + Caudales[0:, 1:])
     SSS = SSS[0:, 1:] * Caudales[0:, 1:] / (Caudales[0, 1:] + Caudales[0:, 1:])
-    ST = (ST[0:, 1:] + 273.15)
+    ST = (ST[0:, 1:] + 273)
     SpH = (10 ** (-1 * (SpH[0:, 1:]))) * Caudales[0:, 1:] / (Caudales[0, 1:] + Caudales[0:, 1:])
     SALK = SALK[0:, 1:] * Caudales[0:, 1:] / (Caudales[0, 1:] + Caudales[0:, 1:])
     
@@ -229,7 +229,8 @@ def calidad_explicito(D, dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO
 
     # tfactor es un factor multiplicador del numero de nodos en el tiempo para llegar de t a t + dt, tfactor >= 1,
     # se recomienda aumentarlo de 10 en 10 {10, 100, 1000, 10000... }
-    tfactor = 1.0
+    # ## AGREGAR TFACTOR
+    tfactor = variables['tfactor']
     # Se guarda el dt inicial como dtini
     dtini = dt
     # Se ajusta el dt según tfactor, dt se hace más pequeño tfactor-veces
@@ -352,116 +353,117 @@ def calidad_explicito(D, dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO
 
     # range(int(dtini / dt)) determina el número de nodos temporales necesarios para llegar t + dt de forma estable
     for i in range(int(dtini / dt)):
+        caudales = Caudales[0:, 1:] / (Caudales[0, 1:] + Caudales[0:, 1:])
         adv_T = -((ki[2:] * v[2:] * c_T[2:] - ki[1:-1] * v[1:-1] * c_T[1:-1]) * (dt / dx) +
                    (kr[1:-1] * v[1:-1] * c_T[1:-1] - kr[0:-2] * v[0:-2] * c_T[0:-2]) * (dt / dx))
         reac_T = (Jsn + sbc*((Tair + 273)**4)*(Aair + 0.031*((eair)**0.5))*(1-RL) - 0.97*sbc*((c_T[0:-2])**4) -
-                  0.47*(19 + (0.95*(Uw**2)))*((c_T[0:-2]) - Tair - 273.15) - (19 + (0.95*(Uw**2)))*(es - eair))*D/(den*Cp*As1)*dt
-        cout_T[1:-1] = c_T[1:-1] + adv_T + reac_T + ((S_T[1:-1] - c_T[1:-1]) * Caudales[1:-1, 1] * dt)
+                  0.47*(19 + (0.95*(Uw**2)))*((c_T[0:-2]) - Tair - 273.15) - (19 + (0.95*(Uw**2)))*(es - eair))*D/(den*Cp*As1)
+        cout_T[1:-1] = c_T[1:-1] + adv_T + reac_T + ((S_T[1:-1] - c_T[1:-1])*caudales[1:-1, 1])
 
         adv_OD = -((ki[2:] * v[2:] * c_OD[2:] - ki[1:-1] * v[1:-1] * c_OD[1:-1]) * (dt / dx) +
                    (kr[1:-1] * v[1:-1] * c_OD[1:-1] - kr[0:-2] * v[0:-2] * c_OD[0:-2]) * (dt / dx))
         dif_OD = 0.5 * (d[2:] * c_OD[2:] - 2 * d[1:-1] * c_OD[1:-1] + d[0:-2] * c_OD[0:-2]) * (dt / dx ** 2)
         p = (c_OD[0:-2]) / ((c_OD[0:-2]) + ks)
-        reac_OD = (Da + ko2 * (cs - c_OD[0:-2]) - kdbo * c_DBO[0:-2] * p * (
-        teta_DBO ** (c_T[0:-2] - 293.15)) - alfa_nh3 * knh3 *
+        reac_OD = (Da + ko2 * (cs - c_OD[0:-2]) - kdbo * c_DBO[0:-2] * p * (teta_DBO ** (c_T[0:-2] - 293.15)) - alfa_nh3 * knh3 *
                    c_NH3[0:-2] * p * (teta_NH3 ** (c_T[0:-2] - 293.15)) - alfa_no2 * kno2 * c_NO2[0:-2] * p * (
                    teta_NO2 ** (c_T[0:-2] - 293.15)) - ksod / D) * dt
-        cout_OD[1:-1] = c_OD[1:-1] + adv_OD + dif_OD + reac_OD + (S_OD[1:-1] * dt)
+        cout_OD[1:-1] = c_OD[1:-1] + adv_OD + dif_OD + reac_OD + S_OD[1:-1]*caudales[1:-1, 1]
 
         adv_DBO = -((ki[2:] * v[2:] * c_DBO[2:] - ki[1:-1] * v[1:-1] * c_DBO[1:-1]) * (dt / dx) +
                     (kr[1:-1] * v[1:-1] * c_DBO[1:-1] - kr[0:-2] * v[0:-2] * c_DBO[0:-2]) * (dt / dx))
         dif_DBO = 0.5 * (d[2:] * c_DBO[2:] - 2 * d[1:-1] * c_DBO[1:-1] + d[0:-2] * c_DBO[0:-2]) * (dt / dx ** 2)
         reac_DBO = (-kdbo * c_DBO[0:-2] * p * (teta_DBO ** (c_T[0:-2] - 293.15))) * dt
-        cout_DBO[1:-1] = c_DBO[1:-1] + adv_DBO + dif_DBO + reac_DBO + S_DBO[1:-1] * dt
+        cout_DBO[1:-1] = c_DBO[1:-1] + adv_DBO + dif_DBO + reac_DBO + S_DBO[1:-1]*caudales[1:-1, 1]
 
         adv_NH3 = -((ki[2:] * v[2:] * c_NH3[2:] - ki[1:-1] * v[1:-1] * c_NH3[1:-1]) * (dt / dx) +
                     (kr[1:-1] * v[1:-1] * c_NH3[1:-1] - kr[0:-2] * v[0:-2] * c_NH3[0:-2]) * (dt / dx))
         dif_NH3 = 0.5 * (d[2:] * c_NH3[2:] - 2 * d[1:-1] * c_NH3[1:-1] + d[0:-2] * c_NH3[0:-2]) * (dt / dx ** 2)
         reac_NH3 = (knt * NT * (teta_NT ** (c_T[0:-2] - 293.15)) - knh3 * c_NH3[0:-2] * p * (
         teta_NH3 ** (c_T[0:-2] - 293.15)) + ksnh3 / D - F * alfa_1 * miu * A) * dt
-        cout_NH3[1:-1] = c_NH3[1:-1] + adv_NH3 + dif_NH3 + reac_NH3 + S_NH3[1:-1] * dt
+        cout_NH3[1:-1] = c_NH3[1:-1] + adv_NH3 + dif_NH3 + reac_NH3 + S_NH3[1:-1]*caudales[1:-1, 1]
 
         adv_NO2 = -((ki[2:] * v[2:] * c_NO2[2:] - ki[1:-1] * v[1:-1] * c_NO2[1:-1]) * (dt / dx) +
                     (kr[1:-1] * v[1:-1] * c_NO2[1:-1] - kr[0:-2] * v[0:-2] * c_NO2[0:-2]) * (dt / dx))
         dif_NO2 = 0.5 * (d[2:] * c_NO2[2:] - 2 * d[1:-1] * c_NO2[1:-1] + d[0:-2] * c_NO2[0:-2]) * (dt / dx ** 2)
         reac_NO2 = (knh3 * c_NH3[0:-2] * p * (teta_NH3 ** (c_T[0:-2] - 293.15)) - kno2 * c_NO2[0:-2] * p * (
         teta_NO2 ** (c_T[0:-2] - 293.15)) + kno3 * c_NO3[0:-2] * (teta_NO3 ** (c_T[0:-2] - 293.15))) * dt
-        cout_NO2[1:-1] = c_NO2[1:-1] + adv_NO2 + dif_NO2 + reac_NO2 + S_NO2[1:-1] * dt
+        cout_NO2[1:-1] = c_NO2[1:-1] + adv_NO2 + dif_NO2 + reac_NO2 + S_NO2[1:-1]*caudales[1:-1, 1]
 
         adv_NO3 = -((ki[2:] * v[2:] * c_NO3[2:] - ki[1:-1] * v[1:-1] * c_NO3[1:-1]) * (dt / dx) +
                     (kr[1:-1] * v[1:-1] * c_NO3[1:-1] - kr[0:-2] * v[0:-2] * c_NO3[0:-2]) * (dt / dx))
         dif_NO3 = 0.5 * (d[2:] * c_NO3[2:] - 2 * d[1:-1] * c_NO3[1:-1] + d[0:-2] * c_NO3[0:-2]) * (dt / dx ** 2)
         reac_NO3 = (kno2 * c_NO2[0:-2] * p * (teta_NO2 ** (c_T[0:-2] - 293.15)) - kno3 * c_NO3[0:-2] * (
         teta_NO3 ** (c_T[0:-2] - 293.15)) - (1 - F) * alfa_1 * miu * A) * dt
-        cout_NO3[1:-1] = c_NO3[1:-1] + adv_NO3 + dif_NO3 + reac_NO3 + S_NO3[1:-1] * dt
+        cout_NO3[1:-1] = c_NO3[1:-1] + adv_NO3 + dif_NO3 + reac_NO3 + S_NO3[1:-1]*caudales[1:-1, 1]
 
         adv_DQO = -((ki[2:] * v[2:] * c_DQO[2:] - ki[1:-1] * v[1:-1] * c_DQO[1:-1]) * (dt / dx) +
                     (kr[1:-1] * v[1:-1] * c_DQO[1:-1] - kr[0:-2] * v[0:-2] * c_DQO[0:-2]) * (dt / dx))
         dif_DQO = 0.5 * (d[2:] * c_DQO[2:] - 2 * d[1:-1] * c_DQO[1:-1] + d[0:-2] * c_DQO[0:-2]) * (dt / dx ** 2)
         reac_DQO = (-kDQO * c_DQO[0:-2] * p * (teta_DQO ** (c_T[0:-2] - 293.15))) * dt
-        cout_DQO[1:-1] = c_DQO[1:-1] + adv_DQO + dif_DQO + reac_DQO + + S_DQO[1:-1] * dt
+        cout_DQO[1:-1] = c_DQO[1:-1] + adv_DQO + dif_DQO + reac_DQO + + S_DQO[1:-1]*caudales[1:-1, 1]
 
         adv_TDS = -((ki[2:] * v[2:] * c_TDS[2:] - ki[1:-1] * v[1:-1] * c_TDS[1:-1]) * (dt / dx) +
                     (kr[1:-1] * v[1:-1] * c_TDS[1:-1] - kr[0:-2] * v[0:-2] * c_TDS[0:-2]) * (dt / dx))
         dif_TDS = 0.5 * (d[2:] * c_TDS[2:] - 2 * d[1:-1] * c_TDS[1:-1] + d[0:-2] * c_TDS[0:-2]) * (dt / dx ** 2)
         reac_TDS = (-kTDS * c_TDS[0:-2]) * dt
-        cout_TDS[1:-1] = c_TDS[1:-1] + adv_TDS + dif_TDS + reac_TDS + S_TDS[1:-1] * dt
+        cout_TDS[1:-1] = c_TDS[1:-1] + adv_TDS + dif_TDS + reac_TDS + S_TDS[1:-1]*caudales[1:-1, 1]
 
         adv_EC = -((ki[2:] * v[2:] * c_EC[2:] - ki[1:-1] * v[1:-1] * c_EC[1:-1]) * (dt / dx) +
                    (kr[1:-1] * v[1:-1] * c_EC[1:-1] - kr[0:-2] * v[0:-2] * c_EC[0:-2]) * (dt / dx))
         dif_EC = 0.5 * (d[2:] * c_EC[2:] - 2 * d[1:-1] * c_EC[1:-1] + d[0:-2] * c_EC[0:-2]) * (dt / dx ** 2)
         reac_EC = (-kEC * c_EC[0:-2] * (teta_EC ** (c_T[0:-2] - 293.15))) * dt
-        cout_EC[1:-1] = c_EC[1:-1] + adv_EC + dif_EC + reac_EC + S_EC[1:-1] * dt
+        cout_EC[1:-1] = c_EC[1:-1] + adv_EC + dif_EC + reac_EC + S_EC[1:-1]*caudales[1:-1, 1]
 
         adv_TC = -((ki[2:] * v[2:] * c_TC[2:] - ki[1:-1] * v[1:-1] * c_TC[1:-1]) * (dt / dx) +
                    (kr[1:-1] * v[1:-1] * c_TC[1:-1] - kr[0:-2] * v[0:-2] * c_TC[0:-2]) * (dt / dx))
         dif_TC = 0.5 * (d[2:] * c_TC[2:] - 2 * d[1:-1] * c_TC[1:-1] + d[0:-2] * c_TC[0:-2]) * (dt / dx ** 2)
         reac_TC = (-kTC * c_TC[0:-2] * (teta_TC ** (c_T[0:-2] - 293.15))) * dt
-        cout_TC[1:-1] = c_TC[1:-1] + adv_TC + dif_TC + reac_TC + S_TC[1:-1] * dt
+        cout_TC[1:-1] = c_TC[1:-1] + adv_TC + dif_TC + reac_TC + S_TC[1:-1]*caudales[1:-1, 1]
 
         adv_GyA = -((ki[2:] * v[2:] * c_GyA[2:] - ki[1:-1] * v[1:-1] * c_GyA[1:-1]) * (dt / dx) +
                     (kr[1:-1] * v[1:-1] * c_GyA[1:-1] - kr[0:-2] * v[0:-2] * c_GyA[0:-2]) * (dt / dx))
         dif_GyA = 0.5 * (d[2:] * c_GyA[2:] - 2 * d[1:-1] * c_GyA[1:-1] + d[0:-2] * c_GyA[0:-2]) * (dt / dx ** 2)
-        reac_GyA = (Jdbw / D + qtex / D - (kN + kH * c_pH[0:-2] + kOH * (Kw / c_pH[0:-2])) * fdw * c_GyA[0:-2] - kf * c_GyA[0:-2] - kb * c_GyA[
-                                    0:-2] - kv * ((Cg / (Henry / (R * c_T[0:-2]))) - fdw * c_GyA[0:-2])) * dt
-        cout_GyA[1:-1] = c_GyA[1:-1] + adv_GyA + dif_GyA + reac_GyA + S_GyA[1:-1] * dt
+        reac_GyA = (Jdbw / D + qtex / D - (kN + kH * c_pH[0:-2] - kOH * (Kw / c_pH[0:-2])) * fdw * c_GyA[0:-2] - kf * c_GyA[0:-2] - kb * c_GyA[
+                                    0:-2] - kv * ((Cg / (Henry / (R * c_T[0:-2]))) - fdw * c_GyA[0:-2])) * dt/(10*tfactor)
+        cout_GyA[1:-1] = c_GyA[1:-1] + adv_GyA + dif_GyA + reac_GyA + S_GyA[1:-1]
+
 
         adv_Porg = -((ki[2:] * v[2:] * c_Porg[2:] - ki[1:-1] * v[1:-1] * c_Porg[1:-1]) * (dt / dx) +
                      (kr[1:-1] * v[1:-1] * c_Porg[1:-1] - kr[0:-2] * v[0:-2] * c_Porg[0:-2]) * (dt / dx))
         dif_Porg = 0.5 * (d[2:] * c_Porg[2:] - 2 * d[1:-1] * c_Porg[1:-1] + d[0:-2] * c_Porg[0:-2]) * (dt / dx ** 2)
         reac_Porg = (alfa_2 * resp * A - kPorg * c_Porg[0:-2] - kPsed * c_Porg[0:-2]) * dt
-        cout_Porg[1:-1] = c_Porg[1:-1] + adv_Porg + dif_Porg + reac_Porg + S_Porg[1:-1] * dt
+        cout_Porg[1:-1] = c_Porg[1:-1] + adv_Porg + dif_Porg + reac_Porg + S_Porg[1:-1]
 
         adv_Pdis = -((ki[2:] * v[2:] * c_Pdis[2:] - ki[1:-1] * v[1:-1] * c_Pdis[1:-1]) * (dt / dx) +
                      (kr[1:-1] * v[1:-1] * c_Pdis[1:-1] - kr[0:-2] * v[0:-2] * c_Pdis[0:-2]) * (dt / dx))
         dif_Pdis = 0.5 * (d[2:] * c_Pdis[2:] - 2 * d[1:-1] * c_Pdis[1:-1] + d[0:-2] * c_Pdis[0:-2]) * (dt / dx ** 2)
         reac_Pdis = (kPorg * c_Porg[1:-1] + kPsed / D - sigma2 * miu * A) * dt
-        cout_Pdis[1:-1] = c_Pdis[1:-1] + adv_Pdis + dif_Pdis + reac_Pdis + S_Pdis[1:-1] * dt
+        cout_Pdis[1:-1] = c_Pdis[1:-1] + adv_Pdis + dif_Pdis + reac_Pdis + S_Pdis[1:-1]
 
         adv_TSS = -((ki[2:] * v[2:] * c_TSS[2:] - ki[1:-1] * v[1:-1] * c_TSS[1:-1]) * (dt / dx) +
                     (kr[1:-1] * v[1:-1] * c_TSS[1:-1] - kr[0:-2] * v[0:-2] * c_TSS[0:-2]) * (dt / dx))
         dif_TSS = 0.5 * (d[2:] * c_TSS[2:] - 2 * d[1:-1] * c_TSS[1:-1] + d[0:-2] * c_TSS[0:-2]) * (dt / dx ** 2)
         reac_TSS = (-Ws * c_TSS[0:-2] / D + Rs / D + Rp / D) * dt
-        cout_TSS[1:-1] = c_TSS[1:-1] + adv_TSS + dif_TSS + reac_TSS + S_TSS[1:-1] * dt
+        cout_TSS[1:-1] = c_TSS[1:-1] + adv_TSS + dif_TSS + reac_TSS + S_TSS[1:-1]*caudales[1:-1, 1]
 
         adv_SS = -((ki[2:] * v[2:] * c_SS[2:] - ki[1:-1] * v[1:-1] * c_SS[1:-1]) * (dt / dx) +
                    (kr[1:-1] * v[1:-1] * c_SS[1:-1] - kr[0:-2] * v[0:-2] * c_SS[0:-2]) * (dt / dx))
         dif_SS = 0.5 * (d[2:] * c_SS[2:] - 2 * d[1:-1] * c_SS[1:-1] + d[0:-2] * c_SS[0:-2]) * (dt / dx ** 2)
         reac_SS = (-Ws * c_SS[0:-2] / D + Rs / D + Rp / D) * dt
-        cout_SS[1:-1] = c_SS[1:-1] + adv_SS + dif_SS + reac_SS + S_SS[1:-1] * dt
+        cout_SS[1:-1] = c_SS[1:-1] + adv_SS + dif_SS + reac_SS + S_SS[1:-1]*caudales[1:-1, 1]
 
         adv_ALK = -((ki[2:] * v[2:] * c_ALK[2:] - ki[1:-1] * v[1:-1] * c_ALK[1:-1]) * (dt / dx) + (
         kr[1:-1] * v[1:-1] * c_ALK[1:-1] - kr[0:-2] * v[0:-2] * c_ALK[0:-2]) * (dt / dx))
         dif_ALK = 0.5 * (d[2:] * c_ALK[2:] - 2 * d[1:-1] * c_ALK[1:-1] + d[0:-2] * c_ALK[0:-2]) * (dt / dx ** 2)
         reac_ALK = Wrp + Vv * As * (CO2S - ((c_pH[0:-2]) * (c_pH[0:-2]) / (((c_pH[0:-2]) * (c_pH[0:-2])) + K1 * (c_pH[0:-2]) + K1 * K2)) * c_ALK[
                                                                                                                0:-2])
-        cout_ALK[1:-1] = c_ALK[1:-1] + adv_ALK + dif_ALK + reac_ALK + S_ALK[1:-1] * dt
+        cout_ALK[1:-1] = c_ALK[1:-1] + adv_ALK + dif_ALK + reac_ALK + S_ALK[1:-1]*caudales[1:-1, 1]
 
         adv_pH = -((ki[2:] * v[2:] * c_pH[2:] - ki[1:-1] * v[1:-1] * c_pH[1:-1]) * (dt / dx) +
                    (kr[1:-1] * v[1:-1] * c_pH[1:-1] - kr[0:-2] * v[0:-2] * c_pH[0:-2]) * (dt / dx))
         dif_pH = 0.5 * (d[2:] * c_pH[2:] - 2 * d[1:-1] * c_pH[1:-1] + d[0:-2] * c_pH[0:-2]) * (dt / dx ** 2)
         reac_pH = ((Kw / (FrH * (c_ALK[0:-2])) ** 0.5))
-        cout_pH[1:-1] = c_pH[1:-1] + adv_pH + dif_pH + reac_pH + S_pH[1:-1]*dt
+        cout_pH[1:-1] = c_pH[1:-1] + adv_pH + dif_pH + reac_pH + S_pH[1:-1]*caudales[1:-1, 1]
 
         c_T = cout_T
         c_OD = cout_OD
@@ -517,8 +519,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     Diff = variables['Diff']
 
     cd = np.zeros(len(va)) + Diff
-    v = np.zeros(len(va)) + np.max(vel)
-    D = np.max(hmed)
+    v = np.zeros(len(va)) + np.mean(vel)
+    D = np.mean(hmed)
     # Condiciones de Frontera
     # TEMPERATURA
     b_c_T = b_c[:, 14]
@@ -688,7 +690,10 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         S_ALK = SALK[:, muestra]
 
         #  Evolución de la concentración para t + dt
-        T, OD, DBO, NH3, NO2, NO3, DQO, TDS, EC, TC, GyA, Porg, Pdis, TSS, SS, pH, ALK, paso_t = calidad_explicito(D, dx, i_c_T, i_c_OD, i_c_DBO, i_c_NH3, i_c_NO2, i_c_NO3, i_c_DQO, i_c_TDS, i_c_EC, i_c_TC, i_c_GyA, i_c_Porg, i_c_Pdis, i_c_TSS, i_c_SS, i_c_pH, i_c_ALK, v, cd, S_T, S_OD, S_DBO, S_NH3, S_NO2, S_NO3, S_TDS, S_GyA, S_DQO, S_Porg, S_Pdis, S_EC, S_TC, S_TSS, S_SS, S_pH, S_ALK, Caudales, variables)
+        T, OD, DBO, NH3, NO2, NO3, DQO, TDS, EC, TC, GyA, Porg, Pdis, TSS, SS, pH, ALK, paso_t = calidad_explicito(D, dx, i_c_T,
+            i_c_OD, i_c_DBO, i_c_NH3, i_c_NO2, i_c_NO3, i_c_DQO, i_c_TDS, i_c_EC, i_c_TC, i_c_GyA,i_c_Porg, i_c_Pdis, i_c_TSS, i_c_SS,
+            i_c_pH, i_c_ALK, v, cd, S_T, S_OD, S_DBO, S_NH3, S_NO2, S_NO3, S_DQO, S_TDS, S_EC, S_TC, S_GyA, S_Porg, S_Pdis, S_TSS, S_SS,
+            S_pH, S_ALK, Caudales, variables)
 
         # Se guardan las concentraciones del momento t+dt
         mconT[i, :] = T

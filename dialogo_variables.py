@@ -20,7 +20,7 @@ siglas = ['Da', 'ko2', 'cs', 'knh3', 'ksnh3', 'alfa_nh3',
     'kPorg', 'kPsed', 'sigma2', 'Ws', 'Rs', 'Rp', 'k', 'den', 'Cp', 
     'teta_DBO', 'teta_NH3', 'teta_NO2', 'teta_DQO', 'teta_NT', 'teta_NO3', 
     'Kw', 'K1', 'K2', 'Vv', 'As', 'CO2S', 'Wrp', 'FrH', 'Diff',
-    'As1', 'Jsn', 'sbc', 'Tair', 'Aair', 'eair', 'RL', 'Uw', 'es']
+    'As1', 'Jsn', 'sbc', 'Tair', 'Aair', 'eair', 'RL', 'Uw', 'es', 'tfactor']
 
 class VarsDialog(QtGui.QDialog, FORM_CLASS):
     def __init__(self, parent = None):
@@ -46,7 +46,8 @@ class VarsDialog(QtGui.QDialog, FORM_CLASS):
             'Kw': self.Kw, 'K1': self.K1, 'K2': self.K2, 'Vv': self.Vv, 'As': self.As, 
             'CO2S': self.CO2S, 'Wrp': self.Wrp, 'FrH': self.FrH, 'Diff': self.Diff,
             'As1': self.As1 , 'Jsn': self.Jsn , 'sbc': self.sbc , 'Tair': self.Tair , 
-            'Aair': self.Aair , 'eair': self.eair , 'RL': self.RL , 'Uw': self.Uw , 'es': self.es }
+            'Aair': self.Aair , 'eair': self.eair , 'RL': self.RL , 'Uw': self.Uw , 'es': self.es,
+            'tfactor': self.tfactor }
         
         # Agregar validador
         validator = QtGui.QDoubleValidator()

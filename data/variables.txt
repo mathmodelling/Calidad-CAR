@@ -10,7 +10,7 @@ K1 4.5e-07
 teta_NH3 1.01
 fdw 0.5
 Wrp 1.808e-09
-Jdbw 0.000462963
+Jdbw 4.62963e-08
 alfa_no2 1.1
 ksnh3 1.15741e-06
 teta_DQO 1.01
@@ -35,7 +35,7 @@ teta_EC 0.8
 Tair 17.0
 Uw 3.0
 kH 1.1574e-05
-qtex 0.000347222
+qtex 3.47222e-05
 kN 1.1574e-07
 kPsed 1.574e-06
 kPorg 1.1574e-06
@@ -61,6 +61,7 @@ Cg 1e-05
 alfa_2 0.5
 ks 0.4
 As 1.0
+k 0.58
 kno3 1.1574e-06
 teta_NT 1.01
 Vv 5.787e-06
@@ -68,5 +69,5 @@ CO2S 1.23e-05
 Diff 5.0
 knt 2.3148e-06
 Cp 4148.1
-k 0.58
+tfactor 1.0
 eair 14.3
