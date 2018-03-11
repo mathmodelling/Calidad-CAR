@@ -29,11 +29,18 @@ from PyQt4.QtGui import ( QIcon,
 from src.actions import ( Modelling,
                           CSVAction,
                           LayerAction,
-                          AddSectionAction,
-                          ConcentrationPointsAction,
+                          LayerNotFound,
+                          DrawAxisAction,
                           ModellingAction,
-                          CreateInputFileAction)
+                          AddSectionAction,
+                          DrawPointsAction,
+                          CreateInputFileAction,
+                          ConcentrationPointsAction,
+                          PreviousGeneratedLayerFound)
 
+from dialogo_dibujar_vertices import (DrawDialog,
+                                      NoSelectedOption, 
+                                      NotLoadedPoints)
 import time
 import util
 import copy
@@ -44,11 +51,11 @@ import numpy as np
 import datetime as dtm
 
 from dialogo_csv import CSVDialog
-from src.spreadsheets import Error, ErrorRow
 from src.modelling import calidad_car
 from src import layer_manager as manager
 from dialogo_variables import VarsDialog
 from informacion import InformationDialog
+from src.spreadsheets import Error, ErrorRow
 from dialogo_parametros import SettingsDialog
 from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
 from dialogo_arhivo_entrada import InputFileDialog, LoadInputFileDialog
@@ -235,6 +242,20 @@ class CalidadCAR:
             callback=self.conf_vars,
             parent=self.iface.mainWindow())
 
+        icon_path = ':/plugins/CalidadCAR/icons/icon.png'
+        self.intersctionAction = self.add_action(
+            icon_path,
+            text=self.tr(u'Agregar vértices'),
+            callback=self.generate_secciones,
+            parent=self.iface.mainWindow())
+
+        icon_path = ':/plugins/CalidadCAR/icons/icon.png'
+        self.intersctionAction = self.add_action(
+            icon_path,
+            text=self.tr(u'Generar eje'),
+            callback=self.generate_axis,
+            parent=self.iface.mainWindow())
+
         icon_path = ':/plugins/CalidadCAR/icons/info.png'
         self.intersctionAction = self.add_action(
             icon_path,
@@ -244,6 +265,70 @@ class CalidadCAR:
 
         # self.intersctionAction.setEnabled(False)
         # self.addCsvAction.setEnabled(False)
+
+    def generate_secciones(self):
+        action = DrawPointsAction()
+        dialog = DrawDialog()
+        err = None
+
+        try:
+            action.pre()
+            r = dialog.exec_()
+
+            # En caso de que el usuario cancelo
+            if not r: return
+
+            dialog.validate()
+            coords = None
+            option = dialog.getOption()
+
+            if not option:
+                coords = dialog.getCoords()
+
+            # print option, coords
+            action.pro()
+            action.pos(coords)
+            # Actualiza el canvas
+            self.iface.mapCanvas().refreshAllLayers() 
+
+        except ValueError:
+            err = u"Asegurate que las coordenadas están en el formato correcto."
+        except NoSelectedOption:
+            err = u"Tienes que seleccionar una opción."
+        except NotLoadedPoints:
+            err = u"No subiste ninguna coordenada."
+        except LayerNotFound:
+            err = u"No se encontró la capa hidrografia, asegurate de cargarla con la acción\
+            de cargar fondos."
+        except PreviousGeneratedLayerFound:
+            # TODO: Fix this
+            err = u"Ya existe una capa de secciones, por favor eliminala antes de continuar"
+        finally:
+            if err:
+                util.errorDialog(self, u'Error', err)
+
+    def generate_axis(self):
+        action = DrawAxisAction()
+        err = None
+
+        try:
+            action.pre()
+            action.pro()
+            action.pos()
+
+            # Actualiza el canvas
+            self.iface.mapCanvas().refreshAllLayers() 
+
+        except LayerNotFound:
+            err = u"No se encontró la capa hidrografia, asegurate de cargarla con la acción\
+            de cargar fondos."
+        except PreviousGeneratedLayerFound:
+            # TODO: Fix this
+            err = u"Ya existe una capa de eje, por favor eliminala antes de continuar."
+        finally:
+            if err:
+                util.errorDialog(self, u'Error', err)
+
 
     def createInputFile(self):
         action = CreateInputFileAction()

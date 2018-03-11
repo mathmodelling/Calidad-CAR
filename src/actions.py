@@ -6,14 +6,18 @@ import geometry
 import numpy as np
 import datetime as dtm
 import layer_manager as manager
+from abc import ABCMeta, abstractmethod
 from modelling import calidad_car, calidad_carV2
 from spreadsheets import create_book, verify_book, load_book
-from abc import ABCMeta, abstractmethod
+
 from PyQt4.QtCore import (QFileInfo, QVariant)
 
 from qgis.core import ( QgsField,
-                        QgsVectorJoinInfo,
-                        QgsVectorLayer)
+                        QgsPoint,
+                        QgsFeature,
+                        QgsGeometry,
+                        QgsVectorLayer,
+                        QgsVectorJoinInfo)
 
 class BaseAction:
     """Clase base que define la estructura de una acción."""
@@ -30,6 +34,116 @@ class BaseAction:
     def pos(self):
         """En este método se pueden implementar procesos que se deben realizar una vez se ha concluido con éxito el llamado al método pos."""
         pass
+
+class LayerNotFound(Exception):
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return "Layer %s not found" % self.name
+
+class PreviousGeneratedLayerFound(Exception):
+    def __init__(self, name):
+        self.name = name
+    def __str__(self):
+        return "Te layer %s was already generated." % self.name
+
+
+class DrawPointsAction(BaseAction):
+    """Esta accion es la encargada de crear una capa de secciones y una capa de eje que el usuario podrá cargar después"""
+    
+    # TODO: Fix harcoded names
+    def __init__(self):
+        self.hidro_layer = None
+        self.gen_sec = None
+
+    def pre(self):
+        # Verifica que la capa de hidrografía exista
+        self.hidro_layer = manager.get_layer('hidrografia')
+        self.gen_sec = manager.get_layer('secciones')
+
+        if self.hidro_layer is None:
+            raise LayerNotFound('hidrografia')
+        
+        # Este error se genera para preguntarle al usuario que desea hacer.
+        if self.gen_sec is not None:
+            raise PreviousGeneratedLayerFound('secciones')
+
+    def pro(self):
+        # Crea la capa en la que se van a agregar los nuevos puntos
+
+        # Obtener crs de la capa de hidrografia
+        crs = self.hidro_layer.crs().authid()
+
+        self.gen_sec = QgsVectorLayer('Point?crs='+crs, 'secciones', 'memory')
+        manager.add_layers([self.gen_sec])
+
+    def pos(self, points):
+        """
+        Habilita la edición de la capa, y dibuja los puntos en caso de ser necesario.
+        
+        :param option: Opción elegida por el usuario de importar los puntos o dibujarlos.
+        :type option: bool
+
+        :param points: En caso de que option sea True, los puntos serán una lista de puntos
+        :type points: list
+        """
+
+        self.gen_sec.startEditing()
+
+        if points:
+            for x, y in points:
+                feature = QgsFeature()
+                feature.setGeometry(QgsGeometry.fromPoint(QgsPoint(x, y)))
+                self.gen_sec.addFeature(feature)
+            self.gen_sec.commitChanges()
+
+        # self.gen_sec.triggerRepaint()
+
+class DrawAxisAction(BaseAction):
+    # TODO: Fix harcoded names
+    def __init__(self):
+        self.hidro_layer = None
+        self.gen_sec = None
+        self.gen_eje = None
+
+    def pre(self):
+        # Verifica que la capa de hidrografía exista
+        self.hidro_layer = manager.get_layer('hidrografia')
+        self.gen_sec = manager.get_layer('secciones')
+        self.gen_eje = manager.get_layer('ejes')
+
+        if self.hidro_layer is None:
+            raise LayerNotFound('hidrografia')
+
+        if self.gen_sec is None:
+            raise LayerNotFound('secciones')
+        
+        # Este error se genera para preguntarle al usuario que desea hacer.
+        if self.gen_eje is not None:
+            raise PreviousGeneratedLayerFound('ejes')
+
+    def pro(self):
+        # Obtener crs de la capa de hidrografia
+        crs = self.hidro_layer.crs().authid()
+        self.gen_eje = QgsVectorLayer('LineString?crs='+crs, 'ejes', 'memory')
+        manager.add_layers([self.gen_eje])
+        self.gen_sec.commitChanges()
+
+
+    def pos(self):
+        self.gen_eje.startEditing()
+
+        points = []
+        for feat in self.gen_sec.getFeatures():
+            points.append(feat.geometry().asPoint())
+
+        # print points
+        feature = QgsFeature()
+        feature.setGeometry(QgsGeometry.fromPolyline(points))
+
+        self.gen_eje.addFeature(feature)
+        self.gen_eje.commitChanges()
 
 class LayerAction(BaseAction):
     """Esta clase representa la acción encargada de cargar las capas necesarias."""
