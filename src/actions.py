@@ -454,9 +454,9 @@ class CreateInputFileAction(BaseAction):
             dist = geometry.distance(points[i], points[i - 1]) + distances[i - 1]
             distances.append(float(format(dist, '.4f')))
 
-        return distances
+        return points, distances
 
-    def pos(self, path, dis, time, wd, sl):
+    def pos(self, path, dis, time, wd, sl, coords):
         """
             Recibe la información del diálogo, y crea el archivo de entrada.
             
@@ -479,7 +479,7 @@ class CreateInputFileAction(BaseAction):
             :rtype: bool
 
         """
-        create_book(path, dis, time, wd, sl)
+        create_book(path, dis, time, wd, sl, coords)
         return True
 
 class ModellingAction(BaseAction):

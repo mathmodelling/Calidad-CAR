@@ -215,7 +215,17 @@ def create_sheet_tc(workbook, name, hours, initial_value=None):
 			for j in xrange(1, cols + 1):
 				sheet.write(i, j, initial_value)
 
-def create_book(path, distances, hours, wd=None, sl=None):
+def create_coordinates_sheet(workbook, coordinates):
+	sheet = workbook.add_sheet('Coordenadas')
+	sheet.write(0, 0, 'Longitud', BOLD_FONT_XLWT)
+	sheet.write(0, 1, 'Latitud', BOLD_FONT_XLWT)
+	pos = 1
+	for x, y in coordinates:
+		sheet.write(pos, 0, "%f " % x)
+		sheet.write(pos, 1, "%f " % y)
+		pos += 1
+
+def create_book(path, distances, hours, wd=None, sl=None, coordinates=None):
 	"""
 		Crea archivo xlsx con el formato que se necesita
 
@@ -254,6 +264,9 @@ def create_book(path, distances, hours, wd=None, sl=None):
 	# Crear hojas de Sinks and Sources
 	for contaminante in CONTAMINANTS:
 		create_sheet_dt(book, 'S'+contaminante, distances, hours, 0.0)
+
+	if coordinates:
+		create_coordinates_sheet(book, coordinates)
 
 	create_description_sheet(book)
 	book.save(path)

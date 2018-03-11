@@ -291,8 +291,8 @@ class CalidadCAR:
             # Actualiza el canvas
             self.iface.mapCanvas().refreshAllLayers() 
 
-        except ValueError:
-            err = u"Asegurate que las coordenadas están en el formato correcto."
+        # except ValueError:
+        #     err = u"Asegurate que las coordenadas están en el formato correcto."
         except NoSelectedOption:
             err = u"Tienes que seleccionar una opción."
         except NotLoadedPoints:
@@ -329,7 +329,6 @@ class CalidadCAR:
             if err:
                 util.errorDialog(self, u'Error', err)
 
-
     def createInputFile(self):
         action = CreateInputFileAction()
         if not action.pre():
@@ -358,12 +357,12 @@ class CalidadCAR:
                 u'Y su valor tienen que ser mayor a cero.')
             return            
 
-        dis = action.pro()
+        coords, dis = action.pro()
         path = dialog.getFilePath()
         wd = dialog.getWD()
         sl = dialog.getSL()
 
-        if action.pos(path, dis, int(time), wd, sl):
+        if action.pos(path, dis, int(time), wd, sl, coords):
             self.inputFile = path
             util.infoDialog(
                 self,

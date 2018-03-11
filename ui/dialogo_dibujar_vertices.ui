@@ -41,6 +41,9 @@
      <height>111</height>
     </rect>
    </property>
+   <property name="acceptRichText">
+    <bool>false</bool>
+   </property>
   </widget>
   <widget class="QRadioButton" name="radioButtonDraw">
    <property name="geometry">
