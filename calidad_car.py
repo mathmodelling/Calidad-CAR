@@ -242,14 +242,14 @@ class CalidadCAR:
             callback=self.conf_vars,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icons/icon.png'
+        icon_path = ':/plugins/CalidadCAR/icons/add_section.png'
         self.intersctionAction = self.add_action(
             icon_path,
             text=self.tr(u'Agregar vértices'),
             callback=self.generate_secciones,
             parent=self.iface.mainWindow())
 
-        icon_path = ':/plugins/CalidadCAR/icons/icon.png'
+        icon_path = ':/plugins/CalidadCAR/icons/add_axis.png'
         self.intersctionAction = self.add_action(
             icon_path,
             text=self.tr(u'Generar eje'),

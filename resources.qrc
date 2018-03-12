@@ -12,5 +12,7 @@
         <file>icons/logo.png</file>
         <file>icons/info.png</file>
         <file>icons/vars-icon.png</file>
+        <file>icons/add_section.png</file>
+        <file>icons/add_axis.png</file>
     </qresource>
 </RCC>
