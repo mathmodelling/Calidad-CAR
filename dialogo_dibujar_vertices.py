@@ -33,7 +33,7 @@ class DrawDialog(QtGui.QDialog, FORM_CLASS):
     def getCoords(self):
         points = []
         coords = self.textEditPoints.toPlainText()
-        print coords
+        # print coords
 
         for coord in coords.splitlines():
             x, y = [float(t) for t in coord.split()]
