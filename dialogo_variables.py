@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
-
 import os
-from PyQt4 import QtGui, uic
+from builtins import str
+
+from qgis.PyQt import uic
+from qgis.PyQt import QtGui
+from qgis.PyQt.QtWidgets import QDialog
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'ui', 'dialogo_variables_base.ui'))
@@ -13,7 +15,7 @@ RUTA_ARCHIVO_VARIABLES_LOCK = os.path.join(
     os.path.dirname(__file__), 'data', 'variables.lock.txt')
 
 siglas = ['Da', 'ko2', 'cs', 'knh3', 'ksnh3', 'alfa_nh3',
-	'kdbo', 'ks', 'alfa_no2', 'ksod', 'knt', 'NT', 'kno2', 'kno3',
+    'kdbo', 'ks', 'alfa_no2', 'ksod', 'knt', 'NT', 'kno2', 'kno3',
     'kDQO', 'kTDS', 'A', 'alfa_1', 'miu', 'F', 'kTC', 'teta_TC',
     'kEC', 'teta_EC', 'Jdbw', 'qtex', 'kN', 'kH', 'kOH', 'fdw', 
     'kf', 'kb', 'kv', 'Cg', 'Henry', 'R', 'T', 'alfa_2', 'resp',
@@ -22,7 +24,8 @@ siglas = ['Da', 'ko2', 'cs', 'knh3', 'ksnh3', 'alfa_nh3',
     'Kw', 'K1', 'K2', 'Vv', 'As', 'CO2S', 'Wrp', 'FrH', 'Diff',
     'As1', 'Jsn', 'sbc', 'Tair', 'Aair', 'eair', 'RL', 'Uw', 'es', 'tfactor']
 
-class VarsDialog(QtGui.QDialog, FORM_CLASS):
+
+class VarsDialog(QDialog, FORM_CLASS):
     def __init__(self, parent = None):
         """Constructor."""
         super(VarsDialog, self).__init__(parent)
@@ -51,12 +54,12 @@ class VarsDialog(QtGui.QDialog, FORM_CLASS):
         
         # Agregar validador
         validator = QtGui.QDoubleValidator()
-        for k, e in self.dic.iteritems():
+        for k, e in self.dic.items():
             e.setValidator(validator)
 
         # Agregar valores iniciales
         valores_iniciales = self.leerVariables()
-        for k, v in valores_iniciales.iteritems():
+        for k, v in valores_iniciales.items():
             self.dic[k].setText(v)
 
         self.pushButtonRestablecer.clicked.connect(self.reset)
@@ -69,29 +72,28 @@ class VarsDialog(QtGui.QDialog, FORM_CLASS):
                 values[k] = v
 
         with open(RUTA_ARCHIVO_VARIABLES, 'w') as file:
-            for k, v in values.iteritems():
+            for k, v in values.items():
                 file.write("%s %s\n" % (k, str(v)))
                 self.dic[k].setText(v)
 
     def getContaminantes(self):
-        '''
-            Retorna el diccionario con todos los
-            contaminantes y sus valores.
-        '''
+        """
+        Retorna el diccionario con todos los
+        contaminantes y sus valores.
+        """
         cont = {}
-        for k, v in self.dic.iteritems():
+        for k, v in self.dic.items():
             cont[k] = float(v.text())
         return cont
 
     @staticmethod
     def leerVariables():
-        '''
-            Lee los contaminantes del archivo en el que
-            se almacenan.
+        """
+        Lee los contaminantes del archivo en el que se almacenan.
 
-            :returns: Diccionario cuya clave es el contaminante
-            y el valor, en formato string.
-        '''
+        :returns: Diccionario cuya clave es el contaminante
+        y el valor, en formato string.
+        """
         values = {}
         with open(RUTA_ARCHIVO_VARIABLES, 'r') as file:
             for line in file:
@@ -100,14 +102,14 @@ class VarsDialog(QtGui.QDialog, FORM_CLASS):
         return values
 
     def guargarContaminantes(self, cont):
-        '''
-            En caso de que se haya actualizado algún
-            contaminante, se actualiza el archivo.
-        '''
+        """
+        En caso de que se haya actualizado algún contaminante, se actualiza
+        el archivo.
+        """
         cond = False
         saved = self.leerVariables()
 
-        for k, v in saved.iteritems():
+        for k, v in saved.items():
             if v != str(cont[k]):
                 cond = True
                 break
@@ -115,5 +117,5 @@ class VarsDialog(QtGui.QDialog, FORM_CLASS):
         if not cond: return 
 
         with open(RUTA_ARCHIVO_VARIABLES, 'w') as file:
-            for k, v in cont.iteritems():
+            for k, v in cont.items():
                 file.write("%s %s\n" % (k, str(v)))

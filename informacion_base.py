@@ -6,7 +6,13 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-from PyQt4 import QtCore, QtGui
+from __future__ import absolute_import
+from future import standard_library
+
+standard_library.install_aliases()
+
+from builtins import object
+from qgis.PyQt import QtCore, QtGui
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -72,4 +78,4 @@ class Ui_Dialog(object):
         self.label_4.setText(_translate("Dialog", "<html><head/><body><p><a href=\"https://cbdavide.github.io/Calidad-CAR/help/manual_usuario.html\"><span style=\" text-decoration: underline; color:#2980b9;\">Documentación</span></a> — <a href=\"http://plugins.qgis.org/plugins/CalidadCAR/\"><span style=\" text-decoration: underline; color:#2980b9;\">Información de desarrollo</span></a></p></body></html>", None))
         self.label_5.setText(_translate("Dialog", "<html><head/><body><p align=\"justify\">Este es un desarrollo de la Corporación Autónoma Regional de Cundinamarca - <a href=\"https://www.car.gov.co/\"><span style=\" text-decoration: underline; color:#2980b9;\">CAR</span></a> Licenciado bajo los términos de la GNU GPL v3.0.</p></body></html>", None))
 
-import resources
+from . import resources

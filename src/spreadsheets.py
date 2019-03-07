@@ -4,6 +4,8 @@
 	Módulo encargado de crear hojas de
 	cálculo con una plantilla determinada.
 '''
+from __future__ import print_function
+from builtins import range
 import xlrd
 import xlwt
 
@@ -89,19 +91,19 @@ def create_sheet_dt(workbook, name, distances, hours, initial_value=None):
 	sheet.write(0, 0, 'L', BOLD_FONT_XLWT)
 
 	# Crear columna de distancias
-	for i in xrange(len(distances)):
+	for i in range(len(distances)):
 		sheet.write(i + 1, 0, distances[i], BOLD_FONT_XLWT)
 
 	# Crear la fila de tiempo
-	for i in xrange(0,  hours + 1):
+	for i in range(0,  hours + 1):
 		sheet.write(0, i + 1, 3600 * i, BOLD_FONT_XLWT)
 
 	if initial_value is not None:
 		rows = len(distances)
 		cols = hours + 1
 
-		for i in xrange(1, rows + 1):
-			for j in xrange(1, cols + 1):
+		for i in range(1, rows + 1):
+			for j in range(1, cols + 1):
 				sheet.write(i, j, initial_value)
 
 def create_sheet_td(workbook, name, distances, hours, initial_value=None):
@@ -128,19 +130,19 @@ def create_sheet_td(workbook, name, distances, hours, initial_value=None):
 	sheet.write(0, 0, 'T', BOLD_FONT_XLWT)
 
 	# Crear fila de distancias
-	for i in xrange(len(distances)):
+	for i in range(len(distances)):
 		sheet.write(0, i + 1, distances[i], BOLD_FONT_XLWT)
 
 	# Crear la columna de tiempo
-	for i in xrange(0,  hours + 1):
+	for i in range(0,  hours + 1):
 		sheet.write(i + 1, 0, 3600 * i, BOLD_FONT_XLWT)
 
 	if initial_value is not None:
 		rows = hours + 1
 		cols = len(distances)
 
-		for i in xrange(1, rows + 1):
-			for j in xrange(1, cols + 1):
+		for i in range(1, rows + 1):
+			for j in range(1, cols + 1):
 				sheet.write(i, j, initial_value)
 
 def create_sheet_dc(workbook, name, distances, initial_value=None):
@@ -164,19 +166,19 @@ def create_sheet_dc(workbook, name, distances, initial_value=None):
 	sheet.write(0, 0, 'L', BOLD_FONT_XLWT)
 	
 	# Crear fila de distancias
-	for i in xrange(len(distances)):
+	for i in range(len(distances)):
 		sheet.write(i + 1, 0, distances[i], BOLD_FONT_XLWT)
 
 	# Crear la columna de contaminantes
-	for i in xrange(len(COLS_CONTAMINANTS)):
+	for i in range(len(COLS_CONTAMINANTS)):
 		sheet.write(0, i + 1, COLS_CONTAMINANTS[i], BOLD_FONT_XLWT)
 	
 	if initial_value is not None:
 		rows = len(distances)
 		cols = len(COLS_CONTAMINANTS)
 
-		for i in xrange(1, rows + 1):
-			for j in xrange(1, cols + 1):
+		for i in range(1, rows + 1):
+			for j in range(1, cols + 1):
 				sheet.write(i, j, initial_value)
 
 def create_sheet_tc(workbook, name, hours, initial_value=None):
@@ -200,19 +202,19 @@ def create_sheet_tc(workbook, name, hours, initial_value=None):
 	sheet.write(0, 0, 'T', BOLD_FONT_XLWT)
 
 	# Crear la fila del tiempo
-	for i in xrange(0,  hours + 1):
+	for i in range(0,  hours + 1):
 		sheet.write(i + 1, 0, 3600 * i, BOLD_FONT_XLWT)
 
 	# Crear la columna de contaminantes
-	for i in xrange(len(COLS_CONTAMINANTS)):
+	for i in range(len(COLS_CONTAMINANTS)):
 		sheet.write(0, i + 1, COLS_CONTAMINANTS[i], BOLD_FONT_XLWT)
 
 	if initial_value is not None:
 		rows = hours + 1
 		cols = len(COLS_CONTAMINANTS)
 
-		for i in xrange(1, rows + 1):
-			for j in xrange(1, cols + 1):
+		for i in range(1, rows + 1):
+			for j in range(1, cols + 1):
 				sheet.write(i, j, initial_value)
 
 def create_coordinates_sheet(workbook, coordinates):
@@ -299,8 +301,8 @@ def verify_sheet(sheet):
 	"""Verifica que una hoja de cálculo no tenga celdas vacias."""
 	rows, cols = sheet.nrows, sheet.ncols
 
-	for i in xrange(1, rows):
-		for j in xrange(1, cols):
+	for i in range(1, rows):
+		for j in range(1, cols):
 
 			try:
 				float(sheet.cell_value(i, j))
@@ -312,7 +314,7 @@ def verify_sheet_row(sheet, row, value):
 	"""Verifica que la hoja de cálculo no tenga el valor indicado en la fila indicada."""
 	cols = sheet.ncols
 
-	for j in xrange(1, cols):
+	for j in range(1, cols):
 		if float(sheet.cell_value(row, j)) == value:
 			raise ErrorRow(sheet.name, row, value)
 
@@ -363,7 +365,8 @@ if __name__ == '__main__':
 	# 	125.19, 130.01,	134.82,	139.64,	144.45,	149.27,	154.08,	158.90]
 	# book = create_book("sample3.xls", d, 4, 1.0, 0.35)
 	book = load_book("sample3.xlsx")
-	print verify_book(book)
+	# fix_print_with_import
+	print(verify_book(book))
 	
 
 

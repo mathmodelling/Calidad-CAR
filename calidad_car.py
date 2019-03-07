@@ -1,66 +1,53 @@
 # -*- coding: utf-8 -*-
 """Este módulo es el que articula toda la funcionalidad del plugin,
 y esta compuesto por la clase CalidadCAR."""
+from __future__ import print_function
+from __future__ import absolute_import
 
-from qgis.core import ( QGis,
-                        QgsField,
-                        QgsPoint,
-                        QgsFeature,
-                        QgsGeometry,
-                        QgsVectorLayer,
-                        QgsRasterLayer,
-                        QgsMapLayerRegistry,
-                        QgsCoordinateReferenceSystem,
-                        QgsCoordinateReferenceSystem)
-
-from PyQt4.QtCore import ( QVariant,
-                           qVersion,
-                           QSettings,
-                           QFileInfo,
-                           QTranslator,
-                           QCoreApplication)
-
-from PyQt4.QtGui import ( QIcon,
-                          QColor,
-                          QAction,
-                          QMessageBox)
+from builtins import object
 
 
-from src.actions import ( Modelling,
-                          CSVAction,
-                          LayerAction,
-                          LayerNotFound,
-                          DrawAxisAction,
-                          ModellingAction,
-                          AddSectionAction,
-                          DrawPointsAction,
-                          CreateInputFileAction,
-                          ConcentrationPointsAction,
-                          PreviousGeneratedLayerFound)
+from qgis.PyQt.QtCore import QVariant, qVersion, QSettings, QFileInfo, QTranslator, QCoreApplication
 
-from dialogo_dibujar_vertices import (DrawDialog,
+from qgis.PyQt.QtGui import QIcon, QColor
+from qgis.PyQt.QtWidgets import QAction, QMessageBox
+
+
+from .src.actions import Modelling
+from .src.actions import CSVAction
+from .src.actions import LayerAction
+from .src.actions import LayerNotFound
+from .src.actions import DrawAxisAction
+from .src.actions import ModellingAction
+from .src.actions import AddSectionAction
+from .src.actions import DrawPointsAction
+from .src.actions import CreateInputFileAction
+from .src.actions import ConcentrationPointsAction
+from .src.actions import PreviousGeneratedLayerFound
+
+from .dialogo_dibujar_vertices import (DrawDialog,
                                       NoSelectedOption, 
                                       NotLoadedPoints)
 import time
-import util
+from . import util
 import copy
 import os.path
-import geometry
-import resources
+from . import geometry
+from . import resources
 import numpy as np
 import datetime as dtm
 
-from dialogo_csv import CSVDialog
-from src.modelling import calidad_car
-from src import layer_manager as manager
-from dialogo_variables import VarsDialog
-from informacion import InformationDialog
-from src.spreadsheets import Error, ErrorRow
-from dialogo_parametros import SettingsDialog
-from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
-from dialogo_arhivo_entrada import InputFileDialog, LoadInputFileDialog
+from .dialogo_csv import CSVDialog
+from .src.modelling import calidad_car
+from .src import layer_manager as manager
+from .dialogo_variables import VarsDialog
+from .informacion import InformationDialog
+from .src.spreadsheets import Error, ErrorRow
+from .dialogo_parametros import SettingsDialog
+from .calidad_car_dialog import Ui_Dialog as CalidadCARDialog
+from .dialogo_arhivo_entrada import InputFileDialog, LoadInputFileDialog
 
-class CalidadCAR:
+class CalidadCAR(object):
     """Implementación del plugin."""
 
     def __init__(self, iface):
@@ -465,7 +452,7 @@ class CalidadCAR:
             return
 
         variables = VarsDialog.leerVariables()
-        for k, v in variables.iteritems():
+        for k, v in variables.items():
             variables[k] = float(v)
 
         action = Modelling()
@@ -485,7 +472,8 @@ class CalidadCAR:
             return
 
 
-        print "Se inicio el proceso..."
+        # fix_print_with_import
+        print("Se inicio el proceso...")
         action.pro(output_path, variables, dialog.getShowPlots(), dialog.getSavePlots())
 
     def intersection(self):

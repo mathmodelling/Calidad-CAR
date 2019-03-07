@@ -1,10 +1,14 @@
-# -*- coding: utf-8 -*-
-"""Este módulo propociona puntos de acceso al registro de capas de QGIS
-(QgsMapLayerRegistry.instance()), para hacer el código más legible."""
-from PyQt4.QtGui import QColor
-from qgis.core import ( QgsMapLayerRegistry,
-                        QgsVectorLayer,
-                        QgsRasterLayer)
+
+"""
+Este módulo propociona puntos de acceso al registro de capas de QGIS
+(QgsProject.instance()), para hacer el código más legible.
+"""
+
+from qgis.PyQt.QtGui import QColor
+from qgis.core import QgsProject
+from qgis.core import QgsVectorLayer
+from qgis.core import QgsRasterLayer
+
 
 def get_layer(layer_name):
     """ Busca una capa por nombre en el registro de capas de qgis.
@@ -16,9 +20,10 @@ def get_layer(layer_name):
     :rtype: QgsMapLayer
     """
     try:
-        return QgsMapLayerRegistry.instance().mapLayersByName(layer_name)[0]
+        return QgsProject.instance().mapLayersByName(layer_name)[0]
     except IndexError:
         return None
+
 
 def get_all_layers(layer_name):
     """ Retorna todas la capas con el nombre layer_name que estan en el registro de capas de qgis.
@@ -30,9 +35,10 @@ def get_all_layers(layer_name):
     :rtype: Lista de QgsMapLayer
     """
     try:
-        return QgsMapLayerRegistry.instance().mapLayersByName(layer_name)
+        return QgsProject.instance().mapLayersByName(layer_name)
     except IndexError:
         return []
+
 
 def remove_layers(layers):
     """ Elimina capas del registro de capas de qgis.
@@ -41,7 +47,8 @@ def remove_layers(layers):
     :type layer_name: Lista QgsMapLayers
     """
     for layer in layers:
-        QgsMapLayerRegistry.instance().removeMapLayer(layer)
+        QgsProject.instance().removeMapLayer(layer)
+
 
 def add_layers(layers):
     """ Agrega capas al registro de capas de qgis.
@@ -50,7 +57,8 @@ def add_layers(layers):
     :type layer_name: Lista QgsMapLayers
     """
     for layer in layers:
-        QgsMapLayerRegistry.instance().addMapLayer(layer)
+        QgsProject.instance().addMapLayer(layer)
+
 
 def load_raster_layer(path, name):
     """Carga una capa rasterizada.
@@ -58,9 +66,11 @@ def load_raster_layer(path, name):
     :param path: Ruta de la capa que se va a cargar.
     :type path: str
 
-    :param name: Nombre de la capa que se va a cargar, este nombre será el identificador de la capa.
+    :param name: Nombre de la capa que se va a cargar, este nombre será el
+    identificador de la capa.
 
-    :returns: Capa rasterizada en caso de que sea valida, de lo contrario se retorna None.
+    :returns: Capa rasterizada en caso de que sea valida, de lo contrario se
+    retorna None.
     :rtype: QgsRasterLayer
     """
     rlayer = QgsRasterLayer(path, name)
@@ -68,18 +78,22 @@ def load_raster_layer(path, name):
         return None
     return rlayer
 
+
 def load_vector_layer(path, name, color = (0, 0 , 0)):
-    """Carga una capa vectorizada.
+    """
+    Carga una capa vectorizada.
 
     :param path: Ruta de la capa que se va a cargar.
     :type path: str
 
-    :param name: Nombre de la capa que se va a cargar, este nombre será el identificador de la capa.
+    :param name: Nombre de la capa que se va a cargar, este nombre será el
+    identificador de la capa.
 
     :param color: Color que se la va a asignar a la capa
     :type color: Tupla de 3 elementos r, g, b
 
-    :returns: Capa vectorizada en caso de que sea valida, de lo contrario se retorna None
+    :returns: Capa vectorizada en caso de que sea valida, de lo contrario se
+    retorna None
     :rtype: QgsVectorLayer
     """
     layer = QgsVectorLayer(path, name, 'ogr')

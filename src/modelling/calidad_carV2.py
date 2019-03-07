@@ -1,5 +1,5 @@
-
-# -*- coding: utf-8 -*-
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Efraín Domínguez Calle, PhD - Wilfredo Marimón Bolivar, PhD'
 __copyright__ = "Copyright 2017, Mathmodelling"
@@ -11,13 +11,17 @@ __email__ = 'edoc@marthmodelling.org, w.marimon@javeriana.edu.co'
 __status__ = "En desarrollo"
 
 
+from builtins import range
+
+
 import numpy as np
-import matplotlib
 import matplotlib.pyplot as plt
 
-import xlrd, xlwt
+import xlrd
+import xlwt
 
-from util import join, used_vars
+from .util import join
+from .util import used_vars
 
 BOLD_FONT_XLWT = xlwt.Style.easyxf('font: bold on;')
 
@@ -31,17 +35,19 @@ def read_sheet(workbook, name):
     c = sheet.ncols
     answ = np.zeros([r - 1, c])
     # Reading each cell in excel sheet 'BC'
-    for i in xrange(1, r):
-        for j in xrange(c):
+    for i in range(1, r):
+        for j in range(c):
             answ[i - 1, j] = float(sheet.cell_value(i, j))
 
     return answ
+
 
 def plot(ax, name, data):
     ax.tick_params(labelsize=6)
     ax.yaxis.get_offset_text().set_fontsize(6)
     ax.plot(data[0], data[1])
     ax.set_title(name, fontsize=8)
+
 
 def save_plot(plt, title, xlabel, ylabel, data, path):
     plt.plot(data[0], data[1])
@@ -51,17 +57,19 @@ def save_plot(plt, title, xlabel, ylabel, data, path):
     plt.savefig("%s.png" % join(path, title), dpi=300)
     plt.clf()
 
+
 def save_sheet(book, name, data):
     sheet = book.add_sheet(name)
 
-    for i in xrange(1, len(data) + 1):
+    for i in range(1, len(data) + 1):
         sheet.write(i, 0, i - 1, BOLD_FONT_XLWT)
-    for i in xrange(1, len(data[0]) + 1):
+    for i in range(1, len(data[0]) + 1):
         sheet.write(0, i, i - 1, BOLD_FONT_XLWT)
 
-    for i in xrange(1, len(data) + 1):
-        for j in xrange(1, len(data[0]) + 1):
+    for i in range(1, len(data) + 1):
+        for j in range(1, len(data[0]) + 1):
             sheet.write(i, j, data[i -1 , j - 1])
+
 
 def read_config_file(config_file, sheet_name_wd='WD', sheet_name_sl='SL', sheet_name_wv='WV', sheet_name_bc='BC',
                      sheet_name_ic='IC', sheet_name_ST='ST', sheet_name_SOD='SOD', sheet_name_SDBO='SDBO', sheet_name_SNH3='SNH4',
@@ -737,7 +745,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     mconT = mconT - 273.15
     mconpH = (np.log10(mconpH))*(-1)
     pH = (np.log10(pH))*(-1)
-    print "Guardando datos de salida..."
+    # fix_print_with_import
+    print("Guardando datos de salida...")
 
     book = xlwt.Workbook()
     save_sheet(book, 'T', mconT[0::3600, :])
@@ -764,7 +773,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
 
     if show:
 
-        print u"Creando Graficas"
+        # fix_print_with_import
+        print(u"Creando Graficas")
 
         #Graficas en el tiempo
         xlabel = 'Tiempo(s)'
@@ -837,7 +847,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
 
     if export:
 
-        print u"Guardando Graficas..."
+        # fix_print_with_import
+        print(u"Guardando Graficas...")
 
         xlabel = 'Tiempo(s)'
         ylabel = 'Concentracion (mg/L)'
@@ -882,10 +893,11 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         save_plot(plt, 'Evalucion del pH en espacio',xlabel, 'pH', [c_x, pH], directorio_salida)
         save_plot(plt, 'Evalucion Alcanilidad en espacio',xlabel, 'CaCO3', [c_x, ALK], directorio_salida)
 
-    print "El proceso ha finalizado."
+    # fix_print_with_import
+    print("El proceso ha finalizado.")
+
 
 if __name__ == '__main__':
     pass
     # book = xlrd.open_workbook("sample3.xlsx")
     # print read_sheet(book, 'WD')
-    

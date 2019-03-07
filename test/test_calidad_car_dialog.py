@@ -7,6 +7,7 @@
      (at your option) any later version.
 
 """
+from __future__ import absolute_import
 
 __author__ = 'David Castelblanco B.'
 __date__ = '2017-07-24'
@@ -14,14 +15,14 @@ __copyright__ = 'Copyright 2017, cbdavide'
 
 import unittest
 
-from PyQt4.QtGui import QDialogButtonBox, QDialog
-from PyQt4.QtTest import QTest
-from PyQt4.QtCore import Qt
+from qgis.PyQt.QtWidgets import QDialogButtonBox, QDialog
+from qgis.PyQt.QtTest import QTest
+from qgis.PyQt.QtCore import Qt
 
 # from calidad_car_dialog import CalidadCARDialog
 from calidad_car_dialog import Ui_Dialog as CalidadCARDialog
 
-from utilities import get_qgis_app
+from .utilities import get_qgis_app
 QGIS_APP = get_qgis_app()
 
 

@@ -1,39 +1,65 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+from __future__ import absolute_import
+
+from abc import ABCMeta
+from abc import abstractmethod
+
+from builtins import str
+from builtins import range
+from builtins import object
+
 import copy
-import time
-import geometry
 import numpy as np
-import datetime as dtm
-import layer_manager as manager
-from abc import ABCMeta, abstractmethod
-from modelling import calidad_car, calidad_carV2
-from spreadsheets import create_book, verify_book, load_book
 
-from PyQt4.QtCore import (QFileInfo, QVariant)
+from qgis.PyQt.QtCore import QFileInfo
 
-from qgis.core import ( QgsField,
-                        QgsPoint,
-                        QgsFeature,
-                        QgsGeometry,
-                        QgsVectorLayer,
-                        QgsVectorJoinInfo)
+from qgis.core import QgsPoint
+from qgis.core import QgsFeature
+from qgis.core import QgsGeometry
+from qgis.core import QgsVectorLayer
+from qgis.core import QgsVectorLayerJoinInfo
 
-class BaseAction:
+from . import geometry
+from . import layer_manager as manager
+
+from .modelling import calidad_car
+from .modelling import calidad_carV2
+
+from .spreadsheets import create_book
+from .spreadsheets import verify_book
+from .spreadsheets import load_book
+
+from future.utils import with_metaclass
+
+
+class BaseAction(with_metaclass(ABCMeta, object)):
     """Clase base que define la estructura de una acción."""
-    __metaclass__ = ABCMeta
     @abstractmethod
     def pre(self):
-        """En este método puede definir y verificar condiciones iniciales necesarias para que se pueda realizar una acción."""
+        """
+        En este método puede definir y verificar condiciones iniciales
+        necesarias para que se pueda realizar una acción.
+        """
         pass
+
     @abstractmethod
     def pro(self):
-        """En este método se puede implementar la funcionalidad esencial de la acción."""
+        """
+        En este método se puede implementar la funcionalidad esencial
+        de la acción.
+        """
         pass
+
     @abstractmethod
     def pos(self):
-        """En este método se pueden implementar procesos que se deben realizar una vez se ha concluido con éxito el llamado al método pos."""
+        """
+        En este método se pueden implementar procesos que se deben realizar
+        una vez se ha concluido con éxito el llamado al método pos.
+        """
         pass
+
 
 class LayerNotFound(Exception):
     def __init__(self, name):
@@ -42,16 +68,21 @@ class LayerNotFound(Exception):
     def __str__(self):
         return "Layer %s not found" % self.name
 
+
 class PreviousGeneratedLayerFound(Exception):
     def __init__(self, name):
         self.name = name
+
     def __str__(self):
         return "Te layer %s was already generated." % self.name
 
 
 class DrawPointsAction(BaseAction):
-    """Esta accion es la encargada de crear una capa de secciones y una capa de eje que el usuario podrá cargar después"""
-    
+    """
+    Esta accion es la encargada de crear una capa de secciones y una capa de eje
+    que el usuario podrá cargar después
+    """
+
     # TODO: Fix harcoded names
     def __init__(self):
         self.hidro_layer = None
@@ -64,7 +95,7 @@ class DrawPointsAction(BaseAction):
 
         if self.hidro_layer is None:
             raise LayerNotFound('hidrografia')
-        
+
         # Este error se genera para preguntarle al usuario que desea hacer.
         if self.gen_sec is not None:
             raise PreviousGeneratedLayerFound('secciones')
@@ -81,7 +112,7 @@ class DrawPointsAction(BaseAction):
     def pos(self, points):
         """
         Habilita la edición de la capa, y dibuja los puntos en caso de ser necesario.
-        
+
         :param option: Opción elegida por el usuario de importar los puntos o dibujarlos.
         :type option: bool
 
@@ -99,6 +130,7 @@ class DrawPointsAction(BaseAction):
             self.gen_sec.commitChanges()
 
         # self.gen_sec.triggerRepaint()
+
 
 class DrawAxisAction(BaseAction):
     # TODO: Fix harcoded names
@@ -118,7 +150,7 @@ class DrawAxisAction(BaseAction):
 
         if self.gen_sec is None:
             raise LayerNotFound('secciones')
-        
+
         # Este error se genera para preguntarle al usuario que desea hacer.
         if self.gen_eje is not None:
             raise PreviousGeneratedLayerFound('ejes')
@@ -129,7 +161,6 @@ class DrawAxisAction(BaseAction):
         self.gen_eje = QgsVectorLayer('LineString?crs='+crs, 'ejes', 'memory')
         manager.add_layers([self.gen_eje])
         self.gen_sec.commitChanges()
-
 
     def pos(self):
         self.gen_eje.startEditing()
@@ -144,6 +175,7 @@ class DrawAxisAction(BaseAction):
 
         self.gen_eje.addFeature(feature)
         self.gen_eje.commitChanges()
+
 
 class LayerAction(BaseAction):
     """Esta clase representa la acción encargada de cargar las capas necesarias."""
@@ -186,6 +218,7 @@ class LayerAction(BaseAction):
     def pos(self):
         """Este método se encarga de agregar todas las capas cargadas en el registro de QGIS (QgsMapLayerRegistry). """
         manager.add_layers(self.layers)
+
 
 class CSVAction(BaseAction):
     """Esta acción se encarga de cargar un archivo CSV, y de unirlo con la tabla de atributos de la capa de secciones."""
@@ -243,7 +276,7 @@ class CSVAction(BaseAction):
             #No hay columnas nuevas para unir
             return
 
-        joinObject = QgsVectorJoinInfo()
+        joinObject = QgsVectorLayerJoinInfo()
         joinObject.joinLayerId = sheet.id()
         joinObject.joinFieldName = csv_field
         joinObject.targetFieldName = shp_field
@@ -251,6 +284,7 @@ class CSVAction(BaseAction):
         joinObject.setJoinFieldNamesSubset(columns)
         joinObject.memoryCache = True
         self.shp.addJoin(joinObject)
+
 
 class AddSectionAction(BaseAction):
     """Esta acción se encarga de implementar la funcionalidad para agregar secciones."""
@@ -286,6 +320,7 @@ class AddSectionAction(BaseAction):
         csvAction.setEnabled(False)
         iface.setActiveLayer(self.tempLayer)
         self.tempLayer.startEditing()
+
 
 class ConcentrationPointsAction(BaseAction):
     """Esta ación se encarga de fusionar la capa de secciones temporales (temp) con la capa de secciones."""
@@ -449,7 +484,7 @@ class CreateInputFileAction(BaseAction):
         """Cálcula las distancias entre los puntos de intersección de la capa de ejes, y la capa de secciones."""
         points = geometry.intersectionPoints(self.eje, self.secciones)
         distances = [0]
-        for i in xrange(1, len(points)):
+        for i in range(1, len(points)):
             #Precisión de 4 digitos, para evitar problemas con matplotlib
             dist = geometry.distance(points[i], points[i - 1]) + distances[i - 1]
             distances.append(float(format(dist, '.4f')))
@@ -459,7 +494,7 @@ class CreateInputFileAction(BaseAction):
     def pos(self, path, dis, time, wd, sl, coords):
         """
             Recibe la información del diálogo, y crea el archivo de entrada.
-            
+
             :param path: Ruta del archivo que se va a crear.
             :type path: str
 
@@ -545,7 +580,7 @@ class ModellingAction(BaseAction):
 
         points = geometry.intersectionPoints(self.eje, self.work_layer)
         distances = []
-        for i in xrange(len(points)):
+        for i in range(len(points)):
             #Precisión de 4 digitos, para evitar problemas con matplotlib
             dist = geometry.distance(points[0], points[i])
             distances.append(float(format(dist, '.4f')))
@@ -589,7 +624,9 @@ class ModellingAction(BaseAction):
 
         paso_x = 10
 
-        print calidad_car.grafica(mcon, t_step, paso_x, srow=11, scol=80, flag=flag)
+        # fix_print_with_import
+        print(calidad_car.grafica(mcon, t_step, paso_x, srow=11, scol=80, flag=flag))
+
 
 class Modelling(BaseAction):
     def __init__(self):

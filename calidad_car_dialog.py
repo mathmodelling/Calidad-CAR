@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
-import os
+from __future__ import absolute_import
 
-from PyQt4 import QtGui, uic
-from PyQt4.QtGui import QFileDialog
-from PyQt4.QtCore import QFileInfo
+from qgis.PyQt.QtWidgets import QFileDialog
+from qgis.PyQt.QtWidgets import QDialog
 
-# FORM_CLASS, _ = uic.loadUiType(os.path.join(
-    # os.path.dirname(__file__), 'calidad_car_dialog_base.ui'))
-
-from dialogs.calidad_car_dialog_base import Ui_Dialog
+from .dialogs.calidad_car_dialog_base import Ui_Dialog
 
 
-class Ui_Dialog(QtGui.QDialog, Ui_Dialog):
-    """Este diálogo es el encargado de permitirle al usuario cargar las capas necesarias."""
+class Ui_Dialog(QDialog, Ui_Dialog):
+    """
+    Este diálogo es el encargado de permitirle al usuario cargar las
+    capas necesarias.
+    """
 
     def __init__(self, parent=None):
         """Constructor."""
@@ -47,10 +46,18 @@ class Ui_Dialog(QtGui.QDialog, Ui_Dialog):
         return filePaths
 
     def handler(self, title):
-        """Maneja el evento de click sobre cualquiera de los botones de cargar archivo, con el fin de abrir un diálogo que le permita al usuario seleccionar el archivo de su sistema de archivos."""
+        """
+        Maneja el evento de click sobre cualquiera de los botones de
+        cargar archivo, con el fin de abrir un diálogo que le permita al
+        usuario seleccionar el archivo de su sistema de archivos.
+        """
 
-        layerPath = QFileDialog.getOpenFileName(self, u'Abrir shapefile', '.', 'Shapefiles (*.shp *.tif)')
-        layerInfo = QFileInfo(layerPath)
+        layerPath, __ = QFileDialog.getOpenFileName(
+            self,
+            u'Abrir shapefile',
+            '.',
+            'Shapefiles (*.shp *.tif)'
+        )
 
         if title == 'fondo':
             self.capaFondo.setText(layerPath)

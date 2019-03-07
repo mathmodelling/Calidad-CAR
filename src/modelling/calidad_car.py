@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+from builtins import str
+from builtins import range
 import numpy as np
 import time
 import datetime as dtm
@@ -44,12 +47,14 @@ def calidad_explicito(ci, v, d):
     if (np.min(np.abs(pe)) >= 3) or (maxd == 0):
         dt = dx / maxv
         d = d * 0
-        print "Se desconectó la Difusión, el número de peclet es: %s. Courant es igual a: %s. El paso en el " \
-              "tiempo es de: %s segundos" % (round(pe, 2), str(maxv * (dt / dx)), dt)
+        # fix_print_with_import
+        print("Se desconectó la Difusión, el número de peclet es: %s. Courant es igual a: %s. El paso en el " \
+              "tiempo es de: %s segundos" % (round(pe, 2), str(maxv * (dt / dx)), dt))
     else:
         dt = (dx * dx) / (2 * maxd)
-        print 'Se calcula advección y difusión, el número de peclet es: %s. Courant es igual a: %s. El paso en el ' \
-              'tiempo es de: %s segundos' % (round(pe, 2), str(maxv * (dt / dx)), dt)
+        # fix_print_with_import
+        print('Se calcula advección y difusión, el número de peclet es: %s. Courant es igual a: %s. El paso en el ' \
+              'tiempo es de: %s segundos' % (round(pe, 2), str(maxv * (dt / dx)), dt))
 
     # tfactor es un factor multiplicador del numero de nodos en el tiempo para llegar de t a t + dt, tfactor >= 1,
     # se recomienda aumentarlo de 10 en 10 {10, 100, 1000, 10000... }
@@ -128,13 +133,16 @@ def grafica(cs, dt, dx, flag=0, scol=0, srow=0, hi=time.strftime("%d/%b/%Y %H:%M
     """
     ncols = np.size(cs, axis=1)
     nrows = np.size(cs, axis=0)
-    print 'nrows: %s, ncols: %s, cs.shape: %s ' % (nrows, ncols, cs.shape)
+    # fix_print_with_import
+    print('nrows: %s, ncols: %s, cs.shape: %s ' % (nrows, ncols, cs.shape))
     # Convertir hora inicial de referencia -hi- en tiempo estructurado con tupla de 9 elementos
-    print 'hi:', hi
+    # fix_print_with_import
+    print('hi:', hi)
     hi_structime = time.strptime(hi, "%d/%b/%Y %H:%M:%S")
     # Convertir el tiempo estructurado en segundos desde la epoca 12:00am, January 1, 1970(epoch)
     hi_secs = time.mktime(hi_structime)
-    print 'hi_secs:', hi_secs
+    # fix_print_with_import
+    print('hi_secs:', hi_secs)
     # fechas = pd.date_range(hi, periods=nrows, freq=str(int(dt)) + 'S')
     tiempo = dt * nrows - dt
     fechas = [dtm.datetime.fromtimestamp(i) for i in np.arange(hi_secs, hi_secs + tiempo + dt, dt)]
@@ -164,10 +172,14 @@ if __name__ == "__main__":
     paso_x = 10
     np.set_printoptions(precision=2)
     inicio = dtm.datetime.fromtimestamp(time.time())
-    print 'Estoy comenzando a las ', inicio.strftime('%Y-%m-%d %H:%M:%S')
+    # fix_print_with_import
+    print('Estoy comenzando a las ', inicio.strftime('%Y-%m-%d %H:%M:%S'))
     sol, paso_t = ejemplo_de_uso_00()
     hora_inicial = '20/08/2017 12:30:00'
-    print grafica(sol, paso_t, paso_x, srow=11, scol=80, flag=1)
+    # fix_print_with_import
+    print(grafica(sol, paso_t, paso_x, srow=11, scol=80, flag=1))
     final = dtm.datetime.fromtimestamp(time.time())
-    print 'Termine a las %s ', final.strftime('%Y-%m-%d %H:%M:%S')
-    print 'Gasté: ', final - inicio
+    # fix_print_with_import
+    print('Termine a las %s ', final.strftime('%Y-%m-%d %H:%M:%S'))
+    # fix_print_with_import
+    print('Gasté: ', final - inicio)

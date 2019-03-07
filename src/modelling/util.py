@@ -12,7 +12,7 @@ def used_vars(book, variables):
 	sheet.write(0, 0, 'Variables Usadas', BOLD_FONT_XLWT)
 	idx = 1
 
-	for k, v in variables.iteritems():
+	for k, v in variables.items():
 		sheet.write(idx, 0, k, BOLD_FONT_XLWT)
 		sheet.write(idx, 1, v)
 

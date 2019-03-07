@@ -1,19 +1,25 @@
 import os
-from PyQt4 import QtGui, uic
+
+from qgis.PyQt import uic
+from qgis.PyQt import QtWidgets
+
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'ui', 'dialogo_dibujar_vertices.ui'))
+
 
 class NoSelectedOption(Exception):
     def __str__(self):
         return "There is no option selected."
 
+
 class NotLoadedPoints(Exception):
     def __str__(self):
         return "The user did not upload any points."
 
-class DrawDialog(QtGui.QDialog, FORM_CLASS):
-    def __init__(self, parent = None):
+
+class DrawDialog(QtWidgets.QDialog, FORM_CLASS):
+    def __init__(self, parent=None):
         """Constructor."""
         super(DrawDialog, self).__init__(parent)
         self.setupUi(self)
@@ -28,7 +34,7 @@ class DrawDialog(QtGui.QDialog, FORM_CLASS):
             self.textEditPoints.setDisabled(False)
 
     def getOption(self):
-	   return self.radioButtonDraw.isChecked()
+        return self.radioButtonDraw.isChecked()
 
     def getCoords(self):
         points = []
@@ -42,13 +48,13 @@ class DrawDialog(QtGui.QDialog, FORM_CLASS):
         return points
 
     def validate(self):
-        if not self.radioButtonLoad.isChecked() and \
-            not self.radioButtonDraw.isChecked():
+        if not self.radioButtonLoad.isChecked() and not \
+                self.radioButtonDraw.isChecked():
             raise NoSelectedOption
 
         if self.radioButtonLoad.isChecked():
             points = self.getCoords()
-            if points == []:
+            if not points:
                 raise NotLoadedPoints
 
         return True

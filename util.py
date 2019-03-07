@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from PyQt4.QtGui import QMessageBox
-from dialogo_combobox import ComboBoxDialog
+from __future__ import absolute_import
+from qgis.PyQt.QtWidgets import QMessageBox
+from .dialogo_combobox import ComboBoxDialog
 
 def questionDialog(self, title, detail):
     """Este díalogo le hace una pregunta de Si/No al usuario.

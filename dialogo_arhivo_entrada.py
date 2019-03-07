@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import os
 
-from PyQt4 import QtGui, uic
-from PyQt4.QtGui import QFileDialog
-from PyQt4.QtCore import QFileInfo
+from qgis.PyQt import uic
+from qgis.PyQt import QtGui
+from qgis.PyQt.QtWidgets import QFileDialog
+from qgis.PyQt.QtWidgets import QDialog
+from qgis.PyQt.QtCore import QFileInfo
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'ui', 'dialogo_crear_archivo_entrada.ui'))
@@ -11,7 +13,8 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 FORM_CLASS_LOAD_FILE, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'ui', 'dialogo_cargar_archivo_base.ui'))
 
-class InputFileDialog(QtGui.QDialog, FORM_CLASS):
+
+class InputFileDialog(QDialog, FORM_CLASS):
     """Recibir información necesaria para crear el archivo de entrada"""
 
     def __init__(self, parent=None):
@@ -50,21 +53,32 @@ class InputFileDialog(QtGui.QDialog, FORM_CLASS):
         return self.lineEditPath.text()
 
     def handler(self, title):
-        """Maneja el evento de click sobre cualquiera de los botones de cargar archivo, con el fin de abrir un diálogo que le permita al usuario seleccionar el archivo de su sistema de archivos."""
+        """
+        Maneja el evento de click sobre cualquiera de los botones de cargar archivo,
+        con el fin de abrir un diálogo que le permita al usuario seleccionar el
+        archivo de su sistema de archivos.
+        """
 
-        layerPath = QFileDialog.getSaveFileName(self, u'Crear archivo xls', '.', 'Archivo Excel (*.xls)')
+        layerPath, __ = QFileDialog.getSaveFileName(
+            self,
+            u'Crear archivo xls',
+            '.',
+            'Archivo Excel (*.xls)'
+        )
         layerInfo = QFileInfo(layerPath)
 
-        if layerPath == "" : return
+        if layerPath == "":
+            return
         
         if len(layerInfo.fileName()) < 5:
             layerPath += ".xls"
-        elif layerInfo.fileName()[-4: ] != ".xls":
+        elif layerInfo.fileName()[-4:] != ".xls":
             layerPath += ".xls"
 
         self.lineEditPath.setText(layerPath)
 
-class LoadInputFileDialog(QtGui.QDialog, FORM_CLASS_LOAD_FILE):
+
+class LoadInputFileDialog(QDialog, FORM_CLASS_LOAD_FILE):
     def __init__(self, parent=None):
         """Constructor."""
         super(LoadInputFileDialog, self).__init__(parent)
@@ -85,11 +99,20 @@ class LoadInputFileDialog(QtGui.QDialog, FORM_CLASS_LOAD_FILE):
         return self.lineEditPath.text()
 
     def output(self):
-        path = QFileDialog.getExistingDirectory (self, 'Selecciona la carpeta de salida', '.', QFileDialog.ShowDirsOnly)
+        path = QFileDialog.getExistingDirectory(
+            self,
+            'Selecciona la carpeta de salida',
+            '.',
+            QFileDialog.ShowDirsOnly
+        )
         self.lineEditOutput.setText(path)
 
     def handler(self):
-        layerPath = QFileDialog.getOpenFileName(self, u'Abir archivo xls', '.', 'Archivo Excel (*.xls)')
-        layerInfo = QFileInfo(layerPath)
+        layerPath, __ = QFileDialog.getOpenFileName(
+            self,
+            u'Abir archivo xls',
+            '.',
+            'Archivo Excel (*.xls)'
+        )
 
         self.lineEditPath.setText(layerPath)

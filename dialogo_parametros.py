@@ -1,11 +1,16 @@
-# -*- coding: utf-8 -*-
-import os
+from __future__ import absolute_import
+from builtins import str
 
-from PyQt4 import QtGui
-from dialogs.parametros_base import Ui_Dialog
 
-class SettingsDialog(QtGui.QDialog, Ui_Dialog):
-    """Este diálogo es el encargado de permitirle al usuario cargar las capas necesarias."""
+from qgis.PyQt.QtWidgets import QDialog
+from .dialogs.parametros_base import Ui_Dialog
+
+
+class SettingsDialog(QDialog, Ui_Dialog):
+    """
+    Este diálogo es el encargado de permitirle al usuario cargar las
+    capas necesarias.
+    """
 
     def __init__(self, values, parent = None):
         """Constructor."""
@@ -15,7 +20,7 @@ class SettingsDialog(QtGui.QDialog, Ui_Dialog):
         self.comboVelocidad.addItems(values)
         self.comboConcentracion.addItems(values)
 
-        #Para evitar que el usuario redimensione el diálogo
+        # Para evitar que el usuario redimensione el diálogo
         self.setFixedSize(self.size())
 
     def getVelocidad(self):
