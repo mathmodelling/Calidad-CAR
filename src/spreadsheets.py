@@ -19,10 +19,9 @@ COLS_CONTAMINANTS = ['OD', 'DBO', 'NH4', 'NO2', 'NO3', 'TDS', 'GyA',
 CONTAMINANTS_UNITS = ['mg/l', 'mg/l', 'mg/l','mg/l', 'mg/l', 'mg/l', 'mg/l' ,
 	'mg/l', 'mg/l', 'mg/l', 'NMP','NMP', u'c°', 'mg/l', 'mg/l' ,'unidades de pH' ,'mg/l']
 
+
 def create_description_sheet(workbook):
-	'''
-		Crear hoja de descripción:
-	'''
+	"""Crear hoja de descripción:"""
 
 	sheet = workbook.add_sheet(u'Descripción')
 
@@ -67,8 +66,9 @@ def create_description_sheet(workbook):
 		sheet.write(cont, 2, 'Valores de fuentes y sumideros ' + CONTAMINANTS[i])
 		cont += 1
 
+
 def create_sheet_dt(workbook, name, distances, hours, initial_value=None):
-	'''
+	"""
 		Crea una hoja en el libro de excel distancia / tiempo.
 
 		:param workbook: Libro de Excel en el que se va a crear
@@ -86,7 +86,7 @@ def create_sheet_dt(workbook, name, distances, hours, initial_value=None):
 
 		:param initial_value: Valor inicial con el que llenar la hoja
 
-	'''
+	"""
 	sheet = workbook.add_sheet(name)
 	sheet.write(0, 0, 'L', BOLD_FONT_XLWT)
 
@@ -106,8 +106,9 @@ def create_sheet_dt(workbook, name, distances, hours, initial_value=None):
 			for j in range(1, cols + 1):
 				sheet.write(i, j, initial_value)
 
+
 def create_sheet_td(workbook, name, distances, hours, initial_value=None):
-	'''
+	"""
 		Crea una hoja el el libro de excel tiempo / distancia.
 
 		:param workbook: Libro de Excel en el que se va a crear
@@ -125,7 +126,7 @@ def create_sheet_td(workbook, name, distances, hours, initial_value=None):
 
 		:param initial_value: Valor inicial con el que llenar la hoja
 
-	'''
+	"""
 	sheet = workbook.add_sheet(name)
 	sheet.write(0, 0, 'T', BOLD_FONT_XLWT)
 
@@ -145,8 +146,9 @@ def create_sheet_td(workbook, name, distances, hours, initial_value=None):
 			for j in range(1, cols + 1):
 				sheet.write(i, j, initial_value)
 
+
 def create_sheet_dc(workbook, name, distances, initial_value=None):
-	'''
+	"""
 		Crea una hoja el el libro de excel distancia / contaminante.
 
 		:param workbook: Libro de Excel en el que se va a crear
@@ -161,7 +163,7 @@ def create_sheet_dc(workbook, name, distances, initial_value=None):
 
 		:param initial_value: Valor inicial con el que llenar la hoja
 
-	'''
+	"""
 	sheet = workbook.add_sheet(name)
 	sheet.write(0, 0, 'L', BOLD_FONT_XLWT)
 	
@@ -181,8 +183,9 @@ def create_sheet_dc(workbook, name, distances, initial_value=None):
 			for j in range(1, cols + 1):
 				sheet.write(i, j, initial_value)
 
+
 def create_sheet_tc(workbook, name, hours, initial_value=None):
-	'''
+	"""
 		Crea una hoja el el libro de excel tiempo / contaminante.
 
 		:param workbook: Libro de Excel en el que se va a crear
@@ -197,7 +200,7 @@ def create_sheet_tc(workbook, name, hours, initial_value=None):
 
 		:param initial_value: Valor inicial con el que llenar la hoja
 
-	'''
+	"""
 	sheet = workbook.add_sheet(name)
 	sheet.write(0, 0, 'T', BOLD_FONT_XLWT)
 
@@ -217,15 +220,18 @@ def create_sheet_tc(workbook, name, hours, initial_value=None):
 			for j in range(1, cols + 1):
 				sheet.write(i, j, initial_value)
 
+
 def create_coordinates_sheet(workbook, coordinates):
 	sheet = workbook.add_sheet('Coordenadas')
 	sheet.write(0, 0, 'Longitud', BOLD_FONT_XLWT)
 	sheet.write(0, 1, 'Latitud', BOLD_FONT_XLWT)
+
 	pos = 1
-	for x, y in coordinates:
-		sheet.write(pos, 0, "%f " % x)
-		sheet.write(pos, 1, "%f " % y)
+	for point in coordinates:
+		sheet.write(pos, 0, "%f " % point.x())
+		sheet.write(pos, 1, "%f " % point.y())
 		pos += 1
+
 
 def create_book(path, distances, hours, wd=None, sl=None, coordinates=None):
 	"""
@@ -275,27 +281,32 @@ def create_book(path, distances, hours, wd=None, sl=None, coordinates=None):
 
 	return book
 
+
 class Error(Exception):
 	def __init__(self, name, r, c):
 		self.name = name
 		self.r = r
 		self.c = c
+
 	def __str__(self):
 		return "NaN : %s (%d, %d)" % (
 			self.name,
 			self.r,
 			self.c)
 
+
 class ErrorRow(Exception):
 	def __init__(self, name, r, v):
 		self.name = name
 		self.r = r
 		self.v = v
+
 	def __str__(self):
 		return "Error: La hoja %s no puede contener el valor %d en la fila %d" % (
 			self.name,
 			self.v,
 			self.r)
+
 
 def verify_sheet(sheet):
 	"""Verifica que una hoja de cálculo no tenga celdas vacias."""
@@ -310,6 +321,7 @@ def verify_sheet(sheet):
 			except:
 				raise Error(sheet.name, i + 1, j + 1)
 
+
 def verify_sheet_row(sheet, row, value):
 	"""Verifica que la hoja de cálculo no tenga el valor indicado en la fila indicada."""
 	cols = sheet.ncols
@@ -317,6 +329,7 @@ def verify_sheet_row(sheet, row, value):
 	for j in range(1, cols):
 		if float(sheet.cell_value(row, j)) == value:
 			raise ErrorRow(sheet.name, row, value)
+
 
 def verify_book(workbook):
 	"""Verifica que no exitan celdas vacias en todas las hojas del libro de excel."""
@@ -346,7 +359,7 @@ def verify_book(workbook):
 	val = None
 	try:
 		val = int(sheet.cell_value(0, cols - 1))
-	except:
+	except Exception:
 		raise Error(sheet.name, 1, j + 1)
 
 	return val

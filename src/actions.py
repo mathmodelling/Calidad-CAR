@@ -125,7 +125,7 @@ class DrawPointsAction(BaseAction):
         if points:
             for x, y in points:
                 feature = QgsFeature()
-                feature.setGeometry(QgsGeometry.fromPoint(QgsPoint(x, y)))
+                feature.setGeometry(QgsPoint(x, y))
                 self.gen_sec.addFeature(feature)
             self.gen_sec.commitChanges()
 
@@ -171,7 +171,8 @@ class DrawAxisAction(BaseAction):
 
         # print points
         feature = QgsFeature()
-        feature.setGeometry(QgsGeometry.fromPolyline(points))
+        # feature.setGeometry(QgsGeometry.fromPolyline(points))
+        feature.setGeometry(QgsGeometry.fromPolylineXY(points))
 
         self.gen_eje.addFeature(feature)
         self.gen_eje.commitChanges()

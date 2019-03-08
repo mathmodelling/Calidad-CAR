@@ -5,6 +5,7 @@ clase CalidadCAR."""
 from qgis.core import *
 from math import sqrt
 
+
 def getSegments(layer):
     """Retorna los segmentos de layer.
 
@@ -21,6 +22,7 @@ def getSegments(layer):
 
     return segments
 
+
 def distance(a, b):
     """Cálcula la distancia entre un punto a, y un punto b.
 
@@ -33,7 +35,8 @@ def distance(a, b):
     :returns: Distancia entre a y b.
     :rtype: Double
     """
-    return sqrt(a.sqrDist(b))
+    return sqrt(a.distanceSquared(b))
+
 
 def buildConvexPolygon(segments):
     """Construye un polígono convexo a partir de un conjungo de segementos,
@@ -53,7 +56,7 @@ def buildConvexPolygon(segments):
 
     points = borders + origins + ends
 
-    return QgsGeometry.fromMultiPoint(points).convexHull()
+    return QgsGeometry.fromMultiPolylineXY(points).convexHull()
 
 def intersectionPoints(layerA, layerB):
     """Obtiene los puntos de intersección entre dos capas.
@@ -114,6 +117,6 @@ def intersection(A, B):
     """
     if A.intersects(B):
         inter = A.intersection(B)
-        if inter.wkbType() == QGis.WKBPoint:
+        if inter.wkbType() == QgsWkbTypes.Point:
             return inter.asPoint()
     return None

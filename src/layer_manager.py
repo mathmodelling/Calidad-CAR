@@ -103,7 +103,9 @@ def load_vector_layer(path, name, color = (0, 0 , 0)):
 
     # Cambiar el color del layer
     r, g, b = color
-    symbol_layer = layer.rendererV2().symbols()[0].symbolLayer(0)
+    symbol_layer = layer.renderer().symbol()
     symbol_layer.setColor(QColor(r, g, b))
+
+    layer.triggerRepaint()
 
     return layer
