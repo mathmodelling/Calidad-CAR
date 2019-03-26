@@ -1,17 +1,28 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import
+import os
+
+from qgis.PyQt import uic
+from qgis.PyQt import QtGui
 
 from qgis.PyQt.QtWidgets import QFileDialog
 from qgis.PyQt.QtWidgets import QDialog
+from qgis.PyQt.QtCore import QFileInfo
 
-from .dialogs.calidad_car_dialog_base import Ui_Dialog
+from .dialogs.calidad_car_dialog_base import Ui_Dialog as PUi_Dialog
+
+# FORM_CLASS, _ = uic.loadUiType(os.path.join(
+# os.path.dirname(__file__), 'calidad_car_dialog_base.ui'))
+
+DEFAULT_LAYER = os.path.join(
+    os.path.dirname(__file__),
+    'data',
+    'shapes',
+    'Hidrografia.shp'
+)
 
 
-class Ui_Dialog(QDialog, Ui_Dialog):
-    """
-    Este diálogo es el encargado de permitirle al usuario cargar las
-    capas necesarias.
-    """
+class Ui_Dialog(QDialog, PUi_Dialog):
+    """Este diálogo es el encargado de permitirle al usuario cargar las capas necesarias."""
 
     def __init__(self, parent=None):
         """Constructor."""
@@ -21,6 +32,9 @@ class Ui_Dialog(QDialog, Ui_Dialog):
         self.botonFindHdr.clicked.connect(lambda: self.handler('hidr'))
         self.botonFindEjes.clicked.connect(lambda: self.handler('ejes'))
         self.botonFindSecciones.clicked.connect(lambda: self.handler('secc'))
+
+        # Set the default layer
+        self.capaHidrografia.setText(DEFAULT_LAYER)
 
     def getFilePaths(self):
         """Retorna la lista de rutas de las capas que el usuario desea cargar.
@@ -52,18 +66,20 @@ class Ui_Dialog(QDialog, Ui_Dialog):
         usuario seleccionar el archivo de su sistema de archivos.
         """
 
-        layerPath, __ = QFileDialog.getOpenFileName(
+        layer_path = QFileDialog.getOpenFileName(
             self,
-            u'Abrir shapefile',
+            'Abrir shapefile',
             '.',
             'Shapefiles (*.shp *.tif)'
         )
 
+        layer_path = layer_path[0]
+
         if title == 'fondo':
-            self.capaFondo.setText(layerPath)
+            self.capaFondo.setText(layer_path)
         elif title == 'hidr':
-            self.capaHidrografia.setText(layerPath)
+            self.capaHidrografia.setText(layer_path)
         elif title == 'ejes':
-            self.capaEjes.setText(layerPath)
+            self.capaEjes.setText(layer_path)
         elif title == 'secc':
-            self.capaSecciones.setText(layerPath)
+            self.capaSecciones.setText(layer_path)
