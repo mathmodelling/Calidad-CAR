@@ -20,6 +20,7 @@ def read_objetive_values():
 
 def computeError( nameExcelResults ):
     SHEETS_NAME = ['T','OD','DBO','NH3','NO2','NO3','DQO','TDS','EC','TC','GyA','Conduct','Porg','Pdis','TSS','SS','pH','ALK']
+    n = len(SHEETS_NAME)
     objetiveData = read_objetive_values()
     def pow2( a ): return a * a
     errorTotal = 0
@@ -35,7 +36,7 @@ def computeError( nameExcelResults ):
         errorLocal /= cols
         errorTotal+= errorLocal
         print("{} MSE = {}".format(sheet, errorLocal))
-    return errorTotal
+    return errorTotal/n
 
 
 def testEnd():
