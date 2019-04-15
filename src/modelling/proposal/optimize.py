@@ -36,7 +36,9 @@ def computeError( nameExcelResults ):
         errorLocal /= cols
         errorTotal+= errorLocal
         print("{} MSE = {}".format(sheet, errorLocal))
-    return errorTotal/n
+    errorTotal /= n
+    print("MSE TOTAL = {}".format(errorTotal))
+    return errorTotal
 
 
 def testEnd():
