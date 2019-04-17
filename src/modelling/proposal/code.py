@@ -108,7 +108,6 @@ def fn_reactions(c_T=None, c_OD=None, c_DBO=None, c_NH3=None, c_NO2=None, c_NO3=
     :return: Transport reactions by variable, like a dictionary ("OD", "DBO", "NH3", "NO2", "NO3", "DQO", 'TDS', "EC", "TC", "GyA",
                                                                 "Porg", "Pdis", "TSS", "SS")
     """
-
     p = (c_OD[0:-2]) / ((c_OD[0:-2]) + k['ks'])
 
     T = (k['Jsn'] + k['sbc'] * ((k['Tair'] + 273) ** 4) * (k['Aair'] + 0.031 * ((k['eair']) ** 0.5)) * (1 - k['RL']) - 0.97 * k['sbc'] * (
@@ -313,15 +312,17 @@ def save_graphics(C, ct, Cout, mcon, salto=3600):
 
 def print_state_variables(variables):
     to_optimize = ['ko2', 'kdbo', 'kDQO']
+    print("\tVariables to OPTIMIZE: ")
     for var in to_optimize:
-        print( variables[var] )
+        print( "\t\t{} = {}".format(var, variables[var]) )
 
 
 def run(archivo_entrada, tiempo, directorio_salida, variables, show, export, epochs=5):
     start_time = datetime.datetime.now()
     print("The process has started: {}".format(getTime( start_time ) ))
     for epoch in range( 1, epochs+1):
-        print("Epoch {}".format( epoch ))
+        print("------------------------------------------------------Epoch {}".format( epoch ))
+        print_state_variables( variables )
         # Numero de pasos en el tiempo a ejecutar
         nt = tiempo
         ct = (np.arange(1, nt))
@@ -387,7 +388,7 @@ def run(archivo_entrada, tiempo, directorio_salida, variables, show, export, epo
             # Actualizar condición inicial
             for var in config.VARIABLES:
                 Ci['ci_{}'.format(var)] = Cout['c_{}'.format(var)]
-        
+
         mconConduct = kcondt * mcon['TDS']
         mcon['T'] = mcon['T'] - 273.15
         mcon['pH'] = (np.log10(mcon['pH'])) * (-1)
@@ -407,17 +408,22 @@ def run(archivo_entrada, tiempo, directorio_salida, variables, show, export, epo
         save_sheet(book, 'Conduct', mconConduct[0::3600, :])
 
         used_vars(book, variables)
-        book.save(join(directorio_salida, "Resultados.xls"))
-
-
+        name = join(directorio_salida, "Resultados.xls")
+        book.save(name)
         """
             Compute error
         """
-        computeError(join(directorio_salida, "Resultados.xls"))
+        errores, types, sign_dependency = computeError(name)
 
         """
-            Here update the values according the error
+            Here update the values according the error, {gradiente descendente}
         """
+        to_optimize = ['ko2', 'kdbo', 'kDQO']
+
+        learning_rate = 1
+        for var in to_optimize:
+            variables[var] += types[var]*errores[var]*variables[var]*learning_rate*sign_dependency[var]*-1
+
 
     end_time = datetime.datetime.now()
     print("\nThe process has finished at: {}".format(getTime( end_time ) ))
@@ -430,7 +436,7 @@ def run(archivo_entrada, tiempo, directorio_salida, variables, show, export, epo
 
 if __name__ == '__main__':
     archivo_entrada = 'Prueba_CAR.xls'
-    horas = 1
+    horas = 2
     tiempo = 60 * 60 * horas
     directorio_salida = './salida/'
     show = False

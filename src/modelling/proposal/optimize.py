@@ -17,7 +17,7 @@ OBJETIVE_FILE = "./salida/Objetivo.xlsx"
  DBO =  {-kdbo, }
 
          substract
- DQ0 =  {-kDQO}
+ DQO =  {-kDQO}
 """
 def read_objetive_values():
     data = pd.read_excel(OBJETIVE_FILE, index_col=None)
@@ -29,7 +29,11 @@ def read_objetive_values():
 def computeError( nameExcelResults ):
     #SHEETS_NAME = ['T','OD','DBO','NH3','NO2','NO3','DQO','TDS','EC','TC','GyA','Conduct','Porg','Pdis','TSS','SS','pH','ALK']
     SHEETS_NAME = ['OD', 'DBO', 'DQO']
+    dependency = {'ko2':'OD',  'kdbo':'DBO',  'kDQO':'DQO'}
+    dependencyi = {'OD':'ko2',  'DBO':'kdbo',  'DQO':'kDQO'}
+    sign_dependency = {'ko2':1,  'kdbo':-1,  'kDQO':-1}
     objetiveData = read_objetive_values()
+    types = dict()
     errores = dict()
     print("\n Errors: ")
     def pow2( a ): return a * a
@@ -46,18 +50,16 @@ def computeError( nameExcelResults ):
             diff += meanReal - expected
             errorLocal = abs( pow2(meanReal-expected) )
         errorLocal /= cols
-        errores[sheet] = errorLocal
+        errores[dependencyi[sheet]] = errorLocal
         errorTotal+= errorLocal
-        if diff == 0:
-            type = "balanced"
-        elif diff < 0:
-            type = "down"
-        else:
-            type = "up"
+        if diff == 0: type = 0
+        elif diff < 0: type = -1
+        else:  type = 1
+        types[dependencyi[sheet]] =type
         print("\t{} MSE = {}, Type = {} ".format(sheet, errorLocal, type))
     errorTotal /= len(SHEETS_NAME)
     print("\tMSE TOTAL = {}".format(errorTotal))
-    return errorTotal
+    return errores, types, sign_dependency
 
 
 def testEnd():
