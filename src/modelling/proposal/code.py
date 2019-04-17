@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 from __future__ import print_function
 from __future__ import absolute_import
 
@@ -14,6 +16,9 @@ __status__ = "En desarrollo"
 from builtins import range
 
 
+#Base Imports
+import xlrd
+import xlwt
 import numpy as np
 import datetime
 import sys
@@ -22,15 +27,15 @@ matplotlib.use('Qt5Agg')
 
 import matplotlib.pyplot as plt
 
-import xlrd
-import xlwt
 
+# Utilities
 from util import join
 from util import used_vars
 from util import read_sheet
 from util import save_sheet
 from util import save_plot
 from util import plot
+from util import getTime
 
 from optimize import computeError
 
@@ -39,11 +44,6 @@ import config
 
 def f(array1, array2, array3):
     return array1 * array2 / (array3 + array2)
-
-
-def getTime( t ):
-    strTime  = '{}:{}:{}'.format(t.hour, t.minute, t.second)
-    return strTime
 
 def _read_config_file(config_file, sheet_names=config.SHEET_NAMES):
     """
@@ -73,7 +73,6 @@ def _read_config_file(config_file, sheet_names=config.SHEET_NAMES):
 
     return C
 
-
 def fn_advection(vel, co, dtx, ki, kr):
     """
     Advection equation calculator
@@ -88,7 +87,6 @@ def fn_advection(vel, co, dtx, ki, kr):
 
     return adv
 
-
 def fn_diffusion(d, co, dtx):
     """
     Diffusion equation calculator
@@ -101,7 +99,6 @@ def fn_diffusion(d, co, dtx):
     dif = 0.5 * (d[2:] * co[2:] - 2 * d[1:-1] * co[1:-1] + d[0:-2] * co[0:-2]) * dtx
 
     return dif
-
 
 def fn_reactions(c_T=None, c_OD=None, c_DBO=None, c_NH3=None, c_NO2=None, c_NO3=None, c_DQO=None,
                  c_TDS=None, c_EC=None, c_TC=None, c_GyA=None, c_pH=None, c_Porg=None, c_TSS=None,
@@ -167,15 +164,6 @@ def calidad_explicito(D, dx, Ci, S, v, d, Caudales, k):
     """
     Esta función modela la transición de la concentración del momento t al momento t + dt para todos los
     nodos espaciales de la corriente superficial
-
-    :param ci: matrix (bidimensional) de concentración inicial en el canal y su respectiva distancia x la concentración
-    va en g/m3, la distancia en metros
-    :param v: vector de velocidad promedio del agua en m/s, tiene las velocidades promedio para cada sección
-     y para cada momento de tiempo
-    :param d: vector de coeficiente de difusión
-    :return: c, dt: la concentración del contaminante en todos los nodos x para el momento de tiempo t + dt y el valor
-    de dt que cumple la condición de estabilidad de Courant o CFL
-
     """
 
     variables = config.VARIABLES
@@ -193,28 +181,12 @@ def calidad_explicito(D, dx, Ci, S, v, d, Caudales, k):
     if (np.abs(pe) >= 3) or (maxd == 0):
         dt = dx / maxv
         d = d * 0
-        # print ("Se desconectó la Difusión, el número de peclet es: %s. Courant es igual a: %s. El paso en el " \
-        # "tiempo es de: %s segundos" % (round(pe, 2), str(maxv * (dt / dx)), dt))
     elif (np.min(np.abs(pe)) >= 0.1) or (maxd == 0):
         dt = 1 / (2 * maxd / (dx ** 2) + (maxv / dx))
-        # print ("Se se tienen en cuenta difusion y adveccion, el número de peclet es: %s. Courant es igual a: %s. " \
-        # "El paso en el tiempo es de: %s segundos" % (
-        # round(pe, 2), str(maxv * (dt / dx)), dt))
     else:
         dt = (dx * dx) / (2 * maxd)
-        # print ('Se calcula advección y difusión, el número de peclet es: %s. Courant es igual a: %s. El paso en el ' \
-        # 'tiempo es de: %s segundos' % (round(pe, 2), str(maxv * (dt / dx)), dt))
-
-    # tfactor es un factor multiplicador del numero de nodos en el tiempo para llegar de t a t + dt, tfactor >= 1,
-    # se recomienda aumentarlo de 10 en 10 {10, 100, 1000, 10000... }
-
-    # AGREGAR TFACTOR
     tfactor = k['tfactor']
-
-    # Se guarda el dt inicial como dtini
     dtini = dt
-
-    # Se ajusta el dt según tfactor, dt se hace más pequeño tfactor-veces
     dt = dt / tfactor
 
     #CONSTANTES
@@ -257,7 +229,6 @@ def calidad_explicito(D, dx, Ci, S, v, d, Caudales, k):
             Cout['cout_{}'.format(var)][-1] = Cout['cout_{}'.format(var)][-2]
 
     return C, dt
-
 
 def show_graphics(C, ct, Cout, mcon, salto=3600):
 
@@ -312,7 +283,6 @@ def show_graphics(C, ct, Cout, mcon, salto=3600):
 
     fig2.show()
 
-
 def save_graphics(C, ct, Cout, mcon, salto=3600):
     x_data = ct[1::3600]
 
@@ -341,130 +311,126 @@ def save_graphics(C, ct, Cout, mcon, salto=3600):
             directorio_salida
         )
 
+def print_state_variables(variables):
+    to_optimize = ['ko2', 'kdbo', 'kDQO']
+    for var in to_optimize:
+        print( variables[var] )
 
-def run(archivo_entrada, tiempo, directorio_salida, variables, show, export):
+
+def run(archivo_entrada, tiempo, directorio_salida, variables, show, export, epochs=5):
     start_time = datetime.datetime.now()
     print("The process has started: {}".format(getTime( start_time ) ))
-    # Numero de pasos en el tiempo a ejecutar
-    nt = tiempo
-    ct = (np.arange(1, nt))
+    for epoch in range( 1, epochs+1):
+        print("Epoch {}".format( epoch ))
+        # Numero de pasos en el tiempo a ejecutar
+        nt = tiempo
+        ct = (np.arange(1, nt))
 
-    C = _read_config_file(archivo_entrada)
+        C = _read_config_file(archivo_entrada)
 
-    # Discretizacion en el espacio
-    dx = C['wd'][1, 0] - C['wd'][0, 0]
+        # Discretizacion en el espacio
+        dx = C['wd'][1, 0] - C['wd'][0, 0]
 
-    # velocidad del agua en cada punto de monitoreo
-    va = C['wv'][:, 1]
-    # coeficiente de difusión en cada punto de monitoreo
-    cd = np.zeros(len(va)) + variables['Diff']
-    v = np.zeros(len(va)) + np.mean(C['wv'])
-    D = np.mean(C['wd'])
+        # velocidad del agua en cada punto de monitoreo
+        va = C['wv'][:, 1]
+        # coeficiente de difusión en cada punto de monitoreo
+        cd = np.zeros(len(va)) + variables['Diff']
+        v = np.zeros(len(va)) + np.mean(C['wv'])
+        D = np.mean(C['wd'])
 
-    # Condiciones de Frontera
-    bc = dict()
+        # Condiciones de Frontera
+        bc = dict()
 
-    for k, col in config.BC_COLUMNS.items():
-        bc[k] = C['bc'][:, col]
+        for k, col in config.BC_COLUMNS.items():
+            bc[k] = C['bc'][:, col]
 
-    kcondt = 1.92
-    bc['T'] = bc['T'] + 273.15
-    bc['pH'] = 10 ** (-1 * bc['pH'])
+        kcondt = 1.92
+        bc['T'] = bc['T'] + 273.15
+        bc['pH'] = 10 ** (-1 * bc['pH'])
 
-    # Condiciones Iniciales
-    Ci = dict()
-    for k, col in config.BC_COLUMNS.items():
-        Ci['ci_{}'.format(k)] = C['ic'][:, col]
+        # Condiciones Iniciales
+        Ci = dict()
+        for k, col in config.BC_COLUMNS.items():
+            Ci['ci_{}'.format(k)] = C['ic'][:, col]
 
-    Ci['ci_T'] = Ci['ci_T'] + 273.15
-    Ci['ci_pH'] = 10 ** (-1 * Ci['ci_pH'])
+        Ci['ci_T'] = Ci['ci_T'] + 273.15
+        Ci['ci_pH'] = 10 ** (-1 * Ci['ci_pH'])
 
-    mcon = dict()
-    for var in config.VARIABLES:
-        mcon[var] = np.empty((nt, np.size(Ci['ci_{}'.format(var)], axis=0)))
-        mcon[var][0, :] = Ci['ci_{}'.format(var)]
-
-    for var in config.VARIABLES:
-        C['S{}'.format(var)] = C['S{}'.format(var)][:, 1:]
-
-    Cout = dict()
-    print("Total Iterations = {}".format(nt))
-    for i in range(1, nt):
-        sys.stdout.write("\rDoing iteration {}, {:.2f}% Completed ".format(i, i/nt*100))
-
-        muestra = int(i / 3600)
-        for k in config.BC_COLUMNS.keys():
-            Ci['ci_{}'.format(k)][0] = bc[k][muestra]
-
-        S = dict()
+        mcon = dict()
         for var in config.VARIABLES:
-            S['S_{}'.format(var)] = C['S{}'.format(var)][:, muestra]
+            mcon[var] = np.empty((nt, np.size(Ci['ci_{}'.format(var)], axis=0)))
+            mcon[var][0, :] = Ci['ci_{}'.format(var)]
 
-        #  Evolución de la concentración para t + dt
-        Cout, paso_t = calidad_explicito(D, dx, Ci, S, v, cd, C['Caudales'], variables)
-
-        # Se guardan las concentraciones del momento t+dt
         for var in config.VARIABLES:
-            mcon[var][i, :] = Cout['c_{}'.format(var)]
+            C['S{}'.format(var)] = C['S{}'.format(var)][:, 1:]
 
-        # Actualizar condición inicial
+        Cout = dict()
+        #print("Total Iterations = {}".format(nt))
+        for i in range(1, nt):
+            sys.stdout.write("\r\tDoing iteration {}, {:.2f}% Completed ".format(i, i/nt*100))
+
+            muestra = int(i / 3600)
+            for k in config.BC_COLUMNS.keys():
+                Ci['ci_{}'.format(k)][0] = bc[k][muestra]
+
+            S = dict()
+            for var in config.VARIABLES:
+                S['S_{}'.format(var)] = C['S{}'.format(var)][:, muestra]
+
+            #  Evolución de la concentración para t + dt
+            Cout, paso_t = calidad_explicito(D, dx, Ci, S, v, cd, C['Caudales'], variables)
+
+            # Se guardan las concentraciones del momento t+dt
+            for var in config.VARIABLES:
+                mcon[var][i, :] = Cout['c_{}'.format(var)]
+
+            # Actualizar condición inicial
+            for var in config.VARIABLES:
+                Ci['ci_{}'.format(var)] = Cout['c_{}'.format(var)]
+        
+        mconConduct = kcondt * mcon['TDS']
+        mcon['T'] = mcon['T'] - 273.15
+        mcon['pH'] = (np.log10(mcon['pH'])) * (-1)
+        Cout['c_pH'] = (np.log10(Cout['c_pH'])) * (-1)
+
+
+        #print("Guardando datos de salida...")
+        #print( "Shape OD array = {}".format( str(mcon['pH'].shape) ))
+        #print( "Shape OD array = {}".format( str(mcon['pH'][0::3600, :].shape) ))
+        book = xlwt.Workbook()
         for var in config.VARIABLES:
-            Ci['ci_{}'.format(var)] = Cout['c_{}'.format(var)]
+            """
+                take data each 3600 samples mcon[0::3600, :]
+            """
+            save_sheet(book, var, mcon[var][0::3600, :])
 
-    mconConduct = kcondt * mcon['TDS']
-    mcon['T'] = mcon['T'] - 273.15
-    mcon['pH'] = (np.log10(mcon['pH'])) * (-1)
-    Cout['c_pH'] = (np.log10(Cout['c_pH'])) * (-1)
+        save_sheet(book, 'Conduct', mconConduct[0::3600, :])
+
+        used_vars(book, variables)
+        book.save(join(directorio_salida, "Resultados.xls"))
+
+
+        """
+            Compute error
+        """
+        computeError(join(directorio_salida, "Resultados.xls"))
+
+        """
+            Here update the values according the error
+        """
 
     end_time = datetime.datetime.now()
     print("\nThe process has finished at: {}".format(getTime( end_time ) ))
     elapsed_time = end_time - start_time
     elapsed_time = str(datetime.timedelta(seconds=elapsed_time.total_seconds()))
     print("Total Time: {}".format(elapsed_time))
-
-    print("Guardando datos de salida...")
-    print( "Shape OD array = {}".format( str(mcon['pH'].shape) ))
-    print( "Shape OD array = {}".format( str(mcon['pH'][0::3600, :].shape) ))
-    book = xlwt.Workbook()
-    for var in config.VARIABLES:
-        """
-            take data each 3600 samples mcon[0::3600, :]
-        """
-        save_sheet(book, var, mcon[var][0::3600, :])
-
-    save_sheet(book, 'Conduct', mconConduct[0::3600, :])
-
-    used_vars(book, variables)
-    book.save(join(directorio_salida, "Resultados.xls"))
-
-
-    """
-        Compute error
-    """
-    computeError(join(directorio_salida, "Resultados.xls"))
-
-    """
-        Here update the values according the error
-    """
-
-
     print("El proceso ha finalizado.")
 
-
-    if show:
-        print(u"Creando Graficas")
-        show_graphics(C, ct, Cout, mcon)
-
-    if export:
-        print(u"Guardando Graficas...")
-        save_graphics(C, ct, Cout, mcon)
-
-    print("El proceso ha finalizado.")
 
 
 if __name__ == '__main__':
     archivo_entrada = 'Prueba_CAR.xls'
-    horas = 5
+    horas = 1
     tiempo = 60 * 60 * horas
     directorio_salida = './salida/'
     show = False

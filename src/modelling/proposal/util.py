@@ -74,3 +74,7 @@ def save_sheet(book, name, data):
     for i in range(1, len(data) + 1):
         for j in range(1, len(data[0]) + 1):
             sheet.write(i, j, data[i - 1, j - 1])
+
+def getTime( t ):
+    strTime  = '{}:{}:{}'.format(t.hour, t.minute, t.second)
+    return strTime
