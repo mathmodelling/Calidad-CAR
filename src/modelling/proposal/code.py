@@ -686,7 +686,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
 
 if __name__ == '__main__':
     archivo_entrada = 'Prueba_CAR.xls'
-    horas = 24
+    horas = 5
     tiempo = 60*60*horas
     directorio_salida = './salida/'
     show = False
