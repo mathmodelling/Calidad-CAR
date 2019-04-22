@@ -317,7 +317,7 @@ def print_state_variables(variables):
         print( "\t\t{} = {}".format(var, variables[var]) )
 
 
-def run(archivo_entrada, tiempo, directorio_salida, variables, show, export, epochs=5):
+def run(archivo_entrada, tiempo, directorio_salida, variables, show, export,tiempoTotal, epochs=5, estabaEntrenando =True):
     start_time = datetime.datetime.now()
     print("The process has started: {}".format(getTime( start_time ) ))
     for epoch in range( 1, epochs+1):
@@ -424,20 +424,25 @@ def run(archivo_entrada, tiempo, directorio_salida, variables, show, export, epo
         for var in to_optimize:
             variables[var] += types[var]*errores[var]*variables[var]*learning_rate*sign_dependency[var]*-1
 
-
     end_time = datetime.datetime.now()
     print("\nThe process has finished at: {}".format(getTime( end_time ) ))
     elapsed_time = end_time - start_time
     elapsed_time = str(datetime.timedelta(seconds=elapsed_time.total_seconds()))
     print("Total Time: {}".format(elapsed_time))
-    print("El proceso ha finalizado.")
+    if( estabaEntrenando ):
+        print("Final Run: ")
+        run(archivo_entrada, tiempoTotal, directorio_salida, variables, show, export,tiempoTotal, epochs=1, estabaEntrenando=False)
+    else:
+        print("El proceso ha finalizado.")
 
 
 
 if __name__ == '__main__':
     archivo_entrada = 'Prueba_CAR.xls'
-    horas = 2
-    tiempo = 60 * 60 * horas
+    horasTraining = 2
+    horasReal = 24
+    tiempoTraining = 60 * 60 * horasTraining
+    tiempoTotal = 60 * 60 * horasReal
     directorio_salida = './salida/'
     show = False
     export = False
@@ -456,4 +461,4 @@ if __name__ == '__main__':
         'Wrp': 1.808e-09, 'FrH': 0.0172, 'Diff': 5.0, 'As1': 1.0, 'Jsn': 145.0, 'sbc': 5.67e-08,
         'Tair': 17.0, 'Aair': 0.6, 'eair': 14.3, 'RL': 0.03, 'Uw': 3.0, 'es': 11.5, 'tfactor': 1.0}
 
-    run(archivo_entrada, tiempo, directorio_salida, variables, show, export)
+    run(archivo_entrada, tiempoTraining, directorio_salida, variables, show, export, tiempoTotal)
