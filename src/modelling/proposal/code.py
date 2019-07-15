@@ -22,6 +22,7 @@ import xlwt
 import numpy as np
 import datetime
 import sys
+import pandas as pd
 import matplotlib
 matplotlib.use('Qt5Agg')
 
@@ -310,19 +311,19 @@ def save_graphics(C, ct, Cout, mcon, salto=3600):
             directorio_salida
         )
 
-def print_state_variables(variables):
-    to_optimize = ['ko2', 'kdbo', 'kDQO']
+def print_state_variables(variables, to_optimize):
+    #to_optimize = ['ko2', 'kdbo', 'kDQO']
     print("\tVariables to OPTIMIZE: ")
     for var in to_optimize:
         print( "\t\t{} = {}".format(var, variables[var]) )
 
 
-def run(archivo_entrada, tiempo, directorio_salida, variables, show, export,tiempoTotal, epochs=5, estabaEntrenando =True):
+def run(archivo_entrada, tiempo, directorio_salida, variables, show, export,tiempoTotal, epochs=1, estabaEntrenando =True):
     start_time = datetime.datetime.now()
     print("The process has started: {}".format(getTime( start_time ) ))
     for epoch in range( 1, epochs+1):
         print("------------------------------------------------------Epoch {}".format( epoch ))
-        print_state_variables( variables )
+
         # Numero de pasos en el tiempo a ejecutar
         nt = tiempo
         ct = (np.arange(1, nt))
@@ -403,26 +404,29 @@ def run(archivo_entrada, tiempo, directorio_salida, variables, show, export,tiem
             """
                 take data each 3600 samples mcon[0::3600, :]
             """
-            save_sheet(book, var, mcon[var][0::3600, :])
+            data = mcon[var][0::3600, :]
+            data = np.vstack([data, data.mean(axis=0)])
+            save_sheet(book, var, data)
 
         save_sheet(book, 'Conduct', mconConduct[0::3600, :])
 
         used_vars(book, variables)
-        name = join(directorio_salida, "Resultados.xls")
+        name = join(directorio_salida, "Resultados.xlsx")
         book.save(name)
         """
             Compute error
         """
-        errores, types, sign_dependency = computeError(name)
-
+        errores, types, sign_dependency, to_optimize = computeError(name)
         """
             Here update the values according the error, {gradiente descendente}
         """
-        to_optimize = ['ko2', 'kdbo', 'kDQO']
 
         learning_rate = 1
         for var in to_optimize:
             variables[var] += types[var]*errores[var]*variables[var]*learning_rate*sign_dependency[var]*-1
+
+        print_state_variables( variables, to_optimize)
+
 
     end_time = datetime.datetime.now()
     print("\nThe process has finished at: {}".format(getTime( end_time ) ))
@@ -431,10 +435,23 @@ def run(archivo_entrada, tiempo, directorio_salida, variables, show, export,tiem
     print("Total Time: {}".format(elapsed_time))
     if( estabaEntrenando ):
         print("Final Run: ")
-        run(archivo_entrada, tiempoTotal, directorio_salida, variables, show, export,tiempoTotal, epochs=1, estabaEntrenando=False)
+        run(archivo_entrada, tiempoTotal, directorio_salida, variables, show, export,tiempoTotal, epochs=3, estabaEntrenando=False)
     else:
+        book = xlwt.Workbook()
+        used_vars(book, variables)
+        name = "FOptimize/Variables.xlsx"
+        book.save(name)
         print("El proceso ha finalizado.")
 
+
+def cargar_variables():
+    data = pd.read_excel("FOptimize/Variables.xlsx")
+    variables = dict()
+    for row  in data.iterrows():
+        name = row[1]["variable"]
+        value = row[1]["valor"]
+        variables[name] = value
+    return variables
 
 
 if __name__ == '__main__':
@@ -447,6 +464,8 @@ if __name__ == '__main__':
     show = False
     export = False
 
+    variables = cargar_variables()
+    """
     variables = {'Da': 1.6296e-07, 'ko2': 0.0002787, 'cs': 8.0, 'knh3': 5.787e-05, 'ksnh3': 1.15741e-06,
         'alfa_nh3': 2.0, 'kdbo': 1.1574e-06, 'ks': 0.4, 'alfa_no2': 1.1, 'ksod': 1.15e-06,
         'knt': 2.3148e-06, 'NT': 0.5, 'kno2': 1.1574e-05, 'kno3': 1.1574e-06, 'kDQO': 1.1574e-06,
@@ -460,5 +479,6 @@ if __name__ == '__main__':
         'Kw': 1e-14, 'K1': 4.5e-07, 'K2': 4.7e-11, 'Vv': 5.787e-06, 'As': 1.0, 'CO2S': 1.23e-05,
         'Wrp': 1.808e-09, 'FrH': 0.0172, 'Diff': 5.0, 'As1': 1.0, 'Jsn': 145.0, 'sbc': 5.67e-08,
         'Tair': 17.0, 'Aair': 0.6, 'eair': 14.3, 'RL': 0.03, 'Uw': 3.0, 'es': 11.5, 'tfactor': 1.0}
+    """
 
     run(archivo_entrada, tiempoTraining, directorio_salida, variables, show, export, tiempoTotal)
