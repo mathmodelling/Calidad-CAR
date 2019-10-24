@@ -1,5 +1,5 @@
-
-# -*- coding: utf-8 -*-
+from __future__ import print_function
+from __future__ import absolute_import
 
 __author__ = 'Efraín Domínguez Calle, PhD - Wilfredo Marimón Bolivar, PhD'
 __copyright__ = "Copyright 2017, Mathmodelling"
@@ -11,13 +11,21 @@ __email__ = 'edoc@marthmodelling.org, w.marimon@javeriana.edu.co'
 __status__ = "En desarrollo"
 
 
+from builtins import range
+
+
 import numpy as np
+
 import matplotlib
+matplotlib.use('Qt5Agg')
+
 import matplotlib.pyplot as plt
 
-import xlrd, xlwt
+import xlrd
+import xlwt
 
-from util import join, used_vars
+from util import join
+from util import used_vars
 
 BOLD_FONT_XLWT = xlwt.Style.easyxf('font: bold on;')
 
@@ -31,17 +39,19 @@ def read_sheet(workbook, name):
     c = sheet.ncols
     answ = np.zeros([r - 1, c])
     # Reading each cell in excel sheet 'BC'
-    for i in xrange(1, r):
-        for j in xrange(c):
+    for i in range(1, r):
+        for j in range(c):
             answ[i - 1, j] = float(sheet.cell_value(i, j))
 
     return answ
+
 
 def plot(ax, name, data):
     ax.tick_params(labelsize=6)
     ax.yaxis.get_offset_text().set_fontsize(6)
     ax.plot(data[0], data[1])
     ax.set_title(name, fontsize=8)
+
 
 def save_plot(plt, title, xlabel, ylabel, data, path):
     plt.plot(data[0], data[1])
@@ -51,17 +61,19 @@ def save_plot(plt, title, xlabel, ylabel, data, path):
     plt.savefig("%s.png" % join(path, title), dpi=300)
     plt.clf()
 
+
 def save_sheet(book, name, data):
     sheet = book.add_sheet(name)
 
-    for i in xrange(1, len(data) + 1):
+    for i in range(1, len(data) + 1):
         sheet.write(i, 0, i - 1, BOLD_FONT_XLWT)
-    for i in xrange(1, len(data[0]) + 1):
+    for i in range(1, len(data[0]) + 1):
         sheet.write(0, i, i - 1, BOLD_FONT_XLWT)
 
-    for i in xrange(1, len(data) + 1):
-        for j in xrange(1, len(data[0]) + 1):
+    for i in range(1, len(data) + 1):
+        for j in range(1, len(data[0]) + 1):
             sheet.write(i, j, data[i -1 , j - 1])
+
 
 def read_config_file(config_file, sheet_name_wd='WD', sheet_name_sl='SL', sheet_name_wv='WV', sheet_name_bc='BC',
                      sheet_name_ic='IC', sheet_name_ST='ST', sheet_name_SOD='SOD', sheet_name_SDBO='SDBO', sheet_name_SNH3='SNH4',
@@ -92,56 +104,56 @@ def read_config_file(config_file, sheet_name_wd='WD', sheet_name_sl='SL', sheet_
 
     # Reading water velocities sheet
     wv = read_sheet(wb, sheet_name_wv)
-  
+
     # Reading boundary conditions sheet
     bc = read_sheet(wb, sheet_name_bc)
-    
+
     # Reading initial conditions sheet
     ic = read_sheet(wb, sheet_name_ic)
-    
+
     # Reading sinks and sources sheet
     ST = read_sheet(wb, sheet_name_ST)
-    
+
     # Reading sinks and sources sheet
     SOD = read_sheet(wb, sheet_name_SOD)
-    
+
     # Reading sinks and sources sheet
     SDBO = read_sheet(wb, sheet_name_SDBO)
-    
+
     # Reading sinks and sources sheet
     SNO2 = read_sheet(wb, sheet_name_SNO2)
-    
+
     # Reading sinks and sources sheet
     SNO3 = read_sheet(wb, sheet_name_SNO3)
-    
+
     # Reading sinks and sources sheet
     SNH3 = read_sheet(wb, sheet_name_SNH3)
-    
+
     # Reading sinks and sources sheet
     STDS = read_sheet(wb, sheet_name_STDS)
-    
+
     # Reading sinks and sources sheet
     SGyA = read_sheet(wb, sheet_name_SGyA)
-    
-    # Reading sinks and sources sheet    
-    SDQO = read_sheet(wb, sheet_name_SDQO)    
-    
-    # Reading sinks and sources sheet    
-    SPorg = read_sheet(wb, sheet_name_SPorg)  
 
-    # Reading sinks and sources sheet    
-    SPdis = read_sheet(wb, sheet_name_SPdis)    
+    # Reading sinks and sources sheet
+    SDQO = read_sheet(wb, sheet_name_SDQO)
 
-    # Reading sinks and sources sheet    
+    # Reading sinks and sources sheet
+    SPorg = read_sheet(wb, sheet_name_SPorg)
+
+    # Reading sinks and sources sheet
+    SPdis = read_sheet(wb, sheet_name_SPdis)
+
+    # Reading sinks and sources sheet
     SEC = read_sheet(wb, sheet_name_SEC)
-    
-    # Reading sinks and sources sheet    
-    STC = read_sheet(wb, sheet_name_STC)    
-    
-    # Reading sinks and sources sheet    
+
+    # Reading sinks and sources sheet
+    STC = read_sheet(wb, sheet_name_STC)
+
+    # Reading sinks and sources sheet
     STSS = read_sheet(wb, sheet_name_STSS)
 
-    # Reading sinks and sources sheet    
+    # Reading sinks and sources sheet
     SSS = read_sheet(wb, sheet_name_SSS)
 
     # Reading sinks and sources sheet
@@ -171,7 +183,7 @@ def read_config_file(config_file, sheet_name_wd='WD', sheet_name_sl='SL', sheet_
     ST = (ST[0:, 1:] + 273)
     SpH = (10 ** (-1 * (SpH[0:, 1:]))) * Caudales[0:, 1:] / (Caudales[0, 1:] + Caudales[0:, 1:])
     SALK = SALK[0:, 1:] * Caudales[0:, 1:] / (Caudales[0, 1:] + Caudales[0:, 1:])
-    
+
     return wd, sl, wv, bc, ic, ST, SOD, SDBO, SNH3, SNO2, SNO3, STDS, SGyA, SDQO, SPdis, SPorg, SEC, STC, STSS, SSS, SpH, SALK, Caudales
 
 
@@ -240,10 +252,10 @@ def calidad_explicito(D, dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO
     kr = np.where(v < 0, 0, 1)
 
     #VARIABLES ADICIONALES
-    k = variables['k']
+    # k = variables['k']
     den = variables['den']
     Cp = variables['Cp']
-    Dt = k/(den*Cp)
+    # Dt = k/(den*Cp)
     As1 = variables['As1']
     Jsn = variables['Jsn']
     sbc = variables['sbc']
@@ -260,7 +272,7 @@ def calidad_explicito(D, dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO
     As = variables['As']
     CO2S = variables['CO2S']
     Wrp = variables['Wrp']
-    FrH = variables['FrH'] 
+    FrH = variables['FrH']
     Diff = variables['Diff']
     Da = variables['Da']
     ko2 = variables['ko2']
@@ -314,6 +326,7 @@ def calidad_explicito(D, dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO
     teta_NT = variables['teta_NT']
     teta_NO3 = variables['teta_NO3']
 
+    ##### Estas lineas no son necesarias ######
     #Creando variable de salida
     cout_T = np.zeros(len(c_T))
     cout_OD = np.zeros(len(c_OD))
@@ -332,6 +345,7 @@ def calidad_explicito(D, dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO
     cout_SS = np.zeros(len(c_OD))
     cout_pH = np.zeros(len(c_OD))
     cout_ALK = np.zeros(len(c_OD))
+    ##### ############################## ######
 
     cout_T = c_T
     cout_OD = c_OD
@@ -351,6 +365,7 @@ def calidad_explicito(D, dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO
     cout_pH = c_pH
     cout_ALK = c_ALK
 
+    print("Inicial", c_ALK[1: -1])
     # range(int(dtini / dt)) determina el número de nodos temporales necesarios para llegar t + dt de forma estable
     for i in range(int(dtini / dt)):
         caudales = Caudales[0:, 1:] / (Caudales[0, 1:] + Caudales[0:, 1:])
@@ -462,6 +477,7 @@ def calidad_explicito(D, dx, ci_T, ci_OD, ci_DBO, ci_NH3, ci_NO2, ci_NO3, ci_DQO
                    (kr[1:-1] * v[1:-1] * c_pH[1:-1] - kr[0:-2] * v[0:-2] * c_pH[0:-2]) * (dt / dx))
         dif_pH = 0.5 * (d[2:] * c_pH[2:] - 2 * d[1:-1] * c_pH[1:-1] + d[0:-2] * c_pH[0:-2]) * (dt / dx ** 2)
         reac_pH = ((Kw / (FrH * (c_ALK[0:-2])) ** 0.5))
+
         cout_pH[1:-1] = c_pH[1:-1] + adv_pH + dif_pH + reac_pH + ((S_pH[1:-1] - c_pH[1:-1])*caudales[1:-1, 1])
 
         c_T = cout_T
@@ -631,7 +647,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
     mconpH[0, :] = i_c_pH
     mconALK = np.empty((nt, np.size(i_c_ALK, axis=0)))
     mconALK[0, :] = i_c_ALK
-    
+
     ST = ST[:, 1:]
     SOD = SOD[:, 1:]
     SDBO = SDBO[:, 1:]
@@ -669,7 +685,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         i_c_SS[0] = b_c_SS[muestra]
         i_c_pH[0] = b_c_pH[muestra]
         i_c_ALK[0] = b_c_ALK[muestra]
-        
+
         S_T = ST[:, muestra]
         S_OD = SOD[:, muestra]
         S_DBO = SDBO[:, muestra]
@@ -731,13 +747,15 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         i_c_SS = SS
         i_c_pH = pH
         i_c_ALK = ALK
+        print(ALK)
         paso_de_tiempo = paso_t
 
     mconConduct = kcondt * mconTDS
     mconT = mconT - 273.15
     mconpH = (np.log10(mconpH))*(-1)
     pH = (np.log10(pH))*(-1)
-    print "Guardando datos de salida..."
+    # fix_print_with_import
+    print("Guardando datos de salida...")
 
     book = xlwt.Workbook()
     save_sheet(book, 'T', mconT[0::3600, :])
@@ -764,7 +782,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
 
     if show:
 
-        print u"Creando Graficas"
+        # fix_print_with_import
+        print(u"Creando Graficas")
 
         #Graficas en el tiempo
         xlabel = 'Tiempo(s)'
@@ -804,7 +823,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         xlabel = 'Distancia(m)'
         ylabel = 'Concentracion (mg/L)'
         c_x = hmed[:, 0]
-        
+
         fig2, ax2 = plt.subplots(5, 3, sharex=True)
         fig2.add_subplot(111, frameon=False)
         fig2.canvas.set_window_title('Graficas de espacio.')
@@ -837,7 +856,8 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
 
     if export:
 
-        print u"Guardando Graficas..."
+        # fix_print_with_import
+        print(u"Guardando Graficas...")
 
         xlabel = 'Tiempo(s)'
         ylabel = 'Concentracion (mg/L)'
@@ -865,7 +885,7 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         xlabel = 'Distancia(m)'
         ylabel = 'Concentracion (mg/L)'
         c_x = hmed[:, 0]
-        
+
         save_plot(plt, 'Evalucion T en el espacio',xlabel, ylabel, [c_x, T], directorio_salida)
         save_plot(plt, 'Evalucion OD en el espacio',xlabel, ylabel, [c_x, OD], directorio_salida)
         save_plot(plt, 'Evalucion DBO en el espacio',xlabel, ylabel, [c_x, DBO], directorio_salida)
@@ -882,10 +902,29 @@ def run(arhivo_entrada, tiempo, directorio_salida, variables, show, export):
         save_plot(plt, 'Evalucion del pH en espacio',xlabel, 'pH', [c_x, pH], directorio_salida)
         save_plot(plt, 'Evalucion Alcanilidad en espacio',xlabel, 'CaCO3', [c_x, ALK], directorio_salida)
 
-    print "El proceso ha finalizado."
+    # fix_print_with_import
+    print("El proceso ha finalizado.")
+
 
 if __name__ == '__main__':
-    pass
-    # book = xlrd.open_workbook("sample3.xlsx")
-    # print read_sheet(book, 'WD')
-    
+    archivo_entrada = 'Prueba_CAR.xls'
+    tiempo = 86400
+    directorio_salida = './salida/'
+    show = False
+    export = True
+
+    variables = {'Da': 1.6296e-07, 'ko2': 0.0002787, 'cs': 8.0, 'knh3': 5.787e-05, 'ksnh3': 1.15741e-06,
+        'alfa_nh3': 2.0, 'kdbo': 1.1574e-06, 'ks': 0.4, 'alfa_no2': 1.1, 'ksod': 1.15e-06,
+        'knt': 2.3148e-06, 'NT': 0.5, 'kno2': 1.1574e-05, 'kno3': 1.1574e-06, 'kDQO': 1.1574e-06,
+        'kTDS': 2e-08, 'A': 0.001, 'alfa_1': 0.175, 'miu': 2.31481e-05, 'F': 0.1, 'kTC': 2.31481e-06,
+        'teta_TC': 0.9, 'kEC': 6.31481e-06, 'teta_EC': 0.8, 'Jdbw': 4.62963e-08, 'qtex': 3.47222e-05,
+        'kN': 1.1574e-07, 'kH': 1.1574e-05, 'kOH': 8.64e-10, 'fdw': 0.5, 'kf': 1.1574e-07,
+        'kb': 1.1574e-08, 'kv': 1.1574e-08, 'Cg': 1e-05, 'Henry': 0.001, 'R': 8.205746e-05,'T': 295.15,
+        'alfa_2': 0.5, 'resp': 0.25, 'kPorg': 1.1574e-06, 'kPsed': 1.574e-06, 'sigma2': 8.587e-05,
+        'Ws': 0.05, 'Rs': 0.1, 'Rp': 0.1, 'k': 0.58, 'den': 997.3, 'Cp': 4148.1, 'teta_DBO': 1.01,
+        'teta_NH3': 1.01, 'teta_NO2': 1.01, 'teta_DQO': 1.01, 'teta_NT': 1.01, 'teta_NO3': 1.01,
+        'Kw': 1e-14, 'K1': 4.5e-07, 'K2': 4.7e-11, 'Vv': 5.787e-06, 'As': 1.0, 'CO2S': 1.23e-05,
+        'Wrp': 1.808e-09, 'FrH': 0.0172, 'Diff': 5.0, 'As1': 1.0, 'Jsn': 145.0, 'sbc': 5.67e-08,
+        'Tair': 17.0, 'Aair': 0.6, 'eair': 14.3, 'RL': 0.03, 'Uw': 3.0, 'es': 11.5, 'tfactor': 1.0}
+
+    run(archivo_entrada, tiempo, directorio_salida, variables, show, export)
